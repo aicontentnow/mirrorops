@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRROR OPS</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #0a0a0a; --surface: #111111; --surface-2: #1a1a1a; --surface-3: #222222;
+    --border: #2a2a2a; --border-active: #444444;
+    --text: #f0f0f0; --text-dim: #bbbbbb; --text-muted: #888888;
+    --cyan: #00F0FF; --magenta: #FF3366; --green: #7AFF3B; --amber: #FFB800;
+    --purple: #B388FF; --blue: #448AFF; --red: #FF4444; --pink: #FF69B4; --teal: #00CC99;
+    --mono: 'JetBrains Mono', monospace; --sans: 'Space Grotesk', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--mono); font-size:18px; line-height:1.6; overflow-x:hidden; }
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border-active); border-radius:3px; }
+  .app { max-width:1400px; margin:0 auto; padding:24px; }
+  .header { display:flex; align-items:center; justify-content:space-between; padding:28px 0; border-bottom:2px solid var(--border); margin-bottom:32px; }
+  .header h1 { font-family:var(--sans); font-size:32px; font-weight:700; letter-spacing:6px; text-transform:uppercase; color:var(--cyan); }
+  .header-controls { display:flex; align-items:center; gap:24px; }
+  .sync { font-size:16px; color:var(--text-dim); }
+  .sync.live { color:var(--green); font-weight:600; animation: pulse-live 2s infinite; }
+  @keyframes pulse-live { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+  .bell-wrap { position:relative; }
+  .bell-icon { font-size:24px; color:var(--text-dim); cursor:pointer; transition:color 0.2s; }
+  .bell-icon:hover { color:var(--cyan); }
+  .bell-badge { position:absolute; top:-8px; right:-10px; background:var(--magenta); color:#fff; font-size:11px; min-width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:10px; font-weight:700; padding:0 5px; }
+  .notif-dropdown { position:absolute; top:40px; right:-10px; background:var(--surface-2); border:2px solid var(--border); border-radius:6px; width:380px; max-height:450px; overflow-y:auto; z-index:1000; box-shadow:0 12px 40px rgba(0,0,0,0.7); }
+  .notif-item { padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; display:flex; align-items:center; gap:12px; }
+  .notif-item:hover { background:var(--surface-3); }
+  .notif-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .notif-dot.approval { background:var(--amber); }
+  .notif-dot.reply { background:var(--cyan); }
+  .notif-dot.bounced { background:var(--magenta); }
+  .notif-text { font-size:16px; font-weight:500; }
+  .notif-type { font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+  .stats-row { display:grid; grid-template-columns:repeat(8,1fr); gap:14px; margin-bottom:32px; }
+  .stat-card { background:var(--surface); border:2px solid var(--border); padding:20px; border-radius:6px; transition:all 0.3s; position:relative; overflow:hidden; }
+  .stat-card:hover { border-color:var(--border-active); transform:translateY(-2px); }
+  .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .stat-card .stat-label { font-size:13px; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin-bottom:8px; font-weight:600; }
+  .stat-card .stat-value { font-family:var(--sans); font-size:48px; font-weight:700; line-height:1; }
+  .stat-card .stat-icon { font-size:18px; margin-bottom:8px; }
+  .stat-card.s-sent::before { background:var(--cyan); } .stat-card.s-sent .stat-value,.stat-card.s-sent .stat-icon { color:var(--cyan); }
+  .stat-card.s-bounce::before { background:var(--magenta); } .stat-card.s-bounce .stat-value,.stat-card.s-bounce .stat-icon { color:var(--magenta); }
+  .stat-card.s-replies::before { background:var(--green); } .stat-card.s-replies .stat-value,.stat-card.s-replies .stat-icon { color:var(--green); }
+  .stat-card.s-pending::before { background:var(--amber); } .stat-card.s-pending .stat-value,.stat-card.s-pending .stat-icon { color:var(--amber); }
+  .stat-card.s-transmissions::before { background:var(--purple); } .stat-card.s-transmissions .stat-value,.stat-card.s-transmissions .stat-icon { color:var(--purple); }
+  .stat-card.s-packages::before { background:var(--teal); } .stat-card.s-packages .stat-value,.stat-card.s-packages .stat-icon { color:var(--teal); }
+  .stat-card.s-videos::before { background:var(--blue); } .stat-card.s-videos .stat-value,.stat-card.s-videos .stat-icon { color:var(--blue); }
+  .stat-card.s-blogs::before { background:var(--pink); } .stat-card.s-blogs .stat-value,.stat-card.s-blogs .stat-icon { color:var(--pink); }
+  .tabs { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:32px; overflow-x:auto; }
+  .tab { padding:16px 28px; font-size:16px; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); cursor:pointer; border:none; border-bottom:3px solid transparent; transition:all 0.2s; white-space:nowrap; background:none; font-family:var(--mono); font-weight:500; }
+  .tab:hover { color:var(--text-dim); }
+  .tab.active { color:var(--cyan); border-bottom-color:var(--cyan); font-weight:700; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:16px; text-transform:uppercase; letter-spacing:3px; color:var(--text-dim); margin-bottom:20px; display:flex; align-items:center; gap:10px; font-weight:600; }
+  .section-title .count { background:var(--surface-2); padding:4px 12px; font-size:15px; color:var(--cyan); border-radius:3px; font-weight:700; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:14px; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); padding:14px 16px; border-bottom:2px solid var(--border); font-weight:700; }
+  td { padding:14px 16px; border-bottom:1px solid var(--border); font-size:17px; vertical-align:middle; }
+  tr:hover td { background:var(--surface); }
+  .notes-cell { color:var(--text-dim); font-size:16px; max-width:300px; }
+  .badge { display:inline-block; padding:6px 14px; font-size:13px; text-transform:uppercase; letter-spacing:1.5px; border-radius:3px; font-weight:700; white-space:nowrap; cursor:pointer; transition:all 0.15s; }
+  .badge:hover { opacity:0.85; transform:scale(1.02); }
+  .card { background:var(--surface); border:2px solid var(--border); padding:24px; margin-bottom:16px; border-radius:6px; transition:all 0.3s; cursor:pointer; }
+  .card:hover { border-color:var(--border-active); }
+  .card.highlight { animation: highlight-pulse 2s ease-out; }
+  @keyframes highlight-pulse { 0%{border-color:var(--cyan); box-shadow:0 0 20px rgba(0,240,255,0.2);} 100%{border-color:var(--border); box-shadow:none;} }
+  .card.updated { animation: pulse-card 1.5s ease-in-out; }
+  @keyframes pulse-card { 0%,100%{border-color:var(--border);} 50%{border-color:var(--cyan);} }
+  .card-title { font-family:var(--sans); font-size:24px; font-weight:700; color:var(--text); }
+  .card-meta { font-size:15px; color:var(--text-muted); margin-top:6px; letter-spacing:0.5px; }
+  .card-body { font-size:17px; color:var(--text-dim); line-height:1.7; margin-top:14px; white-space:pre-wrap; word-break:break-word; }
+  .card-body.preview { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .card-body.expanded { display:block; }
+  .expand-btn { font-size:15px; color:var(--cyan); cursor:pointer; margin-top:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+  .expand-btn:hover { color:var(--text); }
+  .quote-block { margin-top:16px; padding:12px 16px; border-left:3px solid var(--cyan); background:rgba(0,240,255,0.03); }
+  .quote-block .quote-text { font-size:17px; color:var(--cyan); font-style:italic; }
+  .quote-block .quote-ref { font-size:14px; color:var(--text-muted); margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+  .card-actions { display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; align-items:center; }
+  .btn { padding:12px 24px; font-family:var(--mono); font-size:14px; text-transform:uppercase; letter-spacing:1.5px; cursor:pointer; border:2px solid; background:none; transition:all 0.2s; border-radius:3px; font-weight:700; }
+  .btn:hover { transform:translateY(-1px); }
+  .btn-approve { color:var(--green); border-color:var(--green); }
+  .btn-approve:hover { background:rgba(122,255,59,0.15); }
+  .btn-reject { color:var(--magenta); border-color:var(--magenta); }
+  .btn-reject:hover { background:rgba(255,51,102,0.15); }
+  .btn-revision { color:var(--amber); border-color:var(--amber); }
+  .btn-revision:hover { background:rgba(255,184,0,0.15); }
+  .status-menu { position:relative; display:inline-block; }
+  .status-menu .badge { position:relative; z-index:1; }
+  .status-options { position:absolute; top:100%; left:0; margin-top:4px; background:var(--surface-2); border:2px solid var(--border); border-radius:4px; z-index:100; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,0.6); overflow:hidden; }
+  .status-option { padding:10px 14px; cursor:pointer; transition:background 0.1s; display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+  .status-option:hover { background:var(--surface-3); }
+  .status-option .opt-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+  .filter-bar { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+  .filter-btn { padding:10px 18px; font-family:var(--mono); font-size:14px; text-transform:uppercase; letter-spacing:1px; cursor:pointer; border:2px solid; background:none; border-radius:3px; transition:all 0.2s; font-weight:600; }
+  .tier { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; font-size:12px; font-weight:700; border:2px solid; border-radius:3px; }
+  .tier-1 { border-color:var(--cyan); color:var(--cyan); }
+  .tier-2 { border-color:var(--text-dim); color:var(--text-dim); }
+  .tier-3 { border-color:var(--amber); color:var(--amber); }
+  .timeline { position:relative; padding-left:32px; }
+  .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:var(--border); }
+  .timeline-item { position:relative; margin-bottom:16px; padding:18px; background:var(--surface); border:1px solid var(--border); border-radius:4px; transition:all 0.2s; }
+  .timeline-item:hover { border-color:var(--border-active); }
+  .timeline-item::before { content:''; position:absolute; left:-26px; top:22px; width:10px; height:10px; border:2px solid var(--cyan); background:var(--bg); border-radius:50%; }
+  .timeline-item.completed::before { background:var(--cyan); }
+  .empty { text-align:center; padding:48px; color:var(--text-muted); font-size:14px; text-transform:uppercase; letter-spacing:2px; }
+  .row-flash { animation: row-update 1.5s ease-out; }
+  @keyframes row-update { 0%{background:rgba(0,240,255,0.15);} 100%{background:transparent;} }
+  @media (max-width:1200px) { .stats-row { grid-template-columns:repeat(4,1fr); } }
+  @media (max-width:768px) { .app{padding:12px;} .header h1{font-size:20px;letter-spacing:3px;} .stats-row{grid-template-columns:repeat(2,1fr);gap:10px;} .stat-card .stat-value{font-size:32px;} table{display:block;overflow-x:auto;} .tab{padding:14px 16px;font-size:12px;} }
+  .login-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; gap:24px; }
+  .login-screen h1 { font-family:var(--sans); font-size:28px; font-weight:700; letter-spacing:6px; text-transform:uppercase; color:var(--cyan); }
+  .login-screen input { background:var(--surface); border:2px solid var(--border); color:var(--text); padding:16px 24px; font-family:var(--mono); font-size:16px; border-radius:4px; width:300px; text-align:center; letter-spacing:2px; outline:none; transition:border-color 0.2s; }
+  .login-screen input:focus { border-color:var(--cyan); }
+  .login-screen input::placeholder { color:var(--text-muted); letter-spacing:1px; }
+  .login-screen .login-error { color:var(--magenta); font-size:13px; text-transform:uppercase; letter-spacing:1px; }
+  .login-screen .login-sub { color:var(--text-muted); font-size:12px; text-transform:uppercase; letter-spacing:2px; }
+  .feedback-area { margin-top:16px; padding-top:16px; border-top:1px solid var(--border); }
+  .feedback-area textarea { width:100%; background:var(--surface-2); border:2px solid var(--border); color:var(--text); padding:14px; font-family:var(--mono); font-size:16px; line-height:1.6; border-radius:4px; resize:vertical; min-height:80px; outline:none; transition:border-color 0.2s; }
+  .feedback-area textarea:focus { border-color:var(--cyan); }
+  .feedback-area textarea::placeholder { color:var(--text-muted); }
+  .feedback-sent { color:var(--green); font-size:15px; text-transform:uppercase; letter-spacing:1px; font-weight:600; padding:8px 0; }
+  .prev-feedback { margin-top:10px; padding:12px 16px; border-left:3px solid var(--amber); background:rgba(255,184,0,0.05); }
+  .prev-feedback .fb-label { font-size:13px; text-transform:uppercase; letter-spacing:1.5px; color:var(--amber); font-weight:700; margin-bottom:4px; }
+  .prev-feedback .fb-text { font-size:16px; color:var(--text-dim); line-height:1.6; }
+  .prev-feedback .fb-time { font-size:13px; color:var(--text-muted); margin-top:4px; }
+  .revision-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--pink); border:1px solid var(--pink); border-radius:3px; font-weight:700; margin-left:8px; }
+  .btn-feedback { color:var(--amber); border-color:var(--amber); }
+  .btn-feedback:hover { background:rgba(255,184,0,0.15); }
+  .notif-dot.revised { background:var(--pink); }
+  .notif-dot.agent { background:var(--cyan); }
+
+  /* === OVERVIEW REDESIGN === */
+  .ov-section { margin-bottom:36px; }
+  .ov-section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .ov-section-title { font-size:14px; text-transform:uppercase; letter-spacing:3px; color:var(--text-dim); font-weight:700; display:flex; align-items:center; gap:10px; }
+  .ov-section-title .pulse-dot { width:8px; height:8px; border-radius:50%; animation: pulse-live 1.5s infinite; }
+
+  /* === MORNING REPORT PANEL === */
+  .mr-panel { background:rgba(0,0,0,0.4); border:2px solid rgba(0,240,255,0.18); border-top:3px solid var(--cyan); border-radius:8px; padding:20px; margin-bottom:24px; }
+  .mr-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .mr-title { font-size:13px; text-transform:uppercase; letter-spacing:3px; color:var(--cyan); font-weight:700; display:flex; align-items:center; gap:8px; }
+  .mr-timestamp { font-size:12px; color:var(--text-muted); }
+  .mr-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .mr-left,.mr-right { display:flex; flex-direction:column; gap:12px; }
+  .mr-block { background:var(--surface-2); border:1px solid var(--border); border-radius:4px; padding:12px 14px; }
+  .mr-block-title { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); margin-bottom:8px; font-weight:700; }
+  .mr-stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .mr-stat { display:flex; flex-direction:column; align-items:center; min-width:48px; }
+  .mr-stat-val { font-family:var(--sans); font-size:30px; font-weight:700; line-height:1; }
+  .mr-stat-label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-top:3px; text-align:center; }
+  .mr-queue-item { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid var(--border); font-size:14px; }
+  .mr-queue-item:last-child { border-bottom:none; }
+  .mr-queue-title { color:var(--text); font-weight:600; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mr-queue-expiry { font-size:11px; color:var(--text-muted); white-space:nowrap; }
+  .mr-queue-expiry.urgent { color:var(--magenta); font-weight:700; }
+  .mr-attention-item { display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:13px; line-height:1.4; }
+  .mr-attention-item:last-child { border-bottom:none; }
+  .mr-dispatch-item { font-size:12px; color:var(--text-dim); padding:4px 0; display:flex; align-items:center; gap:6px; }
+  .mr-empty { font-size:12px; color:var(--text-muted); text-align:center; padding:6px 0; text-transform:uppercase; letter-spacing:1px; }
+  .mr-none { color:var(--green) !important; }
+  @media (max-width:900px) { .mr-grid { grid-template-columns:1fr; } }
+  .ov-collapse-btn { font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); cursor:pointer; background:none; border:1px solid var(--border); padding:6px 14px; border-radius:3px; transition:all 0.2s; }
+  .ov-collapse-btn:hover { color:var(--text-dim); border-color:var(--border-active); }
+
+  .action-card { background:var(--surface); border:2px solid var(--border); padding:24px; margin-bottom:14px; border-radius:6px; transition:all 0.3s; }
+  .action-card:hover { border-color:var(--border-active); }
+  .action-card.urgent { border-left:4px solid var(--amber); }
+  .action-card.alert { border-left:4px solid var(--magenta); }
+  .action-card .action-top { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+  .action-card .action-title { font-family:var(--sans); font-size:22px; font-weight:700; }
+  .action-card .action-meta { font-size:15px; color:var(--text-muted); margin-top:4px; }
+  .action-card .action-preview { font-size:16px; color:var(--text-dim); line-height:1.7; margin-top:12px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; white-space:pre-wrap; word-break:break-word; }
+  .action-card .action-preview.expanded { display:block; -webkit-line-clamp:unset; }
+  .action-buttons { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  .action-buttons .btn-big { padding:16px 32px; font-size:16px; font-weight:700; letter-spacing:2px; }
+  .action-buttons .btn-big i { margin-right:6px; }
+
+  .alert-strip { display:flex; align-items:center; gap:14px; padding:16px 20px; background:rgba(255,51,102,0.08); border:1px solid rgba(255,51,102,0.25); border-radius:6px; margin-bottom:10px; }
+  .alert-strip .alert-icon { font-size:18px; color:var(--magenta); flex-shrink:0; }
+  .alert-strip .alert-text { font-size:16px; color:var(--text-dim); flex:1; }
+  .alert-strip .alert-count { font-family:var(--sans); font-size:28px; font-weight:700; color:var(--magenta); }
+
+  .blocker-strip { display:flex; align-items:center; gap:14px; padding:16px 20px; background:rgba(255,184,0,0.08); border:1px solid rgba(255,184,0,0.25); border-radius:6px; margin-bottom:10px; }
+  .blocker-strip .blocker-icon { font-size:18px; color:var(--amber); flex-shrink:0; }
+  .blocker-strip .blocker-text { font-size:16px; color:var(--text-dim); flex:1; }
+
+  .analytics-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:10px; margin-bottom:20px; }
+  .platform-card { background:var(--surface); border:2px solid var(--border); padding:16px 12px; border-radius:6px; text-align:center; transition:all 0.3s; }
+  .platform-card:hover { border-color:var(--border-active); transform:translateY(-2px); }
+  .platform-card .plat-icon { font-size:20px; margin-bottom:8px; }
+  .platform-card .plat-name { font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:6px; font-weight:600; }
+  .platform-card .plat-value { font-family:var(--sans); font-size:32px; font-weight:700; line-height:1; }
+  .platform-card .plat-delta { font-size:13px; margin-top:4px; font-weight:600; }
+  .platform-card .plat-delta.up { color:var(--green); }
+  .platform-card .plat-delta.down { color:var(--magenta); }
+  .platform-card .plat-delta.flat { color:var(--text-muted); }
+
+  .velocity-bar { display:flex; gap:16px; padding:16px 20px; background:var(--surface); border:2px solid var(--border); border-radius:6px; align-items:center; flex-wrap:wrap; }
+  .velocity-stat { display:flex; flex-direction:column; align-items:center; flex:1; min-width:100px; }
+  .velocity-stat .v-label { font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); font-weight:600; }
+  .velocity-stat .v-value { font-family:var(--sans); font-size:28px; font-weight:700; color:var(--cyan); }
+  .velocity-stat .v-sub { font-size:13px; color:var(--text-muted); }
+
+  .dates-compact { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:10px; }
+  .date-chip { display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--surface); border:1px solid var(--border); border-radius:4px; transition:all 0.2s; }
+  .date-chip:hover { border-color:var(--border-active); }
+  .date-chip .date-day { font-family:var(--sans); font-size:26px; font-weight:700; color:var(--cyan); min-width:36px; text-align:center; line-height:1; }
+  .date-chip .date-month { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--cyan); text-align:center; }
+  .date-chip .date-info { flex:1; }
+  .date-chip .date-title { font-size:16px; font-weight:600; }
+  .date-chip .date-cat { font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; }
+
+  .credit-bar-wrap { margin-top:14px; padding:20px; background:var(--surface); border:2px solid var(--border); border-radius:6px; }
+  .credit-bar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .credit-bar-title { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); font-weight:700; }
+  .credit-bar-value { font-family:var(--sans); font-size:18px; font-weight:700; }
+  .credit-track { width:100%; height:16px; background:var(--surface-3); border-radius:8px; overflow:hidden; position:relative; }
+  .credit-fill { height:100%; border-radius:8px; transition:width 0.6s ease; }
+  .credit-fill.safe { background:linear-gradient(90deg, var(--green), var(--cyan)); }
+  .credit-fill.warning { background:linear-gradient(90deg, var(--amber), #FF8800); }
+  .credit-fill.danger { background:linear-gradient(90deg, var(--magenta), var(--red)); }
+  .credit-warn-marker { position:absolute; top:-2px; bottom:-2px; width:2px; background:var(--amber); z-index:2; }
+  .credit-details { display:flex; gap:20px; margin-top:12px; flex-wrap:wrap; }
+  .credit-detail { font-size:12px; color:var(--text-muted); }
+  .credit-detail strong { color:var(--text-dim); }
+  .credit-alert { margin-top:10px; padding:10px 14px; background:rgba(255,184,0,0.1); border:1px solid rgba(255,184,0,0.3); border-radius:4px; font-size:13px; color:var(--amber); display:flex; align-items:center; gap:8px; }
+  .credit-alert.critical { background:rgba(255,51,102,0.1); border-color:rgba(255,51,102,0.3); color:var(--magenta); }
+
+  /* === VIDEO REVIEW === */
+  .video-review-section { margin-top:16px; padding:16px; background:var(--surface-2); border:2px solid var(--border); border-radius:6px; }
+  .video-review-section.needs-review { border-color:var(--amber); }
+  .video-review-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+  .video-review-title { font-size:14px; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); font-weight:700; display:flex; align-items:center; gap:8px; }
+  .video-player-wrap { position:relative; width:100%; max-width:360px; margin:0 auto 12px; border-radius:6px; overflow:hidden; border:2px solid var(--border); background:#000; }
+  .video-player-wrap video { width:100%; display:block; }
+  .video-meta { display:flex; gap:16px; flex-wrap:wrap; font-size:14px; color:var(--text-muted); margin-bottom:12px; }
+  .video-meta span { display:flex; align-items:center; gap:4px; }
+  .video-meta .cost { color:var(--amber); }
+  .video-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+  .video-status-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; font-size:13px; text-transform:uppercase; letter-spacing:1.5px; border-radius:3px; font-weight:700; }
+
+  /* === MORNING QUEUE === */
+  .mq-section { margin-bottom:36px; padding:24px; background:rgba(0,240,255,0.03); border:2px solid rgba(0,240,255,0.15); border-radius:8px; }
+  .mq-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .mq-title { font-size:14px; text-transform:uppercase; letter-spacing:3px; color:var(--cyan); font-weight:700; display:flex; align-items:center; gap:10px; }
+  .mq-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:16px; }
+  .mq-card { background:var(--surface); border:2px solid var(--border); border-radius:6px; padding:20px; transition:all 0.3s; position:relative; }
+  .mq-card:hover { border-color:var(--border-active); transform:translateY(-2px); }
+  .mq-card.approved { border-left:4px solid var(--green); }
+  .mq-card.review { border-left:4px solid var(--amber); }
+  .mq-card.revision_needed { border-left:4px solid var(--pink); }
+  .mq-card.draft { border-left:4px solid var(--border-active); }
+  .mq-card-header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .mq-card-title { font-family:var(--sans); font-size:20px; font-weight:700; line-height:1.2; flex:1; }
+  .mq-badges { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .mq-track-badge { display:inline-flex; align-items:center; justify-content:center; padding:3px 10px; height:26px; border-radius:4px; font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; white-space:nowrap; }
+  .mq-track-a { background:rgba(0,204,153,0.2); color:var(--teal); border:1px solid var(--teal); }
+  .mq-track-b { background:rgba(68,138,255,0.2); color:var(--blue); border:1px solid var(--blue); }
+  .mq-origin-badge { display:inline-flex; align-items:center; padding:3px 8px; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:700; border-radius:3px; }
+  .mq-origin-managed { background:rgba(179,136,255,0.15); color:var(--purple); border:1px solid var(--purple); }
+  .mq-origin-engine { background:rgba(100,100,100,0.15); color:var(--text-muted); border:1px solid var(--border-active); }
+  .mq-lens { font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .mq-hook { font-size:15px; color:var(--text-dim); line-height:1.5; margin-bottom:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .mq-body { font-size:15px; color:var(--text-dim); line-height:1.8; white-space:pre-wrap; word-break:break-word; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; }
+  .mq-body.expanded { display:block; -webkit-line-clamp:unset; }
+  .mq-image { width:100%; max-height:180px; object-fit:cover; border-radius:4px; border:1px solid var(--border); margin:10px 0; }
+  .mq-permalink { font-size:13px; color:var(--cyan); text-decoration:none; display:flex; align-items:center; gap:6px; margin:8px 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .mq-permalink:hover { text-decoration:underline; }
+  .mq-actions { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .mq-copy-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:1px; cursor:pointer; border:2px solid var(--teal); background:rgba(0,204,153,0.08); color:var(--teal); border-radius:4px; font-weight:700; transition:all 0.2s; }
+  .mq-copy-btn:hover { background:rgba(0,204,153,0.15); }
+  .mq-copy-btn.copied { border-color:var(--green); color:var(--green); background:rgba(122,255,59,0.1); }
+  .mq-empty { text-align:center; padding:32px; color:var(--text-muted); font-size:14px; text-transform:uppercase; letter-spacing:2px; }
+
+  /* === ORIGIN / TRACK BADGES (inline, for action cards) === */
+  .inline-track { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; font-size:11px; font-weight:800; border-radius:3px; flex-shrink:0; }
+  .inline-track-a { background:rgba(0,204,153,0.2); color:var(--teal); border:1px solid var(--teal); }
+  .inline-track-b { background:rgba(68,138,255,0.2); color:var(--blue); border:1px solid var(--blue); }
+  .inline-origin { display:inline-flex; align-items:center; padding:2px 7px; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:700; border-radius:3px; }
+  .inline-origin-managed { background:rgba(179,136,255,0.15); color:var(--purple); border:1px solid var(--purple); }
+  .inline-origin-engine { background:rgba(100,100,100,0.12); color:var(--text-muted); border:1px solid var(--border-active); }
+
+  /* === SOCIAL CAPTIONS === */
+  .caption-section { margin-top:16px; padding:16px; background:var(--surface-2); border:2px solid var(--border); border-radius:6px; }
+  .caption-platform { margin-bottom:14px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:4px; }
+  .caption-platform-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .caption-platform-name { font-size:14px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-dim); font-weight:700; display:flex; align-items:center; gap:6px; }
+  .caption-platform-limit { font-size:13px; color:var(--text-muted); }
+  .caption-text { font-size:16px; color:var(--text); line-height:1.6; white-space:pre-wrap; word-break:break-word; }
+  .caption-char-count { font-size:13px; color:var(--text-muted); margin-top:4px; }
+  .caption-char-count.over { color:var(--magenta); font-weight:600; }
+  .caption-edit textarea { width:100%; background:var(--surface-2); border:2px solid var(--border); color:var(--text); padding:10px; font-family:var(--mono); font-size:15px; line-height:1.6; border-radius:4px; resize:vertical; min-height:60px; outline:none; }
+  .caption-edit textarea:focus { border-color:var(--cyan); }
+  .caption-generate-btn { display:flex; align-items:center; gap:8px; padding:12px 24px; font-family:var(--mono); font-size:14px; text-transform:uppercase; letter-spacing:1.5px; cursor:pointer; border:2px solid var(--cyan); background:rgba(0,240,255,0.08); color:var(--cyan); border-radius:4px; font-weight:700; transition:all 0.2s; }
+  .caption-generate-btn:hover { background:rgba(0,240,255,0.15); }
+
+  /* === IMAGE REVIEW GALLERY === */
+  .img-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+  .img-card { background:var(--surface); border:2px solid var(--border); border-radius:6px; overflow:hidden; transition:all 0.3s; }
+  .img-card:hover { border-color:var(--border-active); transform:translateY(-2px); }
+  .img-card.needs-review { border-color:var(--amber); }
+  .img-card .img-preview { width:100%; aspect-ratio:9/16; object-fit:cover; cursor:pointer; display:block; background:#111; }
+  .img-card .img-info { padding:16px; }
+  .img-card .img-title { font-family:var(--sans); font-size:20px; font-weight:700; margin-bottom:4px; }
+  .img-card .img-hook { font-size:14px; color:var(--text-dim); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:10px; }
+  .img-card .img-actions { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .img-filter-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; align-items:center; }
+  .img-filter-btn { padding:10px 20px; font-family:var(--mono); font-size:14px; text-transform:uppercase; letter-spacing:1px; cursor:pointer; border:2px solid var(--border); background:none; border-radius:4px; transition:all 0.2s; font-weight:600; color:var(--text-dim); }
+  .img-filter-btn:hover { border-color:var(--border-active); color:var(--text); }
+  .img-filter-btn.active { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,0.08); }
+  .img-fb-area { border-top:1px solid var(--border); padding-top:10px; margin-top:10px; }
+  .img-fb-area textarea { width:100%; background:var(--surface-2); border:2px solid var(--border); color:var(--text); padding:10px; font-family:var(--mono); font-size:15px; line-height:1.5; border-radius:4px; resize:vertical; min-height:60px; outline:none; transition:border-color 0.2s; }
+  .img-fb-area textarea:focus { border-color:var(--cyan); }
+  .img-lightbox { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.92); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-direction:column; gap:16px; }
+  .img-lightbox img { max-width:90vw; max-height:80vh; object-fit:contain; border-radius:8px; border:2px solid var(--border); }
+  .img-lightbox .lb-title { font-family:var(--sans); font-size:24px; font-weight:700; color:var(--text); }
+  .img-lightbox .lb-hook { font-size:16px; color:var(--text-dim); max-width:600px; text-align:center; }
+  .img-lightbox .lb-close { position:absolute; top:20px; right:20px; font-size:24px; color:var(--text-dim); cursor:pointer; }
+  .img-lightbox .lb-actions { display:flex; gap:12px; }
+  .img-lightbox .lb-nav { position:absolute; top:50%; font-size:36px; color:var(--text-dim); cursor:pointer; padding:16px; transition:color 0.2s; }
+  .img-lightbox .lb-nav:hover { color:var(--cyan); }
+  .img-lightbox .lb-nav.prev { left:12px; }
+  .img-lightbox .lb-nav.next { right:12px; }
+  .batch-bar { display:flex; align-items:center; gap:16px; padding:16px 20px; background:var(--surface); border:2px solid var(--cyan); border-radius:6px; margin-bottom:20px; flex-wrap:wrap; }
+  .batch-bar .batch-count { font-family:var(--sans); font-size:24px; font-weight:700; color:var(--cyan); }
+  .batch-bar .batch-label { font-size:14px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
+
+  @media (max-width:1200px) { .analytics-grid { grid-template-columns:repeat(4,1fr); } .img-gallery { grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); } }
+  @media (max-width:768px) { .analytics-grid { grid-template-columns:repeat(2,1fr); } .action-buttons .btn-big { padding:12px 20px; font-size:12px; } .video-player-wrap { max-width:100%; } .img-gallery { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+const SUPABASE_URL = 'https://pobddtmnzimcdiaujyyf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvYmRkdG1uemltY2RpYXVqeXlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNzU3OTUsImV4cCI6MjA4OTg1MTc5NX0.WuIrn9nOMLqJXL5kou8MyOb4yO6pCEa3QvfqoO3hnls';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// MASTER COLOR MAP -- single source of truth for all status colors
+const STATUS_COLORS = {
+  pending: '#FFB800', sent: '#448AFF', follow_up_sent: '#B388FF',
+  replied: '#00F0FF', bounced: '#FF3366', interested: '#7AFF3B',
+  pass: '#555555', book_sent: '#00CC99',
+  draft: '#444444', review: '#FFB800', approved: '#7AFF3B',
+  distribution_ready: '#B388FF', approved_for_posting: '#00CC99',
+  scheduled: '#448AFF', posted: '#00F0FF', published: '#00F0FF',
+  rejected: '#FF4444', revision_needed: '#FF69B4',
+  upcoming: '#00F0FF', completed: '#555555',
+  ordered: '#448AFF', packaging: '#FFB800', shipped: '#B388FF',
+  delivered: '#7AFF3B', confirmed: '#00CC99',
+  queued: '#444444', all: '#00F0FF',
+  // Video statuses
+  none: '#444444', generating: '#448AFF',
+};
+
+// Supabase storage base URL for transmission media
+const STORAGE_URL = SUPABASE_URL + '/storage/v1/object/public/transmission-media';
+
+// Platform caption specs
+const PLATFORM_SPECS = {
+  tiktok: { name: 'TikTok', icon: 'fab fa-tiktok', maxChars: 4000, visibleChars: 150, hashtagRange: '3-5', format: 'Video post' },
+  instagram: { name: 'Instagram Reels', icon: 'fab fa-instagram', maxChars: 2200, visibleChars: 125, hashtagRange: '20-30', format: 'Reel' },
+  facebook: { name: 'Facebook', icon: 'fab fa-facebook', maxChars: 63206, visibleChars: 477, hashtagRange: '0-3', format: 'Reel or video post' },
+};
+const statusBg = (s) => STATUS_COLORS[s] || '#444';
+const statusFg = (s) => { const dark = ['pending','interested','approved','review','upcoming','packaging','delivered','confirmed','book_sent','posted','published','replied']; return dark.includes(s) ? '#000' : '#fff'; };
+
+// PASSWORD: simple session gate. Change this value to change the password.
+const OPS_PASS = 'mirror143';
+
+function LoginGate({ children }) {
+  const [auth, setAuth] = useState(sessionStorage.getItem('mirror-ops-auth') === 'true');
+  const [pw, setPw] = useState('');
+  const [error, setError] = useState(false);
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (pw === OPS_PASS) { sessionStorage.setItem('mirror-ops-auth','true'); setAuth(true); }
+    else { setError(true); setPw(''); setTimeout(()=>setError(false),2000); }
+  };
+  if (auth) return children;
+  return (
+    <div className="login-screen">
+      <h1>MIRROR OPS</h1>
+      <div className="login-sub">Operations Dashboard</div>
+      <form onSubmit={handleLogin}>
+        <input type="password" value={pw} onChange={e=>setPw(e.target.value)} placeholder="enter passphrase" autoFocus />
+      </form>
+      {error && <div className="login-error">incorrect</div>}
+    </div>
+  );
+}
+
+function FeedbackBox({ transmission, onSubmit }) {
+  const [text, setText] = useState('');
+  const [sent, setSent] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+
+  // Parse feedback: entries separated by \n---\n, most recent is last
+  const parseFeedback = (raw) => {
+    if (!raw) return [];
+    return raw.split('\n---\n').map(s=>s.trim()).filter(Boolean).reverse(); // newest first
+  };
+  const feedbackEntries = parseFeedback(transmission.feedback);
+  const latestFeedback = feedbackEntries[0] || null;
+  const olderFeedback = feedbackEntries.slice(1);
+
+  const handleSubmit = async () => {
+    if (!text.trim()) return;
+    setSaving(true);
+    try {
+      await onSubmit(transmission.id, text.trim());
+      setText(''); setSent(true); setTimeout(()=>setSent(false),5000);
+      setShowForm(false);
+    } catch(e) {
+      console.error('[MIRROR OPS] FeedbackBox error:', e);
+      alert('Feedback failed to save: ' + (e.message || 'Unknown error'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="feedback-area" onClick={e=>e.stopPropagation()}>
+      {latestFeedback && (
+        <div className="prev-feedback">
+          <div className="fb-label">
+            Latest Feedback
+            {transmission.feedback_at && <span style={{marginLeft:8,fontWeight:400,color:'var(--text-muted)'}}>({new Date(transmission.feedback_at).toLocaleString()})</span>}
+          </div>
+          <div className="fb-text">{latestFeedback}</div>
+          {olderFeedback.length > 0 && (
+            <div style={{marginTop:6}}>
+              <span style={{fontSize:11,color:'var(--cyan)',cursor:'pointer',letterSpacing:1,textTransform:'uppercase'}}
+                onClick={()=>setShowHistory(!showHistory)}>
+                {showHistory ? '- hide history' : `+ ${olderFeedback.length} earlier note${olderFeedback.length>1?'s':''}`}
+              </span>
+              {showHistory && olderFeedback.map((fb,i)=>(
+                <div key={i} style={{marginTop:8,padding:'8px',background:'rgba(255,255,255,0.03)',borderRadius:4,fontSize:12,color:'var(--text-dim)',borderLeft:'2px solid var(--border)'}}>
+                  {fb}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      {sent && <div className="feedback-sent"><i className="fas fa-check"></i> Feedback saved. Agent will redraft.</div>}
+      {!showForm ? (
+        <button className="btn btn-feedback" style={{marginTop:latestFeedback?8:0}} onClick={()=>setShowForm(true)}>
+          <i className="fas fa-microphone"></i> {latestFeedback ? 'Add More Feedback' : 'Leave Feedback'}
+        </button>
+      ) : (
+        <div style={{marginTop:12}}>
+          <textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Dictate or type your feedback. Use voice-to-text for hands-free input." />
+          <div style={{display:'flex',gap:10,marginTop:8}}>
+            <button className="btn btn-feedback" onClick={handleSubmit} disabled={saving}><i className={saving?"fas fa-spinner fa-spin":"fas fa-paper-plane"}></i> {saving?'Saving...':'Submit'}</button>
+            <button className="btn" style={{color:'var(--text-muted)',borderColor:'var(--border)'}} onClick={()=>{setShowForm(false);setText('');}}>Cancel</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VideoFeedbackBox({ transmission, onSubmit }) {
+  const [text, setText] = useState('');
+  const [sent, setSent] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const handleSubmit = async () => {
+    if (!text.trim()) return;
+    setSaving(true);
+    try {
+      await onSubmit(transmission.id, text.trim());
+      setText(''); setSent(true); setTimeout(()=>setSent(false),5000);
+      setShowForm(false);
+    } catch(e) {
+      console.error('[MIRROR OPS] VideoFeedbackBox error:', e);
+      alert('Failed to save video feedback. Check console.');
+    } finally {
+      setSaving(false);
+    }
+  };
+  return (
+    <div className="feedback-area" onClick={e=>e.stopPropagation()}>
+      {transmission.video_feedback && (
+        <div className="prev-feedback">
+          <div className="fb-label">Previous Video Feedback</div>
+          <div className="fb-text">{transmission.video_feedback}</div>
+          {transmission.video_reviewed_at && <div className="fb-time">{new Date(transmission.video_reviewed_at).toLocaleString()}</div>}
+        </div>
+      )}
+      {sent && <div className="feedback-sent"><i className="fas fa-check"></i> Video feedback saved. Status moved to REVISION NEEDED.</div>}
+      {!showForm ? (
+        <button className="btn btn-feedback" style={{marginTop:transmission.video_feedback?12:0}} onClick={()=>setShowForm(true)}>
+          <i className="fas fa-video"></i> {transmission.video_feedback ? 'Add More Video Feedback' : 'Leave Video Feedback'}
+        </button>
+      ) : (
+        <div style={{marginTop:12}}>
+          <textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Video feedback: technical issues, aesthetic feedback, pacing, etc." />
+          <div style={{display:'flex',gap:10,marginTop:8}}>
+            <button className="btn btn-feedback" onClick={handleSubmit} disabled={saving}><i className={saving?"fas fa-spinner fa-spin":"fas fa-paper-plane"}></i> {saving?'Saving...':'Submit'}</button>
+            <button className="btn" style={{color:'var(--text-muted)',borderColor:'var(--border)'}} onClick={()=>{setShowForm(false);setText('');}}>Cancel</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function StatusBadge({ status, table, id, field, options, onChange }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const close = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, []);
+  const handlePick = (val) => { setOpen(false); if (onChange) onChange(table, id, field, val); };
+  return (
+    <div className="status-menu" ref={ref}>
+      <span className="badge" style={{background:statusBg(status), color:statusFg(status)}} onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>
+        {status.replace(/_/g,' ')}
+      </span>
+      {open && (
+        <div className="status-options">
+          {options.map(s => (
+            <div key={s} className="status-option" onClick={(e) => { e.stopPropagation(); handlePick(s); }}>
+              <span className="opt-dot" style={{background:statusBg(s)}}></span>
+              <span style={{color: s === status ? '#fff' : 'var(--text-dim)'}}>{s.replace(/_/g,' ')}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  const [tab, setTab] = useState('overview');
+  const [targets, setTargets] = useState([]);
+  const [transmissions, setTransmissions] = useState([]);
+  const [packages, setPackages] = useState([]);
+  const [dates, setDates] = useState([]);
+  const [approvals, setApprovals] = useState([]);
+  const [contentQueue, setContentQueue] = useState([]);
+  const [analytics, setAnalytics] = useState([]);
+  const [creditLogs, setCreditLogs] = useState([]);
+  const [creditAllocation, setCreditAllocation] = useState(null);
+  const [agentNotifs, setAgentNotifs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [lastSync, setLastSync] = useState(null);
+  const [isLive, setIsLive] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [dismissedNotifs, setDismissedNotifs] = useState(new Set());
+  const [updatedIds, setUpdatedIds] = useState(new Set());
+  const [highlightId, setHighlightId] = useState(null);
+  const [morningReport, setMorningReport] = useState(null);
+  const subscriptionsRef = useRef({});
+
+  const fetchAll = useCallback(async () => {
+    setLoading(true);
+    const [t, tr, p, d, a, cq, an] = await Promise.all([
+      supabase.from('outreach_targets').select('*').order('wave',{ascending:true}).order('date_sent',{ascending:false}),
+      supabase.from('transmissions').select('*').order('created_at',{ascending:false}),
+      supabase.from('black_box_packages').select('*').order('created_at',{ascending:false}),
+      supabase.from('key_dates').select('*').order('date',{ascending:true}),
+      supabase.from('approvals').select('*').order('submitted_at',{ascending:false}),
+      supabase.from('content_queue').select('*').order('scheduled_time',{ascending:true}),
+      supabase.from('analytics_snapshots').select('*').order('snapshot_date',{ascending:false}),
+      supabase.from('blotato_credits').select('*').order('created_at',{ascending:false}),
+      supabase.from('blotato_monthly_allocation').select('*').order('month_start',{ascending:false}).limit(1),
+    ]);
+    setTargets(t.data||[]); setTransmissions(tr.data||[]); setPackages(p.data||[]);
+    setDates(d.data||[]); setApprovals(a.data||[]); setContentQueue(cq.data||[]);
+    setAnalytics(an.data||[]);
+    const agentN = await supabase.from('agent_notifications').select('*').eq('acknowledged',false).order('created_at',{ascending:false}).limit(50);
+    setAgentNotifs(agentN.data||[]);
+    setCreditLogs(arguments[6] ? [] : []); // placeholder
+    const creditData = await Promise.all([
+      supabase.from('blotato_credits').select('*').gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()),
+      supabase.from('blotato_monthly_allocation').select('*').order('month_start',{ascending:false}).limit(1),
+    ]);
+    setCreditLogs(creditData[0].data||[]);
+    setCreditAllocation(creditData[1].data?.[0] || null);
+    const mrData = await supabase.from('agent_triggers')
+      .select('payload,created_at,result_summary')
+      .eq('agent_name','chief_of_staff')
+      .eq('reason','morning_report')
+      .eq('status','done')
+      .order('created_at',{ascending:false})
+      .limit(1);
+    setMorningReport(mrData.data?.[0] || null);
+    setLastSync(new Date().toLocaleTimeString()); setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchAll(); }, [fetchAll]);
+
+  useEffect(() => {
+    const tables = ['outreach_targets','transmissions','black_box_packages','key_dates','approvals','content_queue','analytics_snapshots','blotato_credits','agent_notifications','transmission_feedback','agent_triggers'];
+    tables.forEach(name => {
+      const sub = supabase.channel(`${name}-ch`).on('postgres_changes',{event:'*',schema:'public',table:name},(payload) => {
+        const id = payload.new?.id || payload.old?.id;
+        setUpdatedIds(prev => { const s=new Set(prev); s.add(id); setTimeout(()=>setUpdatedIds(p=>{const ns=new Set(p);ns.delete(id);return ns;}),2000); return s; });
+        fetchAll();
+      }).subscribe();
+      subscriptionsRef.current[name] = sub;
+    });
+    setIsLive(true);
+    return () => { Object.values(subscriptionsRef.current).forEach(sub => supabase.removeChannel(sub)); };
+  }, [fetchAll]);
+
+  const stats = {
+    totalSent: targets.filter(t=>['sent','follow_up_sent','replied','interested','book_sent','pass'].includes(t.status)).length,
+    bounced: targets.filter(t=>t.status==='bounced').length,
+    replies: targets.filter(t=>['replied','interested'].includes(t.status)).length,
+    pending: targets.filter(t=>t.status==='pending').length,
+    textReview: transmissions.filter(t=>t.status==='review').length,
+    textApproved: transmissions.filter(t=>t.status==='approved').length,
+    imagesReview: transmissions.filter(t=>t.blog_image_status==='review').length,
+    imagesApproved: transmissions.filter(t=>t.blog_image_status==='approved').length,
+    videosReview: transmissions.filter(t=>t.video_status==='review').length,
+    posted: transmissions.filter(t=>t.status==='posted').length,
+    packagesShipped: packages.filter(p=>['shipped','delivered'].includes(p.status)).length,
+  };
+
+  const sevColors = {info:'var(--cyan)',warning:'var(--amber)',critical:'var(--magenta)',action_needed:'var(--magenta)'};
+  const allNotificationItems = [
+    ...agentNotifs.map(n=>({type:'agent',id:`an-${n.id}`,rawId:n.id,title:n.title,subtitle:`${n.agent_name} -- ${n.severity}`,body:n.body,severity:n.severity,agentName:n.agent_name,transmissionId:n.transmission_id,createdAt:n.created_at})),
+    ...transmissions.filter(t=>t.status==='review').map(t=>({type:'approval',id:`t-${t.id}`,rawId:t.id,title:`${t.title} needs approval`,tabTarget:'approvals'})),
+    ...transmissions.filter(t=>t.status==='revision_needed').map(t=>({type:'revision',id:`rev-${t.id}`,rawId:t.id,title:`${t.title} -- feedback submitted, awaiting redraft`,tabTarget:'approvals'})),
+    ...transmissions.filter(t=>t.status==='distribution_ready').map(t=>({type:'approval',id:`td-${t.id}`,rawId:t.id,title:`${t.title} -- visual + captions ready for review`,tabTarget:'transmissions'})),
+    ...transmissions.filter(t=>t.revision_count>0 && t.status==='review').map(t=>({type:'revised',id:`tr-${t.id}`,rawId:t.id,title:`${t.title} revised (v${t.revision_count+1})`,tabTarget:'approvals'})),
+    ...transmissions.filter(t=>t.blog_image_status==='review').map(t=>({type:'approval',id:`img-${t.id}`,rawId:t.id,title:`${t.title} -- image ready for review`,tabTarget:'images'})),
+    ...targets.filter(t=>['replied','interested'].includes(t.status)).map(t=>({type:'reply',id:`o-${t.id}`,rawId:t.id,title:`${t.name} -- ${t.status}`,tabTarget:'outreach'})),
+    ...targets.filter(t=>t.status==='bounced').slice(0,5).map(t=>({type:'bounced',id:`ob-${t.id}`,rawId:t.id,title:`${t.name} bounced`,tabTarget:'outreach'})),
+  ];
+  const notificationItems = allNotificationItems.filter(n => !dismissedNotifs.has(n.id));
+
+  const acknowledgeAgentNotif = async (notifId) => {
+    await supabase.from('agent_notifications').update({acknowledged:true}).eq('id',notifId);
+    setDismissedNotifs(prev => { const s=new Set(prev); s.add(`an-${notifId}`); return s; });
+    fetchAll();
+  };
+
+  const updateStatus = async (table, id, field, value) => {
+    await supabase.from(table).update({[field]:value, updated_at:new Date().toISOString()}).eq('id',id);
+    fetchAll();
+  };
+
+  const submitFeedback = async (transmissionId, feedbackText) => {
+    const existing = transmissions.find(t=>t.id===transmissionId);
+    const combined = existing?.feedback ? existing.feedback + '\n---\n' + feedbackText : feedbackText;
+    console.log('[MIRROR OPS] Submitting feedback for ID:', transmissionId, 'Text:', feedbackText);
+    const { data, error } = await supabase.from('transmissions').update({
+      feedback: combined,
+      feedback_at: new Date().toISOString(),
+      status: 'revision_needed',
+      core_term_audit: 'not_audited',
+      revision_count: (existing?.revision_count || 0) + 1,
+      updated_at: new Date().toISOString()
+    }).eq('id', transmissionId).select();
+    if (error) {
+      console.error('[MIRROR OPS] Feedback save FAILED:', error);
+      throw new Error(error.message);
+    } else {
+      console.log('[MIRROR OPS] Feedback saved OK. Status now: revision_needed. Response:', data);
+      // Route revision to the correct agent based on origin
+      const agentName = existing?.origin === 'managed_agent' ? 'managed_agent' : 'content-engine';
+      await supabase.from('agent_triggers').insert({
+        agent_name: agentName,
+        reason: 'feedback_ready',
+        payload: { transmission_id: transmissionId },
+        source: 'dashboard_feedback'
+      });
+    }
+    fetchAll();
+  };
+
+  const submitVideoFeedback = async (transmissionId, feedbackText) => {
+    const existing = transmissions.find(t=>t.id===transmissionId);
+    const combined = existing?.video_feedback ? existing.video_feedback + '\n---\n' + feedbackText : feedbackText;
+    console.log('[MIRROR OPS] Submitting video feedback for ID:', transmissionId, 'Text:', feedbackText);
+    const { data, error } = await supabase.from('transmissions').update({
+      video_feedback: combined,
+      video_reviewed_at: new Date().toISOString(),
+      video_status: 'revision_needed',
+      video_revision_count: (existing?.video_revision_count || 0) + 1,
+      updated_at: new Date().toISOString()
+    }).eq('id', transmissionId).select();
+    if (error) {
+      console.error('[MIRROR OPS] Video feedback save FAILED:', error);
+      alert('Video feedback failed to save: ' + error.message);
+    } else {
+      console.log('[MIRROR OPS] Video feedback saved OK. Status now: revision_needed. Response:', data);
+    }
+    await supabase.from('transmission_feedback').insert({
+      transmission_id: transmissionId,
+      feedback_type: 'video',
+      feedback_text: feedbackText
+    });
+    fetchAll();
+  };
+
+  const updateVideoStatus = async (transmissionId, newStatus) => {
+    console.log('[MIRROR OPS] Updating video_status for ID:', transmissionId, 'to:', newStatus);
+    const { error } = await supabase.from('transmissions').update({
+      video_status: newStatus,
+      updated_at: new Date().toISOString()
+    }).eq('id', transmissionId);
+    if (error) {
+      console.error('[MIRROR OPS] Video status update FAILED:', error);
+      alert('Failed to update video status: ' + error.message);
+    } else {
+      console.log('[MIRROR OPS] Video status updated to:', newStatus);
+    }
+    fetchAll();
+  };
+
+  const submitImageFeedback = async (transmissionId, feedbackText) => {
+    const existing = transmissions.find(t=>t.id===transmissionId);
+    const combined = existing?.image_feedback ? existing.image_feedback + '\n---\n' + feedbackText : feedbackText;
+    console.log('[MIRROR OPS] Submitting image feedback for ID:', transmissionId, 'Text:', feedbackText);
+    const { data, error } = await supabase.from('transmissions').update({
+      image_feedback: combined,
+      image_feedback_at: new Date().toISOString(),
+      blog_image_status: 'revision_needed',
+      updated_at: new Date().toISOString()
+    }).eq('id', transmissionId).select();
+    if (error) {
+      console.error('[MIRROR OPS] Image feedback save FAILED:', error);
+      alert('Image feedback failed to save: ' + error.message);
+    } else {
+      console.log('[MIRROR OPS] Image feedback saved OK. blog_image_status now: revision_needed. Response:', data);
+    }
+    await supabase.from('transmission_feedback').insert({
+      transmission_id: transmissionId,
+      feedback_type: 'image',
+      feedback_text: feedbackText
+    });
+    fetchAll();
+  };
+
+  const updateBlogImageStatus = async (transmissionId, newStatus) => {
+    console.log('[MIRROR OPS] Updating blog_image_status for ID:', transmissionId, 'to:', newStatus);
+    const { error } = await supabase.from('transmissions').update({
+      blog_image_status: newStatus,
+      updated_at: new Date().toISOString()
+    }).eq('id', transmissionId);
+    if (error) {
+      console.error('[MIRROR OPS] Blog image status update FAILED:', error);
+      alert('Failed to update blog image status: ' + error.message);
+    } else {
+      console.log('[MIRROR OPS] Blog image status updated to:', newStatus);
+    }
+    fetchAll();
+  };
+
+  const handleNotifClick = (item) => {
+    setDismissedNotifs(prev => { const s = new Set(prev); s.add(item.id); return s; });
+    setTab(item.tabTarget); setHighlightId(item.rawId); setShowNotifications(false);
+    setTimeout(()=>setHighlightId(null),3000);
+    setTimeout(()=>{ const el=document.getElementById(`item-${item.rawId}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); },100);
+  };
+  const markAllRead = async () => {
+    const agentIds = agentNotifs.filter(n=>!n.acknowledged).map(n=>n.id);
+    if (agentIds.length > 0) {
+      await supabase.from('agent_notifications').update({acknowledged:true}).in('id',agentIds);
+    }
+    setDismissedNotifs(new Set(allNotificationItems.map(n=>n.id)));
+    setShowNotifications(false);
+    fetchAll();
+  };
+
+  return (
+    <div className="app">
+      <header className="header">
+        <h1>MIRROR OPS</h1>
+        <div className="header-controls">
+          <div className="bell-wrap">
+            <div className="bell-icon" onClick={()=>setShowNotifications(!showNotifications)}>
+              <i className="fas fa-bell"></i>
+              {notificationItems.length>0 && <span className="bell-badge">{notificationItems.length}</span>}
+            </div>
+            {showNotifications && (
+              <div className="notif-dropdown">
+                {notificationItems.length===0 ? <div style={{padding:24,textAlign:'center',color:'var(--text-muted)',fontSize:13}}>No notifications</div>
+                : <>
+                  <div style={{padding:'10px 18px',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                    <span style={{fontSize:12,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:1,fontWeight:700}}>{notificationItems.length} unread</span>
+                    <span style={{fontSize:12,color:'var(--cyan)',cursor:'pointer',fontWeight:600}} onClick={markAllRead}>Mark all read</span>
+                  </div>
+                  {notificationItems.map(item => (
+                  <div key={item.id} className="notif-item" onClick={()=>item.type==='agent'?null:handleNotifClick(item)} style={{flexDirection:item.type==='agent'?'column':'row',alignItems:item.type==='agent'?'stretch':'center'}}>
+                    {item.type==='agent' ? (
+                      <div style={{width:'100%'}}>
+                        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
+                          <div style={{width:8,height:8,borderRadius:'50%',flexShrink:0,background:sevColors[item.severity]||'var(--cyan)'}}></div>
+                          <div className="notif-text" style={{flex:1,fontSize:13}}>{item.title}</div>
+                        </div>
+                        <div style={{fontSize:11,color:'var(--text-muted)',marginBottom:4,textTransform:'uppercase',letterSpacing:1}}>{item.agentName} -- {item.severity}{item.createdAt ? ' -- '+new Date(item.createdAt).toLocaleString() : ''}</div>
+                        {item.body && <div style={{fontSize:12,color:'var(--text-dim)',whiteSpace:'pre-wrap',maxHeight:80,overflow:'hidden',marginBottom:6}}>{item.body.slice(0,200)}{item.body.length>200?'...':''}</div>}
+                        <div style={{display:'flex',gap:8}}>
+                          <span style={{fontSize:11,color:'var(--cyan)',cursor:'pointer',fontWeight:600}} onClick={e=>{e.stopPropagation();acknowledgeAgentNotif(item.rawId);}}>Acknowledge</span>
+                          {item.transmissionId && <span style={{fontSize:11,color:'var(--amber)',cursor:'pointer',fontWeight:600}} onClick={e=>{e.stopPropagation();setTab('transmissions');setHighlightId(item.transmissionId);setShowNotifications(false);acknowledgeAgentNotif(item.rawId);}}>View Transmission</span>}
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className={`notif-dot ${item.type}`}></div>
+                        <div><div className="notif-text">{item.title}</div><div className="notif-type">{item.type==='approval'?'needs your approval':item.type==='revised'?'revision ready':item.type==='reply'?'outreach reply':'delivery failed'}</div></div>
+                      </>
+                    )}
+                  </div>
+                ))}
+                </>}
+              </div>
+            )}
+          </div>
+          <span className={`sync ${isLive?'live':''}`}>{loading?'syncing...':isLive?'LIVE':`sync // ${lastSync}`}</span>
+        </div>
+      </header>
+
+      <div className="stats-row">
+        <div className="stat-card s-sent"><div className="stat-icon"><i className="fas fa-paper-plane"></i></div><div className="stat-label">OBB Sent</div><div className="stat-value">{stats.totalSent}</div></div>
+        <div className="stat-card s-replies"><div className="stat-icon"><i className="fas fa-reply-all"></i></div><div className="stat-label">Replies</div><div className="stat-value">{stats.replies}</div></div>
+        <div className="stat-card s-pending" style={{cursor:'pointer'}} onClick={()=>setTab('approvals')}><div className="stat-icon"><i className="fas fa-file-alt"></i></div><div className="stat-label">Text Review</div><div className="stat-value">{stats.textReview}</div></div>
+        <div className="stat-card s-transmissions" style={{cursor:'pointer'}} onClick={()=>setTab('images')}><div className="stat-icon"><i className="fas fa-hourglass-half"></i></div><div className="stat-label">Awaiting Image</div><div className="stat-value">{transmissions.filter(t=>t.status==='approved'&&t.blog_image_status!=='approved').length}</div></div>
+        <div className="stat-card s-blogs" style={{cursor:'pointer'}} onClick={()=>setTab('images')}><div className="stat-icon"><i className="fas fa-image"></i></div><div className="stat-label">Image Review</div><div className="stat-value">{stats.imagesReview}</div></div>
+        <div className="stat-card s-packages"><div className="stat-icon"><i className="fas fa-broadcast-tower"></i></div><div className="stat-label">Posted</div><div className="stat-value">{stats.posted}</div></div>
+        <div className="stat-card s-bounce"><div className="stat-icon"><i className="fas fa-box"></i></div><div className="stat-label">OBB Shipped</div><div className="stat-value">{stats.packagesShipped}</div></div>
+      </div>
+
+      <div className="tabs">
+        {[
+          {id:'overview', label:'Overview'},
+          {id:'transmissions', label:'Transmissions'},
+          {id:'images', label:'Images'},
+          {id:'approvals', label:'Text Review'},
+          {id:'outreach', label:'Outreach'},
+          {id:'packages', label:'Packages'},
+          {id:'dates', label:'Dates'},
+        ].map(({id,label})=>(
+          <button key={id} className={`tab ${tab===id?'active':''}`} onClick={()=>setTab(id)}>{label}</button>
+        ))}
+      </div>
+
+      {tab==='overview' && <Overview targets={targets} transmissions={transmissions} dates={dates} packages={packages} contentQueue={contentQueue} analytics={analytics} creditLogs={creditLogs} creditAllocation={creditAllocation} setTab={setTab} setHighlightId={setHighlightId} updateStatus={updateStatus} submitFeedback={submitFeedback} supabase={supabase} morningReport={morningReport} />}
+      {tab==='images' && <ImageReviewTab transmissions={transmissions} updateBlogImageStatus={updateBlogImageStatus} submitImageFeedback={submitImageFeedback} />}
+      {tab==='videos' && <VideoReviewTab transmissions={transmissions} updateVideoStatus={updateVideoStatus} submitVideoFeedback={submitVideoFeedback} />}
+      {tab==='outreach' && <Outreach targets={targets} updateStatus={updateStatus} updatedIds={updatedIds} highlightId={highlightId} />}
+      {tab==='transmissions' && <TransmissionsTab transmissions={transmissions} updateStatus={updateStatus} updatedIds={updatedIds} highlightId={highlightId} submitFeedback={submitFeedback} submitVideoFeedback={submitVideoFeedback} updateVideoStatus={updateVideoStatus} updateBlogImageStatus={updateBlogImageStatus} />}
+      {tab==='content' && <ContentQueue queue={contentQueue} updatedIds={updatedIds} />}
+      {tab==='packages' && <PackagesTab packages={packages} updateStatus={updateStatus} updatedIds={updatedIds} />}
+      {tab==='dates' && <KeyDates dates={dates} updatedIds={updatedIds} />}
+      {tab==='approvals' && <ApprovalsTab transmissions={transmissions} updateStatus={updateStatus} updatedIds={updatedIds} highlightId={highlightId} submitFeedback={submitFeedback} />}
+    </div>
+  );
+}
+
+function KickPipelineButton({ supabase }) {
+  const [kicked, setKicked] = useState(false);
+  const [kicking, setKicking] = useState(false);
+  const lastKickRef = React.useRef(0);
+  const kick = async () => {
+    const now = Date.now();
+    if (now - lastKickRef.current < 30000) {
+      setKicked('dupe');
+      setTimeout(() => setKicked(false), 3000);
+      return;
+    }
+    setKicking(true);
+    try {
+      const { error } = await supabase.from('agent_triggers').insert({
+        agent_name: 'content-engine',
+        reason: 'manual_kick',
+        payload: {},
+        source: 'dashboard_button'
+      });
+      if (error) throw error;
+      lastKickRef.current = now;
+      setKicked(true);
+      setTimeout(() => setKicked(false), 5000);
+    } catch(e) { console.error('[MIRROR OPS] Kick failed:', e); alert('Kick failed: ' + e.message); }
+    setKicking(false);
+  };
+  const label = kicked === 'dupe' ? 'Already queued' : kicked ? 'Queued -- poller picks up within 10 min' : kicking ? 'Kicking...' : 'Kick Pipeline';
+  return (
+    <button onClick={kick} disabled={kicking}
+      style={{fontFamily:'var(--mono)',fontSize:14,textTransform:'uppercase',letterSpacing:2,fontWeight:700,
+        padding:'10px 24px',borderRadius:4,cursor: kicking ? 'wait' : 'pointer',
+        background: kicked ? 'rgba(122,255,59,0.15)' : 'rgba(0,240,255,0.08)',
+        border: `2px solid ${kicked ? 'var(--green)' : 'var(--cyan)'}`,
+        color: kicked ? 'var(--green)' : 'var(--cyan)',
+        transition:'all 0.3s'}}>
+      <i className={kicked ? 'fas fa-check' : kicking ? 'fas fa-spinner fa-spin' : 'fas fa-bolt'}
+        style={{marginRight:8}}></i>
+      {label}
+    </button>
+  );
+}
+
+function MorningReport({ report }) {
+  if (!report) return null;
+  const data = report.payload || {};
+  const ps = data.pipeline_state || {};
+  const queue = data.opus_queue || [];
+  const attention = data.attention_items || [];
+  const dispatched = data.dispatched || [];
+  const runTime = report.created_at ? new Date(report.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : null;
+  const runDate = report.created_at ? new Date(report.created_at).toLocaleDateString([],{month:'short',day:'numeric'}) : null;
+  const now = new Date();
+
+  const formatExpiry = (expiresAt) => {
+    if (!expiresAt) return {label:'evergreen',urgent:false};
+    const d = new Date(expiresAt);
+    const diffH = (d - now) / (1000*60*60);
+    if (diffH < 4) return {label:'EXPIRES <4H',urgent:true};
+    if (diffH < 12) return {label:`expires ${Math.floor(diffH)}h`,urgent:true};
+    const diffD = Math.floor(diffH/24);
+    return {label:`expires ${diffD}d`,urgent:false};
+  };
+
+  return (
+    <div className="mr-panel">
+      <div className="mr-header">
+        <div className="mr-title">
+          <i className="fas fa-satellite-dish"></i> Chief of Staff Report
+        </div>
+        {runTime && <div className="mr-timestamp">Last run: {runDate} at {runTime}</div>}
+      </div>
+      <div className="mr-grid">
+        <div className="mr-left">
+          <div className="mr-block">
+            <div className="mr-block-title">Pipeline</div>
+            <div className="mr-stats">
+              {ps.approved !== undefined && <div className="mr-stat"><div className="mr-stat-val" style={{color:'var(--green)'}}>{ps.approved}</div><div className="mr-stat-label">Approved</div></div>}
+              {ps.ready_for_opus !== undefined && <div className="mr-stat"><div className="mr-stat-val" style={{color:'var(--cyan)'}}>{ps.ready_for_opus}</div><div className="mr-stat-label">Ready</div></div>}
+              {ps.draft !== undefined && <div className="mr-stat"><div className="mr-stat-val" style={{color:'var(--text-dim)'}}>{ps.draft}</div><div className="mr-stat-label">Draft</div></div>}
+              {ps.published_7d !== undefined && <div className="mr-stat"><div className="mr-stat-val" style={{color:'var(--purple)'}}>{ps.published_7d}</div><div className="mr-stat-label">Pub 7d</div></div>}
+              {ps.expired !== undefined && <div className="mr-stat"><div className="mr-stat-val" style={{color:'var(--text-muted)'}}>{ps.expired}</div><div className="mr-stat-label">Expired</div></div>}
+            </div>
+          </div>
+          <div className="mr-block">
+            <div className="mr-block-title">Opus Queue Today</div>
+            {queue.length === 0
+              ? <div className="mr-empty">Nothing ready yet</div>
+              : queue.map((item,i) => {
+                const exp = formatExpiry(item.expires_at);
+                return (
+                  <div key={i} className="mr-queue-item">
+                    <i className="fas fa-circle" style={{fontSize:6,color:'var(--cyan)',flexShrink:0,marginTop:5}}></i>
+                    <div className="mr-queue-title">{item.title}</div>
+                    <div className={`mr-queue-expiry ${exp.urgent?'urgent':''}`}>{exp.label}</div>
+                  </div>
+                );
+              })
+            }
+          </div>
+        </div>
+        <div className="mr-right">
+          <div className="mr-block" style={{borderColor:attention.length>0?'rgba(255,184,0,0.35)':'var(--border)'}}>
+            <div className="mr-block-title" style={{color:attention.length>0?'var(--amber)':'var(--text-muted)'}}>
+              {attention.length>0 ? `Flags (${attention.length})` : 'Flags'}
+            </div>
+            {attention.length === 0
+              ? <div className="mr-empty mr-none">All clear</div>
+              : attention.map((item,i) => (
+                <div key={i} className="mr-attention-item">
+                  <i className={`fas ${item.level==='urgent'?'fa-exclamation-triangle':'fa-info-circle'}`}
+                    style={{color:item.level==='urgent'?'var(--magenta)':'var(--amber)',flexShrink:0,marginTop:2,fontSize:12}}></i>
+                  <span style={{color:'var(--text-dim)'}}>{item.msg}</span>
+                </div>
+              ))
+            }
+          </div>
+          <div className="mr-block">
+            <div className="mr-block-title">Dispatched This Run</div>
+            {dispatched.length === 0
+              ? <div className="mr-empty mr-none">No kicks needed</div>
+              : dispatched.map((item,i) => (
+                <div key={i} className="mr-dispatch-item">
+                  <i className="fas fa-paper-plane" style={{color:'var(--cyan)',fontSize:11}}></i>
+                  <span>{item.agent}{item.count>1?` x${item.count}`:''}{item.reason?` -- ${item.reason}`:''}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MorningQueue({ transmissions, updateStatus, submitFeedback, setTab, setHighlightId }) {
+  const [copiedId, setCopiedId] = useState(null);
+  const [expandedId, setExpandedId] = useState(null);
+
+  // Today's transmissions: created in last 28 hours. Drop rejected/expired/posted/published items.
+  const cutoff = new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString();
+  const todayTx = transmissions
+    .filter(t => {
+      if (t.created_at < cutoff) return false;
+      if (['rejected','expired','posted','published'].includes(t.status)) return false;
+      if (t.blog_published_url) return false;
+      return true;
+    })
+    .sort((a,b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 8);
+
+  const goToFullReview = (t, e) => {
+    if (e) e.stopPropagation();
+    setHighlightId(t.id);
+    setTab('approvals');
+    window.scrollTo(0, 0);
+  };
+
+  const copyScript = (t, e) => {
+    e.stopPropagation();
+    const script = `${t.title}\n\n${t.body || ''}`;
+    navigator.clipboard.writeText(script).then(() => {
+      setCopiedId(t.id);
+      setTimeout(() => setCopiedId(null), 3000);
+    });
+  };
+
+  const trackInfo = (track) => {
+    if (!track) return null;
+    if (track.toUpperCase() === 'A') return { label: 'A / TikTok Gap', cls: 'mq-track-a' };
+    return { label: 'B / World News', cls: 'mq-track-b' };
+  };
+
+  const originBadge = (origin) => {
+    if (origin === 'managed_agent') return <span className="mq-origin-badge mq-origin-managed">MANAGED</span>;
+    return <span className="mq-origin-badge mq-origin-engine">ENGINE</span>;
+  };
+
+  if (todayTx.length === 0) {
+    return (
+      <div className="mq-section">
+        <div className="mq-header">
+          <div className="mq-title"><span className="pulse-dot" style={{background:'var(--border-active)'}}></span> Morning Queue</div>
+        </div>
+        <div className="mq-empty">
+          <i className="fas fa-moon" style={{display:'block',fontSize:28,marginBottom:10,color:'var(--border-active)'}}></i>
+          Nothing in the last 28 hours. Content engine runs at 2:30am.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mq-section">
+      <div className="mq-header">
+        <div className="mq-title">
+          <span className="pulse-dot" style={{background:'var(--cyan)'}}></span>
+          Morning Queue
+          <span className="count" style={{background:'rgba(0,240,255,0.1)',color:'var(--cyan)'}}>{todayTx.length}</span>
+        </div>
+        <div style={{fontSize:13,color:'var(--text-muted)',letterSpacing:1}}>LAST 28H -- CLICK ANY CARD TO REVIEW IN FULL</div>
+      </div>
+      <div className="mq-cards">
+        {todayTx.map(t => {
+          const ti = trackInfo(t.track);
+          const isReview = t.status === 'review';
+          const isDraft = t.status === 'draft';
+          const isApproved = t.status === 'approved';
+          const isRevisionNeeded = t.status === 'revision_needed';
+          const needsTextAction = isDraft || isReview;
+          return (
+          <div key={t.id} className={`mq-card ${t.status}`}
+            style={{cursor:'pointer'}}
+            onClick={(e) => goToFullReview(t, e)}>
+
+            {/* Header row */}
+            <div className="mq-card-header">
+              <div className="mq-card-title">{t.title}</div>
+              <div className="mq-badges">
+                {ti && <span className={`mq-origin-badge ${ti.cls}`} style={{fontWeight:800}}>{ti.label}</span>}
+                {originBadge(t.origin)}
+                <span className="badge" style={{fontSize:11,padding:'3px 8px',background:statusBg(t.status),color:statusFg(t.status)}}>{t.status}</span>
+              </div>
+            </div>
+
+            {/* Lens + hook */}
+            {t.thematic_lens && (
+              <div className="mq-lens">
+                <i className="fas fa-tag" style={{marginRight:5}}></i>{t.thematic_lens}
+              </div>
+            )}
+            {t.cultural_hook && <div className="mq-hook">{t.cultural_hook}</div>}
+
+            {/* Image if available */}
+            {t.blog_image_url && (
+              <img src={t.blog_image_url} className="mq-image" alt={t.title} onClick={e=>e.stopPropagation()} />
+            )}
+
+            {/* Body preview */}
+            {t.body && (
+              <>
+                <div className={`mq-body ${expandedId===t.id?'expanded':''}`}>{t.body}</div>
+                <div className="expand-btn" style={{fontSize:13,marginTop:6}}
+                  onClick={e=>{e.stopPropagation();setExpandedId(expandedId===t.id?null:t.id)}}>
+                  {expandedId===t.id ? '- collapse' : '+ expand'}
+                </div>
+              </>
+            )}
+
+            {/* Blog permalink if published */}
+            {t.blog_published_url && (
+              <a href={t.blog_published_url} target="_blank" rel="noopener" className="mq-permalink"
+                onClick={e=>e.stopPropagation()}>
+                <i className="fas fa-globe"></i>{t.blog_published_url}
+              </a>
+            )}
+
+            {/* Action buttons */}
+            <div className="mq-actions" onClick={e=>e.stopPropagation()}>
+
+              {/* DRAFT or REVIEW: single Approve Text + Kill */}
+              {needsTextAction && (
+                <>
+                  <button className="btn btn-approve" style={{padding:'8px 16px',fontSize:12}}
+                    onClick={e=>{e.stopPropagation();updateStatus('transmissions',t.id,'status','approved')}}>
+                    <i className="fas fa-check"></i> Approve Text
+                  </button>
+                  <button className="btn btn-reject" style={{padding:'8px 16px',fontSize:12}}
+                    onClick={e=>{e.stopPropagation();updateStatus('transmissions',t.id,'status','rejected')}}>
+                    <i className="fas fa-times"></i> Kill
+                  </button>
+                  <button className="btn" style={{fontSize:12,padding:'8px 16px',color:'var(--cyan)',borderColor:'var(--cyan)',background:'rgba(0,240,255,0.06)'}}
+                    onClick={e=>goToFullReview(t,e)}>
+                    <i className="fas fa-external-link-alt"></i> Full Review
+                  </button>
+                </>
+              )}
+
+              {/* REVISION NEEDED: feedback is queued, agent will redraft */}
+              {isRevisionNeeded && (
+                <div style={{fontSize:12,color:'var(--amber)',padding:'6px 0',display:'flex',alignItems:'center',gap:8}}>
+                  <i className="fas fa-clock"></i> Feedback sent -- agent will redraft
+                  <button className="btn" style={{fontSize:11,padding:'5px 12px',color:'var(--cyan)',borderColor:'var(--cyan)',background:'rgba(0,240,255,0.06)',marginLeft:4}}
+                    onClick={e=>goToFullReview(t,e)}>
+                    <i className="fas fa-external-link-alt"></i> View / Add Feedback
+                  </button>
+                </div>
+              )}
+
+              {/* APPROVED: pipeline status + copy script */}
+              {isApproved && (
+                <>
+                  <div style={{fontSize:12,padding:'4px 0',display:'flex',alignItems:'center',gap:8,
+                    color: t.blog_published_url ? 'var(--green)' : t.blog_image_status==='review' ? 'var(--cyan)' : 'var(--text-dim)'}}>
+                    {t.blog_published_url
+                      ? <><i className="fas fa-check-circle"></i> Published to blog -- <a href={t.blog_published_url} target="_blank" rel="noopener" style={{color:'var(--cyan)'}} onClick={e=>e.stopPropagation()}>{t.blog_published_url}</a></>
+                      : t.blog_image_status === 'review'
+                        ? <><i className="fas fa-image"></i> Image ready -- go to <strong>Image Review</strong> tab to approve</>
+                        : t.blog_image_status === 'approved'
+                          ? <><i className="fas fa-spinner fa-pulse"></i> Image approved -- blog post publishing shortly</>
+                          : <><i className="fas fa-hourglass-half"></i> Text approved. Image generating -- agent checks every ~10 min</>
+                    }
+                  </div>
+                  {t.body && (
+                    <button className={`mq-copy-btn ${copiedId===t.id?'copied':''}`}
+                      onClick={e=>copyScript(t,e)}>
+                      <i className={copiedId===t.id?'fas fa-check':'fas fa-microphone'}></i>
+                      {copiedId===t.id ? 'Copied!' : 'Copy Script for ElevenLabs'}
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Feedback box for text-action items */}
+            {(needsTextAction || isRevisionNeeded) && (
+              <div onClick={e=>e.stopPropagation()}>
+                <FeedbackBox transmission={t} onSubmit={submitFeedback} />
+              </div>
+            )}
+          </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function Overview({ targets, transmissions, dates, packages, contentQueue, analytics, creditLogs, creditAllocation, setTab, setHighlightId, updateStatus, submitFeedback, supabase, morningReport }) {
+  const [datesOpen, setDatesOpen] = useState(false);
+  const [expandedAction, setExpandedAction] = useState(null);
+
+  // Action items -- post video-pivot: image approval is the gating step, video is manual via Opus
+  const pendingApprovals = transmissions.filter(t=>['review','revision_needed'].includes(t.status));
+  const revisedTransmissions = transmissions.filter(t=>t.revision_count>0 && t.status==='review');
+  const blogImagesInReview = transmissions.filter(t=>t.blog_image_status==='review');
+  // Image approved and text approved -> ready for website publish + Bodhi's manual Opus workflow
+  const imageReadyForOpus = transmissions.filter(t=>t.blog_image_status==='approved' && t.status==='approved' && !['approved_for_posting','posted','published'].includes(t.status) && !t.blog_published_url);
+  const bouncedTargets = targets.filter(t=>t.status==='bounced');
+  const recentReplies = targets.filter(t=>['replied','interested'].includes(t.status));
+  const upcomingDates = dates.filter(d=>d.status==='upcoming').sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const [showBounces, setShowBounces] = useState(false);
+
+  // Pipeline stats
+  const drafts = transmissions.filter(t=>t.status==='draft').length;
+  const inReview = transmissions.filter(t=>t.status==='review').length;
+  const approved = transmissions.filter(t=>t.status==='approved').length;
+  const scheduled = transmissions.filter(t=>t.status==='scheduled').length;
+  const posted = transmissions.filter(t=>['posted','published'].includes(t.status)).length;
+  const totalSent = targets.filter(t=>['sent','follow_up_sent','replied','interested','book_sent','pass'].includes(t.status)).length;
+
+  // Analytics: get latest follower counts per platform
+  const platformOrder = ['tiktok','instagram','youtube','linkedin','threads','facebook','x'];
+  const platformIcons = {tiktok:'fab fa-tiktok',instagram:'fab fa-instagram',youtube:'fab fa-youtube',linkedin:'fab fa-linkedin',threads:'fas fa-at',facebook:'fab fa-facebook',x:'fab fa-x-twitter'};
+  const platformColors = {tiktok:'#fff',instagram:'#E1306C',youtube:'#FF0000',linkedin:'#0A66C2',threads:'#fff',facebook:'#1877F2',x:'#fff'};
+
+  const getLatestMetric = (platform, metric) => {
+    const matches = analytics.filter(a=>a.platform===platform && a.metric_name===metric);
+    return matches.length > 0 ? matches[0].metric_value : 0;
+  };
+
+  const totalFollowers = platformOrder.reduce((sum,p) => sum + getLatestMetric(p,'followers'), 0);
+
+  // hasActions excludes bounces -- those are FYI, not actionable (nothing Bodhi can do about a bounce)
+  const hasActions = pendingApprovals.length > 0 || recentReplies.length > 0 || blogImagesInReview.length > 0 || imageReadyForOpus.length > 0;
+  const attentionCount = pendingApprovals.length + recentReplies.length + blogImagesInReview.length + imageReadyForOpus.length;
+
+  return (
+    <div>
+      {/* === MORNING QUEUE === */}
+      <MorningReport report={morningReport} />
+      <MorningQueue transmissions={transmissions} updateStatus={updateStatus} submitFeedback={submitFeedback} setTab={setTab} setHighlightId={setHighlightId} />
+
+      {/* === SECTION 1: NEEDS YOUR ATTENTION === */}
+      <div className="ov-section">
+        <div className="ov-section-header">
+          <div className="ov-section-title">
+            {hasActions && <span className="pulse-dot" style={{background:'var(--amber)'}}></span>}
+            {hasActions ? 'Needs Your Attention' : 'All Clear'}
+            {hasActions && <span className="count" style={{background:'rgba(255,184,0,0.15)',color:'var(--amber)'}}>{attentionCount}</span>}
+          </div>
+          <KickPipelineButton supabase={supabase} />
+        </div>
+
+        {/* === TIER 1: HIGH-PRIORITY ACTIONABLE === */}
+
+        {/* Replies that need response */}
+        {recentReplies.length > 0 && recentReplies.map(r => (
+          <div key={r.id} className="alert-strip" style={{background:'rgba(0,240,255,0.06)',borderColor:'rgba(0,240,255,0.25)'}}>
+            <div className="alert-icon" style={{color:'var(--cyan)'}}><i className="fas fa-reply"></i></div>
+            <div className="alert-text">
+              <strong>{r.name}</strong> {r.status === 'interested' ? 'is interested' : 'replied'}.
+              {r.reply_summary && <span style={{color:'var(--text-muted)'}}> {r.reply_summary}</span>}
+            </div>
+            <span className="badge" style={{background:statusBg(r.status),color:statusFg(r.status),flexShrink:0}}>{r.status}</span>
+          </div>
+        ))}
+
+        {/* Blog images in review -- go approve/reject these */}
+        {blogImagesInReview.length > 0 && blogImagesInReview.map(t => (
+          <div key={`blog-${t.id}`} className="alert-strip" style={{background:'rgba(255,105,180,0.06)',borderColor:'rgba(255,105,180,0.25)'}}>
+            <div className="alert-icon" style={{color:'var(--pink)'}}><i className="fas fa-image"></i></div>
+            <div className="alert-text">
+              <strong>{t.title}</strong> -- Signal image ready for review
+            </div>
+            <button className="btn btn-approve" style={{flexShrink:0,fontSize:12,padding:'6px 14px'}} onClick={()=>setTab('transmissions')}>
+              <i className="fas fa-arrow-right"></i> Go to Image Review
+            </button>
+          </div>
+        ))}
+
+        {/* Image approved: ready for Bodhi's Opus manual video workflow */}
+        {imageReadyForOpus.length > 0 && imageReadyForOpus.map(t => (
+          <div key={`opus-${t.id}`} className="alert-strip" style={{background:'rgba(122,255,59,0.06)',borderColor:'rgba(122,255,59,0.25)'}}>
+            <div className="alert-icon" style={{color:'var(--green)'}}><i className="fas fa-rocket"></i></div>
+            <div className="alert-text">
+              <strong>{t.title}</strong> -- image approved. Queue for Opus Agent + Opus Clip workflow.
+            </div>
+            <button className="btn btn-approve" style={{flexShrink:0,fontSize:12,padding:'6px 14px'}} onClick={()=>updateStatus('transmissions',t.id,'status','approved_for_posting')}>
+              <i className="fas fa-check"></i> Mark Opus Ready
+            </button>
+          </div>
+        ))}
+
+        {/* Transmissions awaiting approval -- with full action buttons */}
+        {pendingApprovals.length > 0 ? pendingApprovals.map(t => (
+          <div key={t.id} className="action-card urgent">
+            <div className="action-top">
+              <div style={{flex:1}}>
+                <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+                  <div className="action-title">{t.title}</div>
+                  <span className="badge" style={{background:statusBg('review'),color:statusFg('review')}}>review</span>
+                  {t.revision_count > 0 && <span className="revision-badge"><i className="fas fa-sync-alt"></i> v{t.revision_count + 1}</span>}
+                  {t.track && <span className={`inline-track ${t.track.toUpperCase()==='A'?'inline-track-a':'inline-track-b'}`}>{t.track.toUpperCase()}</span>}
+                  {t.origin && <span className={`inline-origin ${t.origin==='managed_agent'?'inline-origin-managed':'inline-origin-engine'}`}>{t.origin==='managed_agent'?'MANAGED':'ENGINE'}</span>}
+                </div>
+                <div className="action-meta">{t.cultural_hook || t.template_type}</div>
+              </div>
+            </div>
+            <div className={`action-preview ${expandedAction===t.id?'expanded':''}`}>
+              {t.body || 'No body text yet. Content Engine needs to write this transmission.'}
+            </div>
+            {t.body && t.body.length>200 && (
+              <div className="expand-btn" onClick={()=>setExpandedAction(expandedAction===t.id?null:t.id)}>
+                {expandedAction===t.id ? '- collapse' : '+ read full transmission'}
+              </div>
+            )}
+            {t.fracture_quote && <div className="quote-block"><div className="quote-text">"{t.fracture_quote}"</div><div className="quote-ref">Fracture {t.fracture_number}</div></div>}
+            <div className="action-buttons">
+              <button className="btn btn-approve btn-big" onClick={()=>updateStatus('transmissions',t.id,'status','approved')}><i className="fas fa-check"></i> Approve</button>
+              <button className="btn btn-reject btn-big" onClick={()=>updateStatus('transmissions',t.id,'status','rejected')}><i className="fas fa-times"></i> Kill It</button>
+            </div>
+            <FeedbackBox transmission={t} onSubmit={submitFeedback} />
+          </div>
+        )) : !hasActions && (
+          <div style={{padding:'32px 20px',textAlign:'center',color:'var(--text-muted)',fontSize:14,textTransform:'uppercase',letterSpacing:2}}>
+            <i className="fas fa-check-circle" style={{fontSize:32,color:'var(--green)',display:'block',marginBottom:12}}></i>
+            No items need your attention right now. The machine is running.
+          </div>
+        )}
+
+        {/* === TIER 2: FYI -- bounced emails (collapsed, nothing Bodhi can do) === */}
+        {bouncedTargets.length > 0 && (
+          <div style={{marginTop:16,paddingTop:16,borderTop:'1px dashed rgba(255,255,255,0.08)'}}>
+            <div onClick={()=>setShowBounces(!showBounces)} style={{cursor:'pointer',display:'flex',alignItems:'center',gap:10,fontSize:12,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:1.5}}>
+              <i className={`fas fa-${showBounces?'chevron-down':'chevron-right'}`} style={{fontSize:10}}></i>
+              <i className="fas fa-info-circle"></i>
+              <span>FYI: {bouncedTargets.length} bounced email{bouncedTargets.length>1?'s':''} (no action needed)</span>
+            </div>
+            {showBounces && (
+              <div style={{marginTop:10,padding:'10px 14px',background:'rgba(255,255,255,0.02)',borderRadius:4,fontSize:12,color:'var(--text-dim)',lineHeight:1.6}}>
+                {bouncedTargets.map(t=>t.name).join(', ')}
+                <div style={{marginTop:6,fontSize:11,color:'var(--text-muted)',fontStyle:'italic'}}>
+                  Listed here as a record. They'll stay in the outreach tab with bounced status. Nothing to do.
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* === SECTION 2: ANALYTICS === */}
+      <div className="ov-section">
+        <div className="ov-section-header">
+          <div className="ov-section-title">
+            <i className="fas fa-chart-line" style={{color:'var(--cyan)'}}></i>
+            Platform Analytics
+            <span className="count">{totalFollowers} total followers</span>
+          </div>
+        </div>
+
+        <div className="analytics-grid">
+          {platformOrder.map(p => {
+            const followers = getLatestMetric(p, 'followers');
+            const posts = getLatestMetric(p, 'posts_count');
+            return (
+              <div key={p} className="platform-card">
+                <div className="plat-icon" style={{color:platformColors[p]}}><i className={platformIcons[p]}></i></div>
+                <div className="plat-name">{p}</div>
+                <div className="plat-value" style={{color: followers > 0 ? 'var(--text)' : 'var(--text-muted)'}}>{followers}</div>
+                <div className={`plat-delta flat`}>{posts} posts</div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="velocity-bar">
+          <div className="velocity-stat">
+            <div className="v-label">Pipeline</div>
+            <div className="v-value">{drafts + inReview + approved}</div>
+            <div className="v-sub">in progress</div>
+          </div>
+          <div className="velocity-stat">
+            <div className="v-label">Drafts</div>
+            <div className="v-value" style={{color:'var(--text-muted)'}}>{drafts}</div>
+            <div className="v-sub">writing</div>
+          </div>
+          <div className="velocity-stat">
+            <div className="v-label">Review</div>
+            <div className="v-value" style={{color:'var(--amber)'}}>{inReview}</div>
+            <div className="v-sub">awaiting you</div>
+          </div>
+          <div className="velocity-stat">
+            <div className="v-label">Approved</div>
+            <div className="v-value" style={{color:'var(--green)'}}>{approved}</div>
+            <div className="v-sub">ready to post</div>
+          </div>
+          <div className="velocity-stat">
+            <div className="v-label">Scheduled</div>
+            <div className="v-value" style={{color:'var(--blue)'}}>{scheduled}</div>
+            <div className="v-sub">queued</div>
+          </div>
+          <div className="velocity-stat">
+            <div className="v-label">Posted</div>
+            <div className="v-value" style={{color:'var(--cyan)'}}>{posted}</div>
+            <div className="v-sub">live</div>
+          </div>
+          <div className="velocity-stat">
+            <div className="v-label">Outreach</div>
+            <div className="v-value" style={{color:'var(--purple)'}}>{totalSent}</div>
+            <div className="v-sub">sent</div>
+          </div>
+        </div>
+      </div>
+
+      {/* === SECTION 2.5: BLOTATO CREDIT USAGE === */}
+      {creditAllocation && (
+        <div className="ov-section">
+          <div className="ov-section-header">
+            <div className="ov-section-title">
+              <i className="fas fa-coins" style={{color:'var(--amber)'}}></i>
+              Blotato Credits
+            </div>
+          </div>
+          {(() => {
+            const used = creditLogs.reduce((sum, c) => sum + Number(c.credit_cost || 0), 0);
+            const total = Number(creditAllocation.monthly_credits);
+            const pct = total > 0 ? (used / total) * 100 : 0;
+            const remaining = total - used;
+            const threshold = Number(creditAllocation.warning_threshold_pct);
+            const isWarning = pct >= threshold && pct < 90;
+            const isDanger = pct >= 90;
+            const fillClass = isDanger ? 'danger' : isWarning ? 'warning' : 'safe';
+            const imageCount = creditLogs.filter(c => c.generation_type === 'image').length;
+            const videoCount = creditLogs.filter(c => c.generation_type === 'video').length;
+            const imgCredits = creditLogs.filter(c => c.generation_type === 'image').reduce((s,c) => s + Number(c.credit_cost||0), 0);
+            const vidCredits = creditLogs.filter(c => c.generation_type === 'video').reduce((s,c) => s + Number(c.credit_cost||0), 0);
+            return (
+              <div className="credit-bar-wrap">
+                <div className="credit-bar-header">
+                  <div className="credit-bar-title">{creditAllocation.plan_name} plan // {new Date().toLocaleString('en-US',{month:'long', year:'numeric'})}</div>
+                  <div className="credit-bar-value" style={{color: isDanger ? 'var(--magenta)' : isWarning ? 'var(--amber)' : 'var(--green)'}}>
+                    {remaining.toLocaleString()} / {total.toLocaleString()} remaining
+                  </div>
+                </div>
+                <div className="credit-track">
+                  <div className={`credit-fill ${fillClass}`} style={{width:`${Math.min(pct,100)}%`}}></div>
+                  <div className="credit-warn-marker" style={{left:`${threshold}%`}}></div>
+                </div>
+                <div className="credit-details">
+                  <div className="credit-detail"><strong>{imageCount}</strong> images ({imgCredits} credits)</div>
+                  <div className="credit-detail"><strong>{videoCount}</strong> videos ({vidCredits} credits)</div>
+                  <div className="credit-detail"><strong>{Math.round(pct)}%</strong> used this month</div>
+                  <div className="credit-detail">Resets {new Date(new Date().getFullYear(), new Date().getMonth()+1, 1).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+                </div>
+                {isWarning && (
+                  <div className="credit-alert">
+                    <i className="fas fa-exclamation-triangle"></i>
+                    Credit usage has passed {threshold}%. Consider using cheaper models (flux-schnell: 1 credit, imagen4-fast: 7 credits) or slowing visual generation.
+                  </div>
+                )}
+                {isDanger && (
+                  <div className="credit-alert critical">
+                    <i className="fas fa-exclamation-circle"></i>
+                    Credit usage at {Math.round(pct)}%. Additional credits will incur overage charges. Switch to flux-schnell (1 credit) for remaining generations this month.
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* === SECTION 3: KEY DATES (collapsible) === */}
+      <div className="ov-section">
+        <div className="ov-section-header">
+          <div className="ov-section-title">
+            <i className="fas fa-calendar-alt" style={{color:'var(--text-muted)'}}></i>
+            Key Dates
+            <span className="count">{upcomingDates.length}</span>
+          </div>
+          <button className="ov-collapse-btn" onClick={()=>setDatesOpen(!datesOpen)}>
+            {datesOpen ? '- collapse' : '+ show dates'}
+          </button>
+        </div>
+
+        {datesOpen && (
+          upcomingDates.length === 0
+            ? <div className="empty">No upcoming dates</div>
+            : <div className="dates-compact">
+                {upcomingDates.map(d => {
+                  const dt = new Date(d.date);
+                  return (
+                    <div key={d.id} className="date-chip">
+                      <div>
+                        <div className="date-day">{dt.getDate()}</div>
+                        <div className="date-month">{dt.toLocaleString('en-US',{month:'short'})}</div>
+                      </div>
+                      <div className="date-info">
+                        <div className="date-title">{d.title}</div>
+                        {d.category && <div className="date-cat">{d.category}</div>}
+                      </div>
+                      <button
+                        onClick={()=>updateStatus('key_dates',d.id,'status','complete')}
+                        title="Mark complete and dismiss"
+                        style={{flexShrink:0,background:'rgba(122,255,59,0.08)',border:'1px solid rgba(122,255,59,0.3)',color:'var(--green)',padding:'4px 10px',fontSize:10,borderRadius:3,cursor:'pointer',textTransform:'uppercase',letterSpacing:1,fontFamily:'var(--mono)'}}>
+                        <i className="fas fa-check" style={{marginRight:4}}></i>Done
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Outreach({ targets, updateStatus, updatedIds, highlightId }) {
+  const [filter, setFilter] = useState('all');
+  const statuses = ['all','pending','sent','follow_up_sent','replied','bounced','interested','pass','book_sent'];
+  const filtered = filter==='all' ? targets : targets.filter(t=>t.status===filter);
+  return (
+    <div className="section">
+      <div className="section-title">Outreach Targets <span className="count">{targets.length}</span></div>
+      <div className="filter-bar">
+        {statuses.map(f=>(
+          <button key={f} className="filter-btn" style={{
+            color: statusBg(f),
+            borderColor: filter===f ? statusBg(f) : `${statusBg(f)}44`,
+            background: filter===f ? `${statusBg(f)}20` : 'none',
+            opacity: filter===f ? 1 : 0.7,
+          }} onClick={()=>setFilter(f)}>
+            {f.replace(/_/g,' ')} ({f==='all'?targets.length:targets.filter(t=>t.status===f).length})
+          </button>
+        ))}
+      </div>
+      <table>
+        <thead><tr><th>Tier</th><th>Wave</th><th>Name</th><th>Category</th><th>Status</th><th>Notes</th></tr></thead>
+        <tbody>
+          {filtered.map(t=>(
+            <tr key={t.id} id={`item-${t.id}`} className={`${updatedIds.has(t.id)?'row-flash':''} ${highlightId===t.id?'row-flash':''}`}>
+              <td><span className={`tier tier-${t.tier}`}>{t.tier}</span></td>
+              <td style={{fontSize:13,color:'var(--text-muted)'}}>{t.wave}</td>
+              <td style={{fontWeight:600,whiteSpace:'nowrap'}}>{t.name}</td>
+              <td style={{fontSize:14,color:'var(--text-dim)'}}>{t.category}</td>
+              <td>
+                <StatusBadge status={t.status} table="outreach_targets" id={t.id} field="status"
+                  options={['pending','sent','follow_up_sent','replied','bounced','pass','interested','book_sent']}
+                  onChange={updateStatus} />
+              </td>
+              <td className="notes-cell">{t.notes}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ImageReviewTab({ transmissions, updateBlogImageStatus, submitImageFeedback }) {
+  const [filter, setFilter] = useState('review');
+  const [lightbox, setLightbox] = useState(null);
+  const [fbOpen, setFbOpen] = useState(null);
+  const [fbText, setFbText] = useState('');
+  const [fbSaving, setFbSaving] = useState(false);
+  const [fbSent, setFbSent] = useState(null);
+
+  const withImages = transmissions.filter(t => t.blog_image_url);
+  const filtered = filter === 'all' ? withImages : withImages.filter(t => t.blog_image_status === filter);
+  const counts = {
+    review: withImages.filter(t => t.blog_image_status === 'review').length,
+    approved: withImages.filter(t => t.blog_image_status === 'approved').length,
+    revision_needed: withImages.filter(t => t.blog_image_status === 'revision_needed').length,
+    all: withImages.length,
+  };
+
+  const lbIndex = lightbox !== null ? filtered.findIndex(t => t.id === lightbox) : -1;
+  const lbItem = lbIndex >= 0 ? filtered[lbIndex] : null;
+  const goPrev = (e) => { e.stopPropagation(); if (lbIndex > 0) setLightbox(filtered[lbIndex - 1].id); };
+  const goNext = (e) => { e.stopPropagation(); if (lbIndex < filtered.length - 1) setLightbox(filtered[lbIndex + 1].id); };
+
+  const handleFbSubmit = async (tid) => {
+    if (!fbText.trim()) return;
+    setFbSaving(true);
+    try {
+      await submitImageFeedback(tid, fbText.trim());
+      setFbText(''); setFbSent(tid); setFbOpen(null);
+      setTimeout(() => setFbSent(null), 4000);
+    } catch(e) { alert('Failed: ' + e.message); }
+    setFbSaving(false);
+  };
+
+  return (
+    <div className="section">
+      <div className="section-title">
+        <i className="fas fa-image"></i> Signal Image Review <span className="count">{counts.review} to review</span>
+      </div>
+
+      <div className="img-filter-bar">
+        {[{k:'review',label:'Needs Review'},{k:'approved',label:'Approved'},{k:'revision_needed',label:'Revision Needed'},{k:'all',label:'All Images'}].map(f => (
+          <button key={f.k} className={`img-filter-btn ${filter===f.k?'active':''}`} onClick={() => setFilter(f.k)}>
+            {f.label} ({counts[f.k] || 0})
+          </button>
+        ))}
+      </div>
+
+      {filter === 'review' && counts.review > 0 && (
+        <div className="batch-bar">
+          <div className="batch-count">{counts.review}</div>
+          <div className="batch-label">images awaiting your review. Click any image to expand. Approve or reject individually, or leave feedback.</div>
+        </div>
+      )}
+
+      {filtered.length === 0 ? (
+        <div className="empty">No images with status: {filter}</div>
+      ) : (
+        <div className="img-gallery">
+          {filtered.map(t => (
+            <div key={t.id} className={`img-card ${t.blog_image_status === 'review' ? 'needs-review' : ''}`}>
+              <img
+                className="img-preview"
+                src={t.blog_image_url}
+                alt={t.title}
+                loading="lazy"
+                onClick={() => setLightbox(t.id)}
+              />
+              <div className="img-info">
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6,flexWrap:'wrap'}}>
+                  <div className="img-title">{t.title}</div>
+                  <span className="badge" style={{background:statusBg(t.blog_image_status),color:statusFg(t.blog_image_status),fontSize:11,padding:'3px 8px'}}>{(t.blog_image_status||'none').replace(/_/g,' ')}</span>
+                </div>
+                <div className="img-hook">{t.cultural_hook || 'No cultural hook'}</div>
+
+                {fbSent === t.id && (
+                  <div className="feedback-sent" style={{marginBottom:8}}><i className="fas fa-check"></i> Image feedback saved</div>
+                )}
+
+                {t.image_feedback && (
+                  <div className="prev-feedback" style={{marginBottom:10}}>
+                    <div className="fb-label">Image Feedback</div>
+                    <div className="fb-text">{t.image_feedback}</div>
+                    {t.image_feedback_at && <div className="fb-time">{new Date(t.image_feedback_at).toLocaleString()}</div>}
+                  </div>
+                )}
+
+                <div className="img-actions">
+                  {t.blog_image_status === 'review' && (
+                    <>
+                      <button className="btn btn-approve" style={{fontSize:13,padding:'8px 16px'}} onClick={() => updateBlogImageStatus(t.id, 'approved')}><i className="fas fa-check"></i> Approve</button>
+                      <button className="btn btn-reject" style={{fontSize:13,padding:'8px 16px'}} onClick={() => updateBlogImageStatus(t.id, 'revision_needed')}><i className="fas fa-times"></i> Reject</button>
+                    </>
+                  )}
+                  {t.blog_image_status === 'approved' && (
+                    <div style={{fontSize:13,color:'var(--green)',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}><i className="fas fa-check-circle"></i> Approved</div>
+                  )}
+                  <button className="btn btn-feedback" style={{fontSize:12,padding:'6px 14px'}} onClick={() => setFbOpen(fbOpen === t.id ? null : t.id)}><i className="fas fa-comment"></i> Feedback</button>
+                </div>
+
+                {fbOpen === t.id && (
+                  <div className="img-fb-area" onClick={e => e.stopPropagation()}>
+                    <textarea value={fbText} onChange={e => setFbText(e.target.value)} placeholder="Image feedback: wrong subject, too abstract, needs more glitch, etc." />
+                    <div style={{display:'flex',gap:8,marginTop:6}}>
+                      <button className="btn btn-feedback" style={{fontSize:12,padding:'6px 14px'}} onClick={() => handleFbSubmit(t.id)} disabled={fbSaving}>
+                        <i className={fbSaving ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'}></i> {fbSaving ? 'Saving...' : 'Submit + Reject'}
+                      </button>
+                      <button className="btn" style={{fontSize:12,padding:'6px 14px',color:'var(--text-muted)',borderColor:'var(--border)'}} onClick={() => { setFbOpen(null); setFbText(''); }}>Cancel</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {lbItem && (
+        <div className="img-lightbox" onClick={() => setLightbox(null)}>
+          <div className="lb-close"><i className="fas fa-times"></i></div>
+          {lbIndex > 0 && <div className="lb-nav prev" onClick={goPrev}><i className="fas fa-chevron-left"></i></div>}
+          {lbIndex < filtered.length - 1 && <div className="lb-nav next" onClick={goNext}><i className="fas fa-chevron-right"></i></div>}
+          <div className="lb-title">{lbItem.title}</div>
+          <img src={lbItem.blog_image_url} alt={lbItem.title} onClick={e => e.stopPropagation()} />
+          <div className="lb-hook">{lbItem.cultural_hook}</div>
+          <div className="lb-actions" onClick={e => e.stopPropagation()}>
+            {lbItem.blog_image_status === 'review' && (
+              <>
+                <button className="btn btn-approve btn-big" onClick={() => { updateBlogImageStatus(lbItem.id, 'approved'); if (lbIndex < filtered.length - 1) setLightbox(filtered[lbIndex + 1].id); else setLightbox(null); }}><i className="fas fa-check"></i> Approve</button>
+                <button className="btn btn-reject btn-big" onClick={() => { updateBlogImageStatus(lbItem.id, 'revision_needed'); if (lbIndex < filtered.length - 1) setLightbox(filtered[lbIndex + 1].id); else setLightbox(null); }}><i className="fas fa-times"></i> Reject</button>
+              </>
+            )}
+          </div>
+          <div style={{fontSize:14,color:'var(--text-muted)'}}>
+            {lbIndex + 1} of {filtered.length} {filter !== 'all' ? `(${filter.replace(/_/g,' ')})` : ''}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+function VideoReviewTab({ transmissions, updateVideoStatus, submitVideoFeedback }) {
+  const [filter, setFilter] = useState('review');
+  const [lightbox, setLightbox] = useState(null);
+  const [fbOpen, setFbOpen] = useState(null);
+  const [fbText, setFbText] = useState('');
+  const [fbSaving, setFbSaving] = useState(false);
+  const [fbSent, setFbSent] = useState(null);
+
+  const withVideos = transmissions.filter(t => t.video_url);
+  const filtered = filter === 'all' ? withVideos : withVideos.filter(t => t.video_status === filter);
+  const counts = {
+    review: withVideos.filter(t => t.video_status === 'review').length,
+    approved: withVideos.filter(t => t.video_status === 'approved').length,
+    revision_needed: withVideos.filter(t => t.video_status === 'revision_needed').length,
+    all: withVideos.length,
+  };
+
+  const lbIndex = lightbox !== null ? filtered.findIndex(t => t.id === lightbox) : -1;
+  const lbItem = lbIndex >= 0 ? filtered[lbIndex] : null;
+  const goPrev = (e) => { e.stopPropagation(); if (lbIndex > 0) setLightbox(filtered[lbIndex - 1].id); };
+  const goNext = (e) => { e.stopPropagation(); if (lbIndex < filtered.length - 1) setLightbox(filtered[lbIndex + 1].id); };
+
+  const handleFbSubmit = async (tid) => {
+    if (!fbText.trim()) return;
+    setFbSaving(true);
+    try {
+      await submitVideoFeedback(tid, fbText.trim());
+      setFbText(''); setFbSent(tid); setFbOpen(null);
+      setTimeout(() => setFbSent(null), 4000);
+    } catch(e) { alert('Failed: ' + e.message); }
+    setFbSaving(false);
+  };
+
+  return (
+    <div className="section">
+      <div className="section-title">
+        <i className="fas fa-video"></i> Video Review <span className="count">{counts.review} to review</span>
+      </div>
+      <div className="img-filter-bar">
+        {[{k:'review',label:'Needs Review'},{k:'approved',label:'Approved'},{k:'revision_needed',label:'Revision Needed'},{k:'all',label:'All Videos'}].map(f => (
+          <button key={f.k} className={`img-filter-btn ${filter===f.k?'active':''}`} onClick={() => setFilter(f.k)}>
+            {f.label} ({counts[f.k] || 0})
+          </button>
+        ))}
+      </div>
+      {filter === 'review' && counts.review > 0 && (
+        <div className="batch-bar">
+          <div className="batch-count">{counts.review}</div>
+          <div className="batch-label">videos awaiting your review. Click any to expand. Approve or reject individually.</div>
+        </div>
+      )}
+      {filtered.length === 0 ? (
+        <div className="empty">No videos with status: {filter}</div>
+      ) : (
+        <div className="img-gallery">
+          {filtered.map(t => (
+            <div key={t.id} className={`img-card ${t.video_status === 'review' ? 'needs-review' : ''}`}>
+              <video className="img-preview" src={t.video_url} style={{width:'100%',borderRadius:6,cursor:'pointer',maxHeight:320,objectFit:'cover',background:'#000'}} onClick={() => setLightbox(t.id)} muted loop autoPlay playsInline />
+              <div className="img-info">
+                <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6,flexWrap:'wrap'}}>
+                  <div className="img-title">{t.title}</div>
+                  <span className="badge" style={{background:statusBg(t.video_status),color:statusFg(t.video_status),fontSize:11,padding:'3px 8px'}}>{(t.video_status||'none').replace(/_/g,' ')}</span>
+                </div>
+                <div className="img-hook">{t.cultural_hook || 'No cultural hook'}</div>
+
+                {fbSent === t.id && (
+                  <div className="feedback-sent" style={{marginBottom:8}}><i className="fas fa-check"></i> Video feedback saved</div>
+                )}
+                {t.video_feedback && (
+                  <div className="prev-feedback" style={{marginBottom:10}}>
+                    <div className="fb-label">Video Feedback</div>
+                    <div className="fb-text">{t.video_feedback}</div>
+                    {t.video_reviewed_at && <div className="fb-time">{new Date(t.video_reviewed_at).toLocaleString()}</div>}
+                  </div>
+                )}
+                <div className="img-actions">
+                  {t.video_status === 'review' && (
+                    <>
+                      <button className="btn btn-approve" style={{fontSize:13,padding:'8px 16px'}} onClick={() => updateVideoStatus(t.id, 'approved')}><i className="fas fa-check"></i> Approve</button>
+                      <button className="btn btn-reject" style={{fontSize:13,padding:'8px 16px'}} onClick={() => updateVideoStatus(t.id, 'revision_needed')}><i className="fas fa-times"></i> Reject</button>
+                    </>
+                  )}
+                  {t.video_status === 'approved' && (
+                    <div style={{fontSize:13,color:'var(--green)',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}><i className="fas fa-check-circle"></i> Approved</div>
+                  )}
+                  <button className="btn btn-feedback" style={{fontSize:12,padding:'6px 14px'}} onClick={() => setFbOpen(fbOpen === t.id ? null : t.id)}><i className="fas fa-comment"></i> Feedback</button>
+                </div>
+                {fbOpen === t.id && (
+                  <div className="img-fb-area" onClick={e => e.stopPropagation()}>
+                    <textarea value={fbText} onChange={e => setFbText(e.target.value)} placeholder="Video feedback: wrong mood, too fast, glitch too subtle, etc." />
+                    <div style={{display:'flex',gap:8,marginTop:6}}>
+                      <button className="btn btn-feedback" style={{fontSize:12,padding:'6px 14px'}} onClick={() => handleFbSubmit(t.id)} disabled={fbSaving}>
+                        <i className={fbSaving ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'}></i> {fbSaving ? 'Saving...' : 'Submit + Reject'}
+                      </button>
+                      <button className="btn" style={{fontSize:12,padding:'6px 14px',color:'var(--text-muted)',borderColor:'var(--border)'}} onClick={() => { setFbOpen(null); setFbText(''); }}>Cancel</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {lbItem && (
+        <div className="img-lightbox" onClick={() => setLightbox(null)}>
+          <div className="lb-close"><i className="fas fa-times"></i></div>
+          {lbIndex > 0 && <div className="lb-nav prev" onClick={goPrev}><i className="fas fa-chevron-left"></i></div>}
+          {lbIndex < filtered.length - 1 && <div className="lb-nav next" onClick={goNext}><i className="fas fa-chevron-right"></i></div>}
+          <div className="lb-title">{lbItem.title}</div>
+          <video src={lbItem.video_url} style={{maxWidth:'90vw',maxHeight:'75vh',borderRadius:8,background:'#000'}} controls autoPlay loop playsInline onClick={e => e.stopPropagation()} />
+          <div className="lb-hook">{lbItem.cultural_hook}</div>
+          <div className="lb-actions" onClick={e => e.stopPropagation()}>
+            {lbItem.video_status === 'review' && (
+              <>
+                <button className="btn btn-approve btn-big" onClick={() => { updateVideoStatus(lbItem.id, 'approved'); if (lbIndex < filtered.length - 1) setLightbox(filtered[lbIndex + 1].id); else setLightbox(null); }}><i className="fas fa-check"></i> Approve</button>
+                <button className="btn btn-reject btn-big" onClick={() => { updateVideoStatus(lbItem.id, 'revision_needed'); if (lbIndex < filtered.length - 1) setLightbox(filtered[lbIndex + 1].id); else setLightbox(null); }}><i className="fas fa-times"></i> Reject</button>
+              </>
+            )}
+          </div>
+          <div style={{fontSize:14,color:'var(--text-muted)'}}>
+            {lbIndex + 1} of {filtered.length} {filter !== 'all' ? `(${filter.replace(/_/g,' ')})` : ''}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+function TransmissionsTab({ transmissions, updateStatus, updatedIds, highlightId, submitFeedback, submitVideoFeedback, updateVideoStatus, updateBlogImageStatus }) {
+  const [expandedId, setExpandedId] = useState(null);
+  const [expandedImage, setExpandedImage] = useState(null);
+  const [filterStatus, setFilterStatus] = useState('all');
+  const filtered = filterStatus === 'all' ? transmissions : transmissions.filter(t=>t.status===filterStatus);
+  const statusCounts = {};
+  transmissions.forEach(t => { statusCounts[t.status] = (statusCounts[t.status]||0)+1; });
+  return (
+    <div className="section">
+      <div className="section-title">Transmissions Pipeline <span className="count">{transmissions.length}</span></div>
+      <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:20}}>
+        {['all','draft','revision_needed','review','approved','distribution_ready','scheduled','posted','rejected'].map(s=>(
+          <button key={s} className={`btn ${filterStatus===s?'btn-active':''}`}
+            style={{fontSize:12,padding:'6px 14px',background:filterStatus===s?'var(--surface-3)':'transparent',border:'1px solid var(--border)',color:filterStatus===s?'var(--text)':'var(--text-dim)',cursor:'pointer',borderRadius:4}}
+            onClick={()=>setFilterStatus(s)}>
+            {s} {s==='all'?`(${transmissions.length})`:statusCounts[s]?`(${statusCounts[s]})`:''}
+          </button>
+        ))}
+      </div>
+      {filtered.length===0 ? <div className="empty">No transmissions with status: {filterStatus}</div> : filtered.map(t=>{
+        const platforms = t.scheduled_platforms || [];
+        const captions = t.platform_captions || {};
+        const isDistReady = ['distribution_ready','approved_for_posting','posted'].includes(t.status);
+        const postIds = t.platform_post_ids || {};
+        const platformIcons = {x:'fab fa-x-twitter',instagram:'fab fa-instagram',threads:'fas fa-at',linkedin:'fab fa-linkedin',facebook:'fab fa-facebook',tiktok:'fab fa-tiktok',youtube:'fab fa-youtube'};
+        const allPlatforms = ['x','instagram','threads','linkedin','facebook','tiktok','youtube'];
+        const baitColor = t.bait_score >= 7 ? 'var(--green)' : t.bait_score >= 5 ? 'var(--amber)' : t.bait_score ? 'var(--magenta)' : 'var(--text-muted)';
+        return (
+        <div key={t.id} id={`item-${t.id}`} className={`card ${updatedIds.has(t.id)?'updated':''} ${highlightId===t.id?'highlight':''}`}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16}}>
+            {(()=>{
+              const mediaUrl = t.blog_image_url || t.visual_url;
+              const isVideo = mediaUrl && (mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.webm') || mediaUrl.endsWith('.mov'));
+              if (!mediaUrl) return null;
+              return React.createElement(React.Fragment, null,
+                React.createElement('div', {style:{flexShrink:0,width:140,height:140,borderRadius:6,overflow:'hidden',border:'2px solid var(--border)',cursor:'pointer',position:'relative'},
+                  onClick:()=>setExpandedImage(expandedImage===t.id?null:t.id)},
+                  isVideo
+                    ? React.createElement('video', {src:mediaUrl,muted:true,loop:true,autoPlay:true,playsInline:true,style:{width:'100%',height:'100%',objectFit:'cover'}})
+                    : React.createElement('img', {src:mediaUrl,alt:t.title,style:{width:'100%',height:'100%',objectFit:'cover'}}),
+                  React.createElement('div', {style:{position:'absolute',bottom:4,right:4,background:'rgba(0,0,0,0.7)',borderRadius:3,padding:'2px 6px',fontSize:11,color:'var(--cyan)'}},
+                    React.createElement('i', {className: isVideo ? 'fas fa-play' : 'fas fa-expand'})),
+                  isVideo && React.createElement('div', {style:{position:'absolute',top:4,left:4,background:'rgba(0,0,0,0.7)',borderRadius:3,padding:'2px 6px',fontSize:10,color:'var(--magenta)',fontWeight:700,letterSpacing:1}}, 'VIDEO')
+                ),
+                expandedImage===t.id && React.createElement('div', {style:{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.9)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'},
+                  onClick:()=>setExpandedImage(null)},
+                  isVideo
+                    ? React.createElement('video', {src:mediaUrl,controls:true,autoPlay:true,loop:true,style:{maxWidth:'90vw',maxHeight:'90vh',borderRadius:8,border:'2px solid var(--border)'}})
+                    : React.createElement('img', {src:mediaUrl,alt:t.title,style:{maxWidth:'90vw',maxHeight:'90vh',objectFit:'contain',borderRadius:8,border:'2px solid var(--border)'}}),
+                  React.createElement('div', {style:{position:'absolute',top:20,right:20,fontSize:24,color:'var(--text-dim)'}},
+                    React.createElement('i', {className:'fas fa-times'}))
+                )
+              );
+            })()}
+            <div style={{flex:1}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+                <div className="card-title" style={{cursor:'pointer'}} onClick={()=>setExpandedId(expandedId===t.id?null:t.id)}>{t.title}</div>
+                <span className="badge" style={{background:statusBg(t.status),color:statusFg(t.status)}}>{t.status}</span>
+                {t.revision_count > 0 && <span className="revision-badge"><i className="fas fa-sync-alt"></i> v{t.revision_count + 1}</span>}
+                {t.core_term_audit === 'passed' && <span style={{fontSize:11,color:'var(--green)',border:'1px solid var(--green)',borderRadius:4,padding:'2px 8px',letterSpacing:1,textTransform:'uppercase',fontWeight:600}}><i className="fas fa-shield-alt"></i> CT</span>}
+                {t.core_term_audit !== 'passed' && <span style={{fontSize:11,color:'var(--magenta)',border:'1px solid var(--magenta)',borderRadius:4,padding:'2px 8px',letterSpacing:1,textTransform:'uppercase',fontWeight:600}}><i className="fas fa-exclamation-triangle"></i> CT</span>}
+                {t.bait_score != null && <span style={{fontSize:11,color:baitColor,border:`1px solid ${baitColor}`,borderRadius:4,padding:'2px 8px',letterSpacing:1,textTransform:'uppercase',fontWeight:600}}><i className="fas fa-crosshairs"></i> BAIT {t.bait_score}/10</span>}
+                {!t.bait_score && <span style={{fontSize:11,color:'var(--text-muted)',border:'1px solid var(--border)',borderRadius:4,padding:'2px 8px',letterSpacing:1,textTransform:'uppercase',fontWeight:600}}><i className="fas fa-crosshairs"></i> BAIT --</span>}
+              </div>
+              <div className="card-meta">{t.cultural_hook || t.template_type}</div>
+
+              {/* Platform distribution strip */}
+              <div style={{display:'flex',gap:6,marginTop:8,flexWrap:'wrap'}}>
+                {allPlatforms.map(p => {
+                  const isScheduled = platforms.includes(p);
+                  const isActive = isScheduled || isDistReady;
+                  const hasCaption = !!captions[p];
+                  const isPosted = t.status === 'posted';
+                  return <div key={p} title={isPosted ? `Posted to ${p}` : isActive ? `Going to ${p}` + (hasCaption ? ' (caption ready)' : '') : `${p}`}
+                    style={{display:'flex',alignItems:'center',gap:4,padding:'4px 10px',borderRadius:4,fontSize:13,
+                      background: isPosted ? 'rgba(122,255,59,0.15)' : isActive ? 'rgba(0,240,255,0.12)' : 'var(--surface-2)',
+                      border: `1px solid ${isPosted ? 'var(--green)' : isActive ? 'var(--cyan)' : 'var(--border)'}`,
+                      color: isPosted ? 'var(--green)' : isActive ? 'var(--cyan)' : 'var(--text-muted)',
+                      opacity: isActive ? 1 : 0.35}}>
+                    <i className={platformIcons[p] || 'fas fa-globe'} style={{fontSize:12}}></i>
+                    <span style={{textTransform:'uppercase',letterSpacing:1,fontSize:11,fontWeight:600}}>{p}</span>
+                    {isPosted && <i className="fas fa-check" style={{fontSize:10,color:'var(--green)'}}></i>}
+                    {isActive && !isPosted && <i className="fas fa-arrow-right" style={{fontSize:9,color:'var(--cyan)',opacity:0.6}}></i>}
+                  </div>;
+                })}
+              </div>
+
+              {t.website_published && t.website_url && (
+                <div style={{marginTop:6,fontSize:12,color:'var(--green)'}}>
+                  <i className="fas fa-globe"></i> Published: <a href={t.website_url} target="_blank" rel="noopener" style={{color:'var(--cyan)',textDecoration:'none'}}>{t.website_url}</a>
+                </div>
+              )}
+
+              <div className={`card-body ${expandedId===t.id?'expanded':'preview'}`} onClick={()=>setExpandedId(expandedId===t.id?null:t.id)} style={{cursor:'pointer',marginTop:10}}>
+                {t.body || 'No body text. Content Engine needs to write this transmission.'}
+              </div>
+              {t.body && t.body.length>200 && (
+                <div className="expand-btn" onClick={e=>{e.stopPropagation();setExpandedId(expandedId===t.id?null:t.id);}}>
+                  {expandedId===t.id ? '- show less' : '+ read full transmission'}
+                </div>
+              )}
+
+              {/* Expandable platform captions */}
+              {expandedId===t.id && Object.keys(captions).length > 0 && (
+                <div style={{marginTop:12,padding:'12px 14px',background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:4}}>
+                  <strong style={{display:'block',marginBottom:8,fontSize:11,letterSpacing:1,textTransform:'uppercase',color:'var(--cyan)'}}>Platform Captions</strong>
+                  {Object.entries(captions).map(([plat,cap])=>(
+                    <div key={plat} style={{marginBottom:8}}>
+                      <div style={{fontSize:11,color:'var(--text-dim)',textTransform:'uppercase',letterSpacing:1,marginBottom:2}}>
+                        <i className={platformIcons[plat] || 'fas fa-globe'} style={{marginRight:6}}></i>{plat}
+                      </div>
+                      <div style={{fontSize:13,color:'var(--text)',whiteSpace:'pre-wrap',paddingLeft:20}}>{cap}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Bait audit details (expandable) */}
+              {expandedId===t.id && t.bait_audit && (
+                <div style={{marginTop:12,padding:'10px 14px',background: t.bait_score >= 7 ? 'rgba(122,255,59,0.06)' : 'rgba(255,51,102,0.06)',border:`1px solid ${t.bait_score >= 7 ? 'rgba(122,255,59,0.3)' : 'rgba(255,51,102,0.3)'}`,borderRadius:4,fontSize:12,color:'var(--text-dim)',whiteSpace:'pre-wrap',fontFamily:'var(--mono)'}}>
+                  <strong style={{display:'block',marginBottom:4,fontSize:11,letterSpacing:1,textTransform:'uppercase',color:baitColor}}>Ego Bait Audit</strong>
+                  {t.bait_audit}
+                </div>
+              )}
+
+              {t.fracture_quote && <div className="quote-block"><div className="quote-text">"{t.fracture_quote}"</div><div className="quote-ref">Fracture {t.fracture_number}</div></div>}
+
+              {t.feedback && (
+                <div style={{marginTop:12,padding:'10px 14px',background:'rgba(255,184,0,0.08)',border:'1px solid rgba(255,184,0,0.3)',borderRadius:4,fontSize:13,color:'var(--amber)',whiteSpace:'pre-wrap'}}>
+                  <strong style={{display:'block',marginBottom:4,fontSize:11,letterSpacing:1,textTransform:'uppercase'}}>Previous Feedback</strong>
+                  {t.feedback}
+                </div>
+              )}
+
+              {t.visual_model && (
+                <div style={{marginTop:6,fontSize:11,color:'var(--text-muted)'}}>
+                  Visual: {t.visual_model} {t.visual_credits_used ? `(${t.visual_credits_used} credits)` : ''}
+                </div>
+              )}
+
+              <div className="action-buttons" style={{marginTop:14}}>
+                {/* Image approved + blog published: ready for Opus workflow and manual distribution */}
+                {t.blog_image_status === 'approved' && t.blog_published_url && !['posted','approved_for_posting'].includes(t.status) && (
+                  <button className="btn btn-approve btn-big" onClick={()=>updateStatus('transmissions',t.id,'status','approved_for_posting')} style={{background:'linear-gradient(135deg,rgba(0,240,255,0.2),rgba(122,255,59,0.2))',border:'2px solid var(--cyan)'}}>
+                    <i className="fas fa-rocket"></i> Send to All 7 Channels + The Signal
+                  </button>
+                )}
+                {t.status === 'distribution_ready' && (
+                  <>
+                    <button className="btn btn-approve btn-big" onClick={()=>updateStatus('transmissions',t.id,'status','approved_for_posting')} style={{background:'linear-gradient(135deg,rgba(0,240,255,0.2),rgba(122,255,59,0.2))',border:'2px solid var(--cyan)'}}>
+                      <i className="fas fa-rocket"></i> Send to All 7 Channels + The Signal
+                    </button>
+                    <button className="btn" style={{fontSize:14,padding:'10px 18px',background:'transparent',border:'1px solid var(--border)',color:'var(--amber)',cursor:'pointer',borderRadius:4}} onClick={()=>updateStatus('transmissions',t.id,'status','revision_needed')}><i className="fas fa-redo"></i> Redo Visual/Captions</button>
+                  </>
+                )}
+                {!['distribution_ready','posted','approved_for_posting'].includes(t.status) && (
+                  <>
+                    {['draft','review','revision_needed'].includes(t.status) && (
+                      <button className="btn btn-approve btn-big" onClick={()=>updateStatus('transmissions',t.id,'status','approved')}><i className="fas fa-check"></i> Approve Text</button>
+                    )}
+                    <button className="btn btn-reject btn-big" onClick={()=>updateStatus('transmissions',t.id,'status','rejected')}><i className="fas fa-times"></i> Kill It</button>
+                    {t.status !== 'rejected' && (
+                      <button className="btn" style={{fontSize:12,padding:'8px 16px',background:'transparent',border:'1px solid var(--border)',color:'var(--amber)',cursor:'pointer',borderRadius:4}} onClick={()=>updateStatus('transmissions',t.id,'status','revision_needed')}><i className="fas fa-redo"></i> Needs Revision</button>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* === STEP 1: THE SIGNAL IMAGE (approve image FIRST) === */}
+                <div className={`video-review-section ${t.blog_image_status === 'review' ? 'needs-review' : ''}`}>
+                  <div className="video-review-header">
+                    <div className="video-review-title">
+                      <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:24,height:24,borderRadius:'50%',background: t.blog_image_status === 'approved' ? 'var(--green)' : 'var(--surface-3)',color: t.blog_image_status === 'approved' ? '#000' : 'var(--text-dim)',fontSize:12,fontWeight:700,marginRight:4}}>1</span>
+                      <i className="fas fa-image"></i> Signal Image
+                    </div>
+                    {t.blog_image_status && <span className="video-status-badge" style={{background:statusBg(t.blog_image_status),color:statusFg(t.blog_image_status)}}>{t.blog_image_status.replace(/_/g,' ')}</span>}
+                  </div>
+
+                  {(!t.blog_image_status || t.blog_image_status === 'none') && (
+                    <div style={{padding:'16px 0',fontSize:14,color:'var(--text-muted)',fontStyle:'italic'}}>
+                      <i className="fas fa-hourglass-start" style={{marginRight:8}}></i>
+                      Image not yet generated. Approval watcher will create the Signal image via Nano Banana Pro.
+                    </div>
+                  )}
+
+                  {t.blog_image_status === 'generating' && (
+                    <div style={{padding:'16px 0',fontSize:14,color:'var(--blue)'}}>
+                      <i className="fas fa-spinner fa-spin" style={{marginRight:8}}></i>
+                      Generating Signal image via Nano Banana Pro...
+                    </div>
+                  )}
+
+                  {t.blog_image_url && (
+                    <div style={{margin:'12px 0',cursor:'pointer'}} onClick={()=>setExpandedImage(expandedImage===('sig-'+t.id)?null:('sig-'+t.id))}>
+                      <img src={t.blog_image_url} alt="Signal glitch image" style={{maxWidth:280,maxHeight:280,borderRadius:6,border:'2px solid var(--border)'}} />
+                      <div style={{fontSize:12,color:'var(--cyan)',marginTop:4}}><i className="fas fa-expand"></i> Click to expand</div>
+                    </div>
+                  )}
+                  {expandedImage===('sig-'+t.id) && t.blog_image_url && (
+                    <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.9)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}
+                      onClick={()=>setExpandedImage(null)}>
+                      <img src={t.blog_image_url} alt="Signal glitch image" style={{maxWidth:'90vw',maxHeight:'90vh',objectFit:'contain',borderRadius:8,border:'2px solid var(--border)'}} />
+                      <div style={{position:'absolute',top:20,right:20,fontSize:24,color:'var(--text-dim)'}}><i className="fas fa-times"></i></div>
+                    </div>
+                  )}
+
+                  <div style={{display:'flex',gap:12,flexWrap:'wrap',marginBottom:8,alignItems:'center'}}>
+                    <div style={{fontSize:14,color: t.blog_status === 'published' ? 'var(--green)' : 'var(--text-muted)'}}>
+                      <i className={t.blog_status === 'published' ? 'fas fa-check-circle' : 'fas fa-circle'}></i> Signal
+                      {t.blog_status && <strong style={{color:'var(--text-dim)',marginLeft:4}}>{t.blog_status}</strong>}
+                      {!t.blog_status && <span style={{marginLeft:4}}>Waiting</span>}
+                    </div>
+                    <div style={{fontSize:14,color: t.twitter_posted ? 'var(--green)' : 'var(--text-muted)'}}>
+                      <i className={t.twitter_posted ? 'fas fa-check-circle' : 'fas fa-circle'}></i> X/Twitter
+                    </div>
+                    <div style={{fontSize:14,color: t.threads_posted ? 'var(--green)' : 'var(--text-muted)'}}>
+                      <i className={t.threads_posted ? 'fas fa-check-circle' : 'fas fa-circle'}></i> Threads
+                    </div>
+                  </div>
+                  {t.blog_published_url && (
+                    <div style={{fontSize:14,color:'var(--green)',marginBottom:8}}>
+                      <i className="fas fa-globe"></i> <a href={t.blog_published_url} target="_blank" rel="noopener" style={{color:'var(--cyan)',textDecoration:'none'}}>{t.blog_published_url}</a>
+                    </div>
+                  )}
+
+                  <div className="video-actions">
+                    {t.blog_image_status === 'review' && (
+                      <>
+                        <button className="btn btn-approve" onClick={()=>updateBlogImageStatus(t.id,'approved')}><i className="fas fa-check"></i> Approve Image</button>
+                        <button className="btn btn-revision" onClick={()=>updateBlogImageStatus(t.id,'revision_needed')}><i className="fas fa-redo"></i> Redo Image</button>
+                      </>
+                    )}
+                    {t.blog_image_status === 'approved' && (
+                      <div style={{fontSize:13,color:'var(--green)',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>
+                        <i className="fas fa-check-circle"></i> Image approved. Blog publishes on next hourly cycle. Grab for Opus.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              {/* Video pipeline deprecated 2026-04-07. Opus workflow is manual. No video gate. */}
+
+              <FeedbackBox transmission={t} onSubmit={submitFeedback} />
+            </div>
+          </div>
+        </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ContentQueue({ queue, updatedIds }) {
+  return (
+    <div className="section">
+      <div className="section-title">Content Queue <span className="count">{queue.length}</span></div>
+      {queue.length===0 ? <div className="empty">No content queued. Approve transmissions to populate this pipeline.</div> : (
+        <table><thead><tr><th>Platform</th><th>Type</th><th>Scheduled</th><th>Status</th></tr></thead>
+          <tbody>{queue.map(c=>(
+            <tr key={c.id} className={updatedIds.has(c.id)?'row-flash':''}>
+              <td style={{fontWeight:600}}>{c.platform}</td><td>{c.content_type}</td>
+              <td style={{color:'var(--text-dim)'}}>{c.scheduled_time?new Date(c.scheduled_time).toLocaleString():'-'}</td>
+              <td><span className="badge" style={{background:statusBg(c.status),color:statusFg(c.status)}}>{c.status}</span></td>
+            </tr>
+          ))}</tbody></table>
+      )}
+    </div>
+  );
+}
+
+function PackagesTab({ packages, updateStatus, updatedIds }) {
+  return (
+    <div className="section">
+      <div className="section-title">Black Box Packages <span className="count">{packages.length}</span></div>
+      {packages.length===0 ? <div className="empty">No packages yet</div> : (
+        <table><thead><tr><th>Target</th><th>Address</th><th>Edition</th><th>Status</th><th>Tracking</th><th>Notes</th></tr></thead>
+          <tbody>{packages.map(p=>(
+            <tr key={p.id} className={updatedIds.has(p.id)?'row-flash':''}>
+              <td style={{fontWeight:600}}>{p.target_name}</td>
+              <td style={{fontSize:14,color:'var(--text-dim)',maxWidth:220}}>{p.mailing_address}</td>
+              <td>{p.edition}</td>
+              <td>
+                <StatusBadge status={p.status} table="black_box_packages" id={p.id} field="status"
+                  options={['pending','ordered','packaging','shipped','delivered','confirmed']} onChange={updateStatus} />
+              </td>
+              <td style={{fontSize:14}}>{p.tracking_number||'-'}</td>
+              <td className="notes-cell">{p.notes}</td>
+            </tr>
+          ))}</tbody></table>
+      )}
+    </div>
+  );
+}
+
+function KeyDates({ dates, updatedIds }) {
+  return (
+    <div className="section">
+      <div className="section-title">Key Dates <span className="count">{dates.length}</span></div>
+      {dates.length===0 ? <div className="empty">No key dates yet</div> : (
+        <table><thead><tr><th>Date</th><th>Title</th><th>Category</th><th>Status</th><th>Description</th></tr></thead>
+          <tbody>{dates.map(d=>(
+            <tr key={d.id} className={updatedIds.has(d.id)?'row-flash':''}>
+              <td style={{whiteSpace:'nowrap',color:'var(--cyan)',fontWeight:600,fontSize:14}}>
+                {new Date(d.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+              </td>
+              <td style={{fontWeight:600}}>{d.title}</td>
+              <td style={{fontSize:14,color:'var(--text-muted)'}}>{d.category}</td>
+              <td><span className="badge" style={{background:statusBg(d.status),color:statusFg(d.status)}}>{d.status}</span></td>
+              <td className="notes-cell">{d.description}</td>
+            </tr>
+          ))}</tbody></table>
+      )}
+    </div>
+  );
+}
+
+function ApprovalsTab({ transmissions, updateStatus, updatedIds, highlightId, submitFeedback }) {
+  const [expandedId, setExpandedId] = useState(null);
+  const pendingReview = transmissions.filter(t=>t.status==='review');
+  const needsRevision = transmissions.filter(t=>t.status==='revision_needed');
+  const approved = transmissions.filter(t=>t.status==='approved');
+
+  const TransmissionCard = ({ t, statusLabel, accentColor }) => {
+    const baitColor = t.bait_score >= 7 ? 'var(--green)' : t.bait_score >= 5 ? 'var(--amber)' : t.bait_score ? 'var(--magenta)' : 'var(--text-muted)';
+    return (
+      <div key={t.id} id={`item-${t.id}`} className={`card ${updatedIds.has(t.id)?'updated':''} ${highlightId===t.id?'highlight':''}`} style={accentColor?{borderLeftColor:accentColor,borderLeftWidth:3}:{}}>
+        <div style={{display:'flex',gap:16,alignItems:'flex-start'}}>
+          {(t.visual_url || t.blog_image_url) && (
+            <div style={{flexShrink:0,width:120,height:120,borderRadius:6,overflow:'hidden',border:'2px solid var(--border)'}}>
+              <img src={t.visual_url || t.blog_image_url} alt={t.title} style={{width:'100%',height:'100%',objectFit:'cover'}} />
+            </div>
+          )}
+          <div style={{flex:1}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8,flexWrap:'wrap'}}>
+              <div className="card-title">{t.title}</div>
+              <span className="badge" style={{background:statusBg(t.status),color:statusFg(t.status)}}>{statusLabel}</span>
+              {t.revision_count > 0 && <span className="revision-badge"><i className="fas fa-sync-alt"></i> v{t.revision_count + 1}</span>}
+              {t.track && <span className={`inline-track ${t.track.toUpperCase()==='A'?'inline-track-a':'inline-track-b'}`}>{t.track.toUpperCase()}</span>}
+              {t.origin && <span className={`inline-origin ${t.origin==='managed_agent'?'inline-origin-managed':'inline-origin-engine'}`}>{t.origin==='managed_agent'?'MANAGED':'ENGINE'}</span>}
+              {t.core_term_audit === 'passed' && <span style={{fontSize:11,color:'var(--green)',border:'1px solid var(--green)',borderRadius:4,padding:'2px 8px',letterSpacing:1,textTransform:'uppercase',fontWeight:600}}><i className="fas fa-shield-alt"></i> CT</span>}
+              {t.bait_score != null && <span style={{fontSize:11,color:baitColor,border:`1px solid ${baitColor}`,borderRadius:4,padding:'2px 8px',letterSpacing:1,textTransform:'uppercase',fontWeight:600}}><i className="fas fa-crosshairs"></i> BAIT {t.bait_score}/10</span>}
+            </div>
+            <div className="card-meta">{t.cultural_hook}</div>
+            {t.feedback && t.status==='revision_needed' && (
+              <div style={{marginTop:10,padding:'8px 12px',background:'rgba(255,160,0,0.08)',border:'1px solid rgba(255,160,0,0.3)',borderRadius:4,fontSize:12,color:'var(--amber)',whiteSpace:'pre-wrap'}}>
+                <strong style={{display:'block',marginBottom:4,fontSize:11,letterSpacing:1,textTransform:'uppercase'}}>Feedback Queued for Agent</strong>
+                {t.feedback}
+              </div>
+            )}
+            <div className={`card-body ${expandedId===t.id?'expanded':'preview'}`} style={{marginTop:12}}>
+              {t.body || 'No body text.'}
+            </div>
+            {t.body && t.body.length>200 && (
+              <div className="expand-btn" onClick={()=>setExpandedId(expandedId===t.id?null:t.id)}>
+                {expandedId===t.id ? '- show less' : '+ read full transmission'}
+              </div>
+            )}
+            {expandedId===t.id && t.bait_audit && (
+              <div style={{marginTop:12,padding:'10px 14px',background: t.bait_score >= 7 ? 'rgba(122,255,59,0.06)' : 'rgba(255,51,102,0.06)',border:`1px solid ${t.bait_score >= 7 ? 'rgba(122,255,59,0.3)' : 'rgba(255,51,102,0.3)'}`,borderRadius:4,fontSize:12,color:'var(--text-dim)',whiteSpace:'pre-wrap',fontFamily:'var(--mono)'}}>
+                <strong style={{display:'block',marginBottom:4,fontSize:11,letterSpacing:1,textTransform:'uppercase',color:baitColor}}>Ego Bait Audit</strong>
+                {t.bait_audit}
+              </div>
+            )}
+            {t.fracture_quote && <div className="quote-block"><div className="quote-text">"{t.fracture_quote}"</div><div className="quote-ref">Fracture {t.fracture_number}</div></div>}
+            <div className="card-actions">
+              <button className="btn btn-approve" onClick={()=>updateStatus('transmissions',t.id,'status','approved')}><i className="fas fa-check"></i> Approve</button>
+              <button className="btn btn-reject" onClick={()=>updateStatus('transmissions',t.id,'status','rejected')}><i className="fas fa-times"></i> Kill It</button>
+              {t.status !== 'revision_needed' && (
+                <button className="btn" style={{fontSize:12,padding:'6px 14px',background:'transparent',border:'1px solid var(--border)',color:'var(--amber)',cursor:'pointer',borderRadius:4}} onClick={()=>updateStatus('transmissions',t.id,'status','revision_needed')}><i className="fas fa-redo"></i> Revision</button>
+              )}
+            </div>
+            <FeedbackBox transmission={t} onSubmit={submitFeedback} />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      {needsRevision.length > 0 && (
+        <div className="section">
+          <div className="section-title" style={{color:'var(--amber)'}}><i className="fas fa-redo" style={{marginRight:8}}></i>Needs Revision <span className="count">{needsRevision.length}</span></div>
+          <div style={{fontSize:12,color:'var(--text-dim)',marginBottom:12}}>Feedback submitted. Agent will redraft. You can approve as-is or add more feedback.</div>
+          {needsRevision.map(t => <TransmissionCard key={t.id} t={t} statusLabel="revision needed" accentColor="var(--amber)" />)}
+        </div>
+      )}
+      <div className="section">
+        <div className="section-title">Pending Approval <span className="count">{pendingReview.length}</span></div>
+        {pendingReview.length===0 ? <div className="empty">Nothing pending approval</div> : pendingReview.map(t => <TransmissionCard key={t.id} t={t} statusLabel="review" accentColor={null} />)}
+      </div>
+      <div className="section">
+        <div className="section-title">Approved <span className="count">{approved.length}</span></div>
+        {approved.length===0 ? <div className="empty">No approved transmissions yet</div> : approved.map(t=>(
+          <div key={t.id} className={`card ${updatedIds.has(t.id)?'updated':''}`} style={{borderLeftColor:'var(--green)',borderLeftWidth:3}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <div className="card-title">{t.title}</div>
+              <span className="badge" style={{background:statusBg('approved'),color:statusFg('approved')}}>Approved</span>
+            </div>
+            <div className="card-meta">{t.cultural_hook}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.render(<LoginGate><App /></LoginGate>, document.getElementById('root'));
+</script>
+</body>
+</html>

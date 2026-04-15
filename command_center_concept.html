@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRROR 360 Command Center</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07080a;
+    --surface: rgba(255,255,255,0.04);
+    --surface-hover: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border-bright: rgba(255,255,255,0.15);
+    --cyan: #00F0FF;
+    --magenta: #FF00AA;
+    --text: #f0f0f0;
+    --muted: #777;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --purple: #a78bfa;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,240,255,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .logo {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    text-transform: uppercase;
+  }
+  .logo span { color: var(--magenta); }
+
+  .agent-pills { display: flex; gap: 10px; align-items: center; }
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border-bright);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    background: var(--surface);
+    cursor: default;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .dot-amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+  .dot-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+  .dot-muted { background: #333; }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .notif-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .toggle-switch {
+    width: 28px;
+    height: 15px;
+    border-radius: 8px;
+    background: var(--green);
+    position: relative;
+  }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: white;
+    top: 2px;
+    right: 2px;
+  }
+  .time-display { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+
+  /* MAIN LAYOUT */
+  .main { display: grid; grid-template-columns: 1fr 300px; gap: 0; min-height: calc(100vh - 49px); }
+
+  /* LEFT CONTENT */
+  .content { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .section-meta { font-size: 10px; color: var(--muted); }
+
+  /* MORNING QUEUE */
+  .queue-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .tx-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .tx-card:hover { border-color: var(--border-bright); }
+  .tx-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+  .track-a::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+  .track-b::before { background: linear-gradient(90deg, var(--magenta), transparent); }
+
+  .tx-track {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .track-a .tx-track { color: var(--cyan); }
+  .track-b .tx-track { color: var(--magenta); }
+
+  .tx-title { font-size: 15px; font-weight: 800; line-height: 1.3; color: var(--text); }
+  .tx-hook { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .tx-lens {
+    display: inline-block;
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    background: rgba(255,255,255,0.06);
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .tx-checks {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .check {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+  .check-pass { background: rgba(16,185,129,0.15); color: var(--green); }
+  .check-fail { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  .tx-actions { display: flex; gap: 8px; }
+  .btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .btn-approve { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .btn-approve:hover { background: rgba(16,185,129,0.25); }
+  .btn-reject { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+  .btn-reject:hover { background: rgba(239,68,68,0.18); }
+  .btn-revise { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+  .btn-revise:hover { background: rgba(245,158,11,0.18); }
+
+  /* LAUNCH PAD */
+  .launch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .launch-btn {
+    padding: 16px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+  }
+  .launch-btn:hover { border-color: var(--border-bright); background: var(--surface-hover); transform: translateY(-1px); }
+  .launch-icon { font-size: 20px; }
+  .launch-label { font-size: 11px; font-weight: 700; color: var(--text); letter-spacing: 0.03em; }
+  .launch-desc { font-size: 10px; color: var(--muted); line-height: 1.4; }
+  .launch-cyan { border-color: rgba(0,240,255,0.2); }
+  .launch-cyan:hover { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,240,255,0.08); }
+  .launch-magenta { border-color: rgba(255,0,170,0.2); }
+  .launch-magenta:hover { border-color: var(--magenta); box-shadow: 0 0 20px rgba(255,0,170,0.08); }
+  .launch-green { border-color: rgba(16,185,129,0.2); }
+  .launch-green:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(16,185,129,0.08); }
+
+  /* WIKI SECTION */
+  .wiki-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .wiki-card {
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .wiki-card:hover { border-color: var(--border-bright); background: var(--surface-hover); }
+  .wiki-icon { font-size: 18px; margin-bottom: 6px; }
+  .wiki-label { font-size: 10px; font-weight: 700; color: var(--text); letter-spacing: 0.04em; }
+  .wiki-desc { font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+  /* RIGHT SIDEBAR */
+  .sidebar {
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-section {
+    padding: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  /* ATTENTION ITEMS */
+  .attention-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .attention-item:hover { background: var(--surface-hover); }
+  .attention-item:last-child { margin-bottom: 0; }
+  .attention-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .attention-text { font-size: 11px; color: var(--text); line-height: 1.5; }
+  .attention-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .attention-action {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    cursor: pointer;
+  }
+
+  /* AGENT HEALTH */
+  .agent-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 11px;
+  }
+  .agent-row:last-child { border-bottom: none; }
+  .agent-name { color: var(--text); font-weight: 500; }
+  .agent-status { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); }
+  .agent-last { font-size: 9px; color: var(--muted); }
+
+  /* PHONE NOTIF SECTION */
+  .notif-section { padding: 18px; }
+  .notif-card {
+    padding: 14px;
+    border-radius: 10px;
+    background: rgba(0,240,255,0.05);
+    border: 1px solid rgba(0,240,255,0.15);
+  }
+  .notif-title { font-size: 11px; font-weight: 700; color: var(--cyan); margin-bottom: 6px; }
+  .notif-body { font-size: 10px; color: var(--muted); line-height: 1.6; }
+  .notif-time { font-size: 9px; color: var(--muted); margin-top: 8px; opacity: 0.7; }
+
+  /* CONCEPT BADGE */
+  .concept-bar {
+    background: rgba(245,158,11,0.12);
+    border-top: 1px solid rgba(245,158,11,0.2);
+    padding: 8px 24px;
+    font-size: 10px;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+    text-align: center;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">MIRR<span>Ø</span>R <span style="color:#444; font-weight:400; font-size:10px; letter-spacing:0.1em; margin-left:8px">360 COMMAND CENTER</span></div>
+
+  <div class="agent-pills">
+    <div class="pill"><div class="dot dot-green"></div> Chief of Staff</div>
+    <div class="pill"><div class="dot dot-green"></div> Track B</div>
+    <div class="pill"><div class="dot dot-amber"></div> Image Engine</div>
+    <div class="pill"><div class="dot dot-muted"></div> Track A</div>
+    <div class="pill"><div class="dot dot-green"></div> Publisher</div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="notif-toggle">
+      <div class="toggle-switch"></div>
+      <span>iMessage alerts ON</span>
+    </div>
+    <div class="time-display">Last sync: 5:04am by Chief of Staff</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="content">
+
+    <!-- MORNING QUEUE -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">Morning Queue -- Today's Transmissions</div>
+        <div class="section-meta">2 ready for your review</div>
+      </div>
+      <div class="queue-grid">
+
+        <div class="tx-card track-a">
+          <div>
+            <div class="tx-track">Track A -- TikTok Content Gap</div>
+            <div class="tx-title" style="margin-top:6px">Who Wrote You?</div>
+            <div class="tx-hook" style="margin-top:6px">"autofill" -- 2.1M monthly searches, rising fast, low content supply</div>
+          </div>
+          <div class="tx-lens">The Story of The Self</div>
+          <div class="tx-checks">
+            <div class="check check-pass">Core Terms ✓</div>
+            <div class="check check-pass">Blade ✓</div>
+            <div class="check check-pass">Ego-bait title ✓</div>
+            <div class="check check-pass">Sign-off ✓</div>
+          </div>
+          <div class="tx-actions">
+            <button class="btn btn-approve">Approve</button>
+            <button class="btn btn-revise">Revise</button>
+            <button class="btn btn-reject">Kill</button>
+          </div>
+        </div>
+
+        <div class="tx-card track-b">
+          <div>
+            <div class="tx-track">Track B -- World News</div>
+            <div class="tx-title" style="margin-top:6px">You Already Knew</div>
+            <div class="tx-hook" style="margin-top:6px">WHO declares end of COVID public health emergency -- you already stopped thinking about it 2 years ago</div>
+          </div>
+          <div class="tx-lens">The Great Forgetting</div>
+          <div class="tx-checks">
+            <div class="check check-pass">Core Terms ✓</div>
+            <div class="check check-pass">Blade ✓</div>
+            <div class="check check-fail">Title: needs sharpening</div>
+            <div class="check check-pass">Sign-off ✓</div>
+          </div>
+          <div class="tx-actions">
+            <button class="btn btn-approve">Approve</button>
+            <button class="btn btn-revise">Revise</button>
+            <button class="btn btn-reject">Kill</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LAUNCH PAD -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">Launch Pad</div>
+        <div class="section-meta">Trigger agents without remembering commands</div>
+      </div>
+      <div class="launch-grid">
+        <div class="launch-btn launch-cyan">
+          <div class="launch-icon">🎯</div>
+          <div class="launch-label">Pull Content Gap</div>
+          <div class="launch-desc">Open TikTok Creator Search. Today's Track A starts here.</div>
+        </div>
+        <div class="launch-btn launch-magenta">
+          <div class="launch-icon">📰</div>
+          <div class="launch-label">Kick Track B</div>
+          <div class="launch-desc">Draft a new world news transmission from today's headlines.</div>
+        </div>
+        <div class="launch-btn launch-green">
+          <div class="launch-icon">🖼</div>
+          <div class="launch-label">Regen Image</div>
+          <div class="launch-desc">Queue a new image for a safety-blocked transmission.</div>
+        </div>
+        <div class="launch-btn">
+          <div class="launch-icon">✅</div>
+          <div class="launch-label">Publish Queue</div>
+          <div class="launch-desc">Push all approved + imaged transmissions to the blog now.</div>
+        </div>
+        <div class="launch-btn">
+          <div class="launch-icon">🔍</div>
+          <div class="launch-label">Core Term Audit</div>
+          <div class="launch-desc">Run a full audit on any pending draft before it moves to review.</div>
+        </div>
+        <div class="launch-btn launch-cyan" style="border-style:dashed; opacity:0.5;">
+          <div class="launch-icon">⚡</div>
+          <div class="launch-label">+ New Agent</div>
+          <div class="launch-desc">Flag a capability gap. Chief of Staff builds the skill.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WIKI / DOCS -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">Wiki -- Reference Docs</div>
+        <div class="section-meta">Always up to date from GitHub</div>
+      </div>
+      <div class="wiki-grid">
+        <div class="wiki-card">
+          <div class="wiki-icon">🗺</div>
+          <div class="wiki-label">Architecture Map</div>
+          <div class="wiki-desc">Agent structure, model tiers, feedback loop</div>
+        </div>
+        <div class="wiki-card">
+          <div class="wiki-icon">⚔️</div>
+          <div class="wiki-label">Core Terms</div>
+          <div class="wiki-desc">Watchlist, derivatives, capitalization rules</div>
+        </div>
+        <div class="wiki-card">
+          <div class="wiki-icon">📖</div>
+          <div class="wiki-label">Agent Learnings</div>
+          <div class="wiki-desc">Living feedback KB -- all principles logged</div>
+        </div>
+        <div class="wiki-card">
+          <div class="wiki-icon">🎨</div>
+          <div class="wiki-label">Visual Spec</div>
+          <div class="wiki-desc">Eye obliteration, glitch level, light backgrounds</div>
+        </div>
+        <div class="wiki-card">
+          <div class="wiki-icon">💡</div>
+          <div class="wiki-label">Transmission Guide</div>
+          <div class="wiki-desc">Breath-line rhythm, ego-bait titles, blade mandate</div>
+        </div>
+        <div class="wiki-card">
+          <div class="wiki-icon">📊</div>
+          <div class="wiki-label">Pipeline Ops</div>
+          <div class="wiki-desc">TTL buckets, lens rotation, track cadence</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Needs Your Attention</div>
+
+      <div class="attention-item">
+        <div class="attention-dot" style="background: var(--red)"></div>
+        <div>
+          <div class="attention-text">Track B title "You Already Knew" too soft. Mechanism is reader's 3-second scroll cycle, not the announcement.</div>
+          <div class="attention-meta">id=94 -- expires in 19h</div>
+          <div class="attention-action">Give feedback →</div>
+        </div>
+      </div>
+
+      <div class="attention-item">
+        <div class="attention-dot" style="background: var(--amber)"></div>
+        <div>
+          <div class="attention-text">Image safety block on id=95. Celebrity name triggered filter. Chief of Staff has queued a regen with alternate subject.</div>
+          <div class="attention-meta">Waiting on your approval to proceed</div>
+          <div class="attention-action">Approve regen →</div>
+        </div>
+      </div>
+
+      <div class="attention-item">
+        <div class="attention-dot" style="background: var(--cyan)"></div>
+        <div>
+          <div class="attention-text">No skill exists for "GitHub Pages deploy." Chief of Staff recommends building it to replace Netlify CLI.</div>
+          <div class="attention-meta">Flag: new skill needed</div>
+          <div class="attention-action">Build skill →</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Agent Health</div>
+
+      <div class="agent-row">
+        <div class="agent-name">Chief of Staff</div>
+        <div class="agent-status"><div class="dot dot-green"></div> 5:04am</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-name">Track B Engine</div>
+        <div class="agent-status"><div class="dot dot-green"></div> 2:31am</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-name">News Pull</div>
+        <div class="agent-status"><div class="dot dot-green"></div> 2:07am</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-name">Image Engine</div>
+        <div class="agent-status"><div class="dot dot-amber"></div> 1 blocked</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-name">Core Term Audit</div>
+        <div class="agent-status"><div class="dot dot-green"></div> on-demand</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-name">Website Publisher</div>
+        <div class="agent-status"><div class="dot dot-green"></div> hourly</div>
+      </div>
+      <div class="agent-row">
+        <div class="agent-name">Track A</div>
+        <div class="agent-status"><div class="dot dot-muted"></div> needs you</div>
+      </div>
+    </div>
+
+    <div class="notif-section">
+      <div class="sidebar-title">This Morning's iMessage</div>
+      <div class="notif-card">
+        <div class="notif-title">Chief of Staff -- 5:04am</div>
+        <div class="notif-body">
+          2 transmissions ready for your review.<br>
+          1 image safety block needs approval.<br>
+          Track B title flagged -- needs sharpening before approval.<br>
+          No Core Term failures overnight.<br>
+          New skill gap identified: GitHub Pages deploy.
+        </div>
+        <div class="notif-time">Sent via iMessage to stillpointventuresllc@pm.me</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="concept-bar">CONCEPT WIREFRAME -- Not the working dashboard. This is the design direction for Bodhi's approval before build begins.</div>
+
+</body>
+</html>

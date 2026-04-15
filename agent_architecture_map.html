@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRROR Agent Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f3;
+    color: #111;
+    padding: 32px 24px;
+    min-height: 100vh;
+  }
+  h1 { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #888; margin-bottom: 4px; }
+  h2 { font-size: 22px; font-weight: 800; color: #111; margin-bottom: 32px; }
+
+  /* LAYERS */
+  .layers { display: flex; flex-direction: column; gap: 0; }
+  .layer {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: stretch;
+    border-top: 1px solid #ddd;
+  }
+  .layer:last-child { border-bottom: 1px solid #ddd; }
+  .layer-label {
+    padding: 20px 16px 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    border-right: 1px solid #ddd;
+  }
+  .layer-name { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .layer-model { font-size: 10px; color: #999; font-weight: 500; }
+  .layer-cost { font-size: 9px; color: #bbb; margin-top: 2px; }
+  .layer-content { padding: 20px 0 20px 20px; }
+
+  /* MODEL TIER COLORS */
+  .tier-opus .layer-name { color: #7c3aed; }
+  .tier-opus .layer-model { color: #7c3aed; opacity: 0.7; }
+  .tier-sonnet .layer-name { color: #0ea5e9; }
+  .tier-sonnet .layer-model { color: #0ea5e9; opacity: 0.7; }
+  .tier-haiku .layer-name { color: #10b981; }
+  .tier-haiku .layer-model { color: #10b981; opacity: 0.7; }
+
+  /* CARDS */
+  .cards { display: flex; flex-wrap: wrap; gap: 10px; }
+  .card {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid;
+    position: relative;
+  }
+  .card-sub { font-size: 10px; font-weight: 400; color: #888; margin-top: 2px; }
+  .card-badge {
+    display: inline-block;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .card-bodhi { background: #faf5ff; border-color: #7c3aed; color: #4c1d95; }
+  .card-bodhi .card-badge { background: #7c3aed; color: white; }
+
+  .card-skill { background: #f0f9ff; border-color: #0ea5e9; color: #0c4a6e; }
+  .card-skill .card-badge { background: #0ea5e9; color: white; }
+
+  .card-shared { background: #ecfdf5; border-color: #10b981; color: #064e3b; }
+  .card-shared .card-badge { background: #10b981; color: white; }
+
+  .card-mcp { background: #fff7ed; border-color: #f97316; color: #7c2d12; }
+  .card-mcp .card-badge { background: #f97316; color: white; }
+
+  .card-task { background: #f9fafb; border-color: #6b7280; color: #374151; }
+  .card-task .card-badge { background: #6b7280; color: white; }
+
+  .card-haiku { background: #f0fdf4; border-color: #10b981; color: #064e3b; }
+
+  /* ARROWS */
+  .arrow-down {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0;
+    color: #ccc;
+    font-size: 20px;
+    background: #f5f5f3;
+  }
+
+  /* FEEDBACK LOOP */
+  .feedback-section {
+    margin-top: 32px;
+    background: white;
+    border: 1.5px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .feedback-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 16px; }
+  .feedback-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .feedback-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 100px;
+  }
+  .step-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .step-label { font-size: 10px; font-weight: 600; color: #555; text-align: center; line-height: 1.3; }
+  .step-arrow { color: #ccc; font-size: 18px; flex: 0; padding: 0 4px; margin-bottom: 16px; }
+
+  /* SKILL SELF-BUILD */
+  .selfbuild {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: #fffbeb;
+    border: 1.5px solid #fbbf24;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #78350f;
+    line-height: 1.6;
+  }
+  .selfbuild strong { font-weight: 700; }
+
+  /* COST TABLE */
+  .cost-table {
+    margin-top: 32px;
+    background: white;
+    border: 1.5px solid #e5e5e5;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .cost-table-header {
+    display: grid;
+    grid-template-columns: 100px 120px 1fr 100px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 10px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+  }
+  .cost-row {
+    display: grid;
+    grid-template-columns: 100px 120px 1fr 100px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f4f6;
+    align-items: center;
+    font-size: 12px;
+  }
+  .cost-row:last-child { border-bottom: none; }
+  .cost-model { font-weight: 700; }
+  .cost-use { color: #555; }
+  .cost-agents { color: #777; font-size: 11px; }
+  .cost-price { font-weight: 600; }
+  .opus-row .cost-model { color: #7c3aed; }
+  .sonnet-row .cost-model { color: #0ea5e9; }
+  .haiku-row .cost-model { color: #10b981; }
+
+  /* RIGHT HAND CALLOUT */
+  .rh-callout {
+    background: white;
+    border: 2px solid #0ea5e9;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+  .rh-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #0ea5e9; margin-bottom: 8px; }
+  .rh-title { font-size: 18px; font-weight: 800; color: #111; margin-bottom: 4px; }
+  .rh-desc { font-size: 12px; color: #666; line-height: 1.6; }
+  .rh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .rh-col { padding: 12px; border-radius: 8px; font-size: 11px; line-height: 1.5; }
+  .rh-col-bodhi { background: #faf5ff; border: 1px solid #c4b5fd; }
+  .rh-col-cos { background: #f0f9ff; border: 1px solid #bae6fd; }
+  .rh-col-label { font-weight: 700; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+
+  /* SKILLS COUNT */
+  .skills-note {
+    margin-top: 32px;
+    background: white;
+    border: 1.5px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .sn-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 16px; }
+  .sn-stat { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  .sn-num { font-size: 28px; font-weight: 800; color: #111; }
+  .sn-label { font-size: 12px; color: #666; }
+  .sn-explain { font-size: 11px; color: #888; line-height: 1.6; margin-top: 12px; border-top: 1px solid #f3f4f6; padding-top: 12px; }
+</style>
+</head>
+<body>
+
+<h1>MIRROR Publishing</h1>
+<h2>Agent Architecture Map</h2>
+
+<!-- RIGHT HAND PERSON -->
+<div class="rh-callout">
+  <div class="rh-label">Your Right-Hand Person</div>
+  <div class="rh-title">Chief of Staff</div>
+  <div class="rh-desc">One conductor. Everything else is a specialist it dispatches.</div>
+  <div class="rh-grid">
+    <div class="rh-col rh-col-bodhi">
+      <div class="rh-col-label">When You're Present</div>
+      You open Cowork. Claude loads the right skills. You are the strategic mind. You approve, redirect, give feedback. This IS the Master Strategist layer. It doesn't need to be a scheduled task -- it's you, here, now.
+    </div>
+    <div class="rh-col rh-col-cos">
+      <div class="rh-col-label">When You're Away</div>
+      Chief of Staff runs at 5am. It checks the pipeline. It dispatches specialists. It propagates your feedback. It writes the morning report. It is the conductor when the conductor isn't in the room.
+    </div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE LAYERS -->
+<div class="layers">
+
+  <!-- LAYER 1: BODHI -->
+  <div class="layer tier-opus">
+    <div class="layer-label">
+      <div class="layer-name">You</div>
+      <div class="layer-model">Opus-equivalent</div>
+      <div class="layer-cost">Live sessions only</div>
+    </div>
+    <div class="layer-content">
+      <div class="cards">
+        <div class="card card-bodhi">
+          Cowork Session
+          <span class="card-badge">LIVE</span>
+          <div class="card-sub">Strategic decisions, approvals, feedback</div>
+        </div>
+        <div class="card card-bodhi">
+          Ops Dashboard
+          <span class="card-badge">ASYNC</span>
+          <div class="card-sub">Approve text, approve images, give feedback</div>
+        </div>
+        <div class="card card-bodhi">
+          Morning Queue
+          <span class="card-badge">DAILY</span>
+          <div class="card-sub">2 transmissions ready by 6am. Review and run Opus workflow.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">&#8595;</div>
+
+  <!-- LAYER 2: CLAUDE + SKILLS -->
+  <div class="layer tier-sonnet">
+    <div class="layer-label">
+      <div class="layer-name">Claude</div>
+      <div class="layer-model">One Agent</div>
+      <div class="layer-cost">Many skills</div>
+    </div>
+    <div class="layer-content">
+      <div class="cards" style="margin-bottom:12px">
+        <div class="card card-shared">
+          _shared/
+          <span class="card-badge">INHERITED BY ALL</span>
+          <div class="card-sub">agent_learnings.md &bull; brand_voice.md &bull; infrastructure.md</div>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card card-skill">
+          chief-of-staff
+          <span class="card-badge">SONNET</span>
+          <div class="card-sub">Conductor. Morning report. Dispatch.</div>
+        </div>
+        <div class="card card-skill">
+          track-b-agent
+          <span class="card-badge">SONNET</span>
+          <div class="card-sub">World news. Cultural commentary. Blade first.</div>
+        </div>
+        <div class="card card-skill">
+          track-a-agent
+          <span class="card-badge">SONNET</span>
+          <div class="card-sub">TikTok gap terms. Hook-chain narration.</div>
+        </div>
+        <div class="card card-skill">
+          image-engine
+          <span class="card-badge">SONNET</span>
+          <div class="card-sub">Signal image generation. Visual spec enforcement.</div>
+        </div>
+        <div class="card card-skill">
+          website-publisher
+          <span class="card-badge">HAIKU</span>
+          <div class="card-sub">Blog posts. TTL checks. Hourly publish.</div>
+        </div>
+        <div class="card card-skill" style="border-style:dashed; opacity:0.6">
+          core-term-audit
+          <span class="card-badge">HAIKU</span>
+          <div class="card-sub">Pass / fail. Auto-fix caps. No rewrites.</div>
+        </div>
+        <div class="card card-skill" style="border-style:dashed; opacity:0.5">
+          + new skills
+          <span class="card-badge">AUTO-BUILD</span>
+          <div class="card-sub">Gap identified → flagged → skill-creator builds it</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">&#8595;</div>
+
+  <!-- LAYER 3: MCP CONNECTIONS -->
+  <div class="layer">
+    <div class="layer-label">
+      <div class="layer-name">MCPs</div>
+      <div class="layer-model">Connectivity</div>
+      <div class="layer-cost">External world</div>
+    </div>
+    <div class="layer-content">
+      <div class="cards">
+        <div class="card card-mcp">Supabase<div class="card-sub">State, queue, data, approvals</div></div>
+        <div class="card card-mcp">Web Search<div class="card-sub">News, research, trends</div></div>
+        <div class="card card-mcp">Gmail<div class="card-sub">Outreach, replies</div></div>
+        <div class="card card-mcp">Desktop Commander<div class="card-sub">File system, scripts, deploys</div></div>
+        <div class="card card-mcp">Netlify<div class="card-sub">Blog publishing</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">&#8595;</div>
+
+  <!-- LAYER 4: SCHEDULED TASKS (THIN WRAPPERS) -->
+  <div class="layer tier-haiku">
+    <div class="layer-label">
+      <div class="layer-name">Tasks</div>
+      <div class="layer-model">Thin wrappers</div>
+      <div class="layer-cost">3-line invocations</div>
+    </div>
+    <div class="layer-content">
+      <div class="cards">
+        <div class="card card-task">mirror-chief-of-staff<div class="card-sub">5am daily</div></div>
+        <div class="card card-task">mirror-track-b-engine<div class="card-sub">2:30am daily</div></div>
+        <div class="card card-task">mirror-news-pull<div class="card-sub">2am daily</div></div>
+        <div class="card card-task">mirror-image-engine<div class="card-sub">3x daily</div></div>
+        <div class="card card-task">mirror-website-publisher<div class="card-sub">Hourly</div></div>
+        <div class="card card-task">mirror-trigger-poller<div class="card-sub">Every 10 min</div></div>
+      </div>
+      <div style="margin-top:10px; font-size:11px; color:#aaa;">
+        Track A has no scheduled task -- it requires you + live Chrome scrape. You trigger it by opening Cowork and saying "pull today's Content Gap."
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FEEDBACK LOOP -->
+<div class="feedback-section">
+  <div class="feedback-title">The Living Knowledge Loop -- How Skills Stay Alive</div>
+  <div class="feedback-steps">
+    <div class="feedback-step">
+      <div class="step-icon" style="background:#faf5ff; border:2px solid #7c3aed; font-size:18px;">👤</div>
+      <div class="step-label">Bodhi gives<br>feedback</div>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="feedback-step">
+      <div class="step-icon" style="background:#f0f9ff; border:2px solid #0ea5e9; font-size:14px; font-weight:800; color:#0ea5e9">CoS</div>
+      <div class="step-label">Chief of Staff<br>extracts principle</div>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="feedback-step">
+      <div class="step-icon" style="background:#ecfdf5; border:2px solid #10b981; font-size:14px; font-weight:800; color:#10b981">AL</div>
+      <div class="step-label">agent_learnings.md<br>updated once</div>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="feedback-step">
+      <div class="step-icon" style="background:#f9fafb; border:2px solid #6b7280; font-size:18px;">🔄</div>
+      <div class="step-label">Every agent reads<br>it at next startup</div>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="feedback-step">
+      <div class="step-icon" style="background:#fff7ed; border:2px solid #f97316; font-size:18px;">📈</div>
+      <div class="step-label">Fleet-wide<br>improvement</div>
+    </div>
+  </div>
+  <div style="margin-top:16px; font-size:11px; color:#888; line-height:1.7;">
+    This IS the neural network update mechanism. One file. All agents read it. You never propagate feedback manually again.<br>
+    Old principles get refined, not deleted -- the file grows smarter over time. That is continuous learning with no infrastructure cost.
+  </div>
+
+  <div class="selfbuild">
+    <strong>Agentic self-healing: yes, this works today.</strong> Pattern: agent hits a task with no skill for it → inserts into agent_notifications "No skill exists for [X], recommend building" → Chief of Staff surfaces it in morning report → You say yes → skill-creator skill (already built into Cowork) generates the new skill folder → it's live for the next run. You don't pre-build every skill. The fleet flags gaps and builds them on demand.
+  </div>
+</div>
+
+<!-- COST TABLE -->
+<div class="cost-table">
+  <div class="cost-table-header">
+    <div>Model</div>
+    <div>When to use</div>
+    <div>Which agents</div>
+    <div>Relative cost</div>
+  </div>
+  <div class="cost-row opus-row">
+    <div class="cost-model">Opus</div>
+    <div class="cost-use">Strategic decisions, architectural thinking, deep reasoning</div>
+    <div class="cost-agents">You (live sessions only) -- NOT scheduled tasks</div>
+    <div class="cost-price" style="color:#7c3aed">●●●●●</div>
+  </div>
+  <div class="cost-row sonnet-row">
+    <div class="cost-model">Sonnet</div>
+    <div class="cost-use">Content drafting, chief of staff, moderate reasoning</div>
+    <div class="cost-agents">track-b, track-a, chief-of-staff, image-engine</div>
+    <div class="cost-price" style="color:#0ea5e9">●●●○○</div>
+  </div>
+  <div class="cost-row haiku-row">
+    <div class="cost-model">Haiku</div>
+    <div class="cost-use">Classification, audits, quick gate checks, publishing logic</div>
+    <div class="cost-agents">core-term-audit, website-publisher, trigger-poller</div>
+    <div class="cost-price" style="color:#10b981">●○○○○</div>
+  </div>
+</div>
+
+<!-- SKILLS COUNT NOTE -->
+<div class="skills-note">
+  <div class="sn-title">How many skills do you actually need?</div>
+  <div class="sn-stat">
+    <div class="sn-num">6</div>
+    <div class="sn-label">core Mirror skills to build in Phase 1</div>
+  </div>
+  <div class="sn-stat">
+    <div class="sn-num">100+</div>
+    <div class="sn-label">Cowork skills you already have (blog, SEO, docx, pptx, social, sales, etc.)</div>
+  </div>
+  <div class="sn-stat">
+    <div class="sn-num">0</div>
+    <div class="sn-label">skills you need to pre-build speculatively -- agents flag gaps and build on demand</div>
+  </div>
+  <div class="sn-explain">
+    A website publisher agent doesn't need its own Core Term knowledge. It calls the core-term-audit skill. Skills compose -- you don't duplicate knowledge across skills, you reference it. The _shared/ folder is the foundation everything sits on. That's where the blade mandate lives. That's where the feedback loop lives. Each specialist skill is thin because _shared/ is deep.
+    <br><br>
+    For Bodhi 360 scale: same architecture, different _shared/ per project. Mirror's shared knowledge doesn't leak into Harmonic. Harmonic's day-job context doesn't contaminate Mirror's anonymity rules. Isolated by design. One Claude. Right skills loaded. Right context only.
+  </div>
+</div>
+
+</body>
+</html>
