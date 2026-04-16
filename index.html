@@ -19,15 +19,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .sidebar::after{content:'';position:absolute;top:0;right:0;bottom:0;width:1px;background:linear-gradient(to bottom,rgba(0,207,255,0.35),transparent 60%,rgba(255,45,150,0.2))}
 .brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.06)}
 .brand-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:0.03em;display:block}
-.brand-sub{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--cyan);letter-spacing:0.16em;text-transform:uppercase;opacity:.8;margin-top:3px}
+.brand-sub{font-family:monospace;font-size:10px;font-weight:600;color:var(--cyan);letter-spacing:0.16em;text-transform:uppercase;opacity:.8;margin-top:3px}
 .nav{flex:1;padding:14px 10px;overflow-y:auto}
-.nav-sec{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.24);padding:0 10px;margin:16px 0 5px}
+.nav-sec{font-family:monospace;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.24);padding:0 10px;margin:16px 0 5px}
 .nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;border:none;background:transparent;color:rgba(255,255,255,0.50);font-family:'Plus Jakarta Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;transition:all .17s;text-align:left}
 .nav-btn:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.82)}
 .nav-btn.active{background:rgba(0,207,255,0.12);color:#fff;border:1px solid rgba(0,207,255,0.22)}
 .nav-btn.active .nav-ico{color:var(--cyan)}
 .nav-ico{font-size:14px;width:20px;text-align:center;flex-shrink:0;color:rgba(255,255,255,0.30)}
-.nav-badge{margin-left:auto;background:var(--magenta);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px}
+.nav-badge{margin-left:auto;background:var(--magenta);color:#fff;font-family:monospace;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px}
 .sidebar-footer{padding:12px 10px 14px;border-top:1px solid rgba(255,255,255,0.06)}
 .cos-card{background:rgba(255,255,255,0.04);border:1px solid rgba(0,207,255,0.14);border-radius:12px;padding:11px 13px;margin-bottom:8px}
 .cos-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
@@ -35,10 +35,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .cos-dot.paused{background:rgba(150,160,180,0.6);box-shadow:none;animation:none}
 @keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.35}}
 .cos-name{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:#fff;letter-spacing:.08em;text-transform:uppercase}
-.cos-st{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.40);line-height:1.4}
+.cos-st{font-family:monospace;font-size:10px;color:rgba(255,255,255,0.40);line-height:1.4}
 .msg-toggle{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:10px;border:1px solid rgba(255,255,255,0.07);cursor:pointer;transition:all .17s;background:rgba(255,255,255,0.03)}
 .msg-toggle:hover{border-color:rgba(0,207,255,0.2)}
-.msg-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:rgba(255,255,255,0.42);text-transform:uppercase;letter-spacing:.12em;flex:1}
+.msg-lbl{font-family:monospace;font-size:10px;font-weight:600;color:rgba(255,255,255,0.42);text-transform:uppercase;letter-spacing:.12em;flex:1}
 .sw{width:34px;height:19px;border-radius:10px;background:rgba(255,255,255,0.14);position:relative;transition:background .22s;flex-shrink:0}
 .sw.on{background:var(--cyan)}
 .sw-knob{position:absolute;top:2.5px;left:2.5px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:transform .22s}
@@ -46,13 +46,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .main{flex:1;display:flex;flex-direction:column;min-width:0;height:100vh}
 .topbar{height:var(--topbar-h);display:flex;align-items:center;padding:0 22px;gap:12px;background:rgba(255,255,255,0.60);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%);border-bottom:1px solid rgba(255,255,255,0.80);flex-shrink:0}
 .topbar-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text-primary);letter-spacing:.02em}
-.topbar-time{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)}
+.topbar-time{font-family:monospace;font-size:12px;color:var(--text-dim)}
 .topbar-sep{width:1px;height:20px;background:rgba(0,0,50,0.10)}
 .agent-pills{display:flex;gap:5px;flex-wrap:nowrap;overflow-x:auto}
-.pill{display:flex;align-items:center;gap:5px;padding:3px 9px 3px 6px;border-radius:20px;background:rgba(255,255,255,0.70);border:1px solid rgba(255,255,255,0.92);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:.04em;cursor:default;transition:all .17s;white-space:nowrap;position:relative}
+.pill{display:flex;align-items:center;gap:5px;padding:3px 9px 3px 6px;border-radius:20px;background:rgba(255,255,255,0.70);border:1px solid rgba(255,255,255,0.92);font-family:monospace;font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:.04em;cursor:default;transition:all .17s;white-space:nowrap;position:relative}
 .pill:hover{background:rgba(255,255,255,0.92);transform:translateY(-1px)}
 .pill:hover .pill-tt{display:block}
-.pill-tt{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--navy-95);color:rgba(255,255,255,0.85);font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 11px;border-radius:8px;white-space:nowrap;z-index:50;border:1px solid rgba(255,255,255,0.10);pointer-events:none;line-height:1.6}
+.pill-tt{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--navy-95);color:rgba(255,255,255,0.85);font-family:monospace;font-size:10px;padding:7px 11px;border-radius:8px;white-space:nowrap;z-index:50;border:1px solid rgba(255,255,255,0.10);pointer-events:none;line-height:1.6}
 .pill-tt::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--navy-95)}
 .pill-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .pill-dot.paused{background:rgba(130,140,165,0.55)}
@@ -60,53 +60,53 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .bell-wrap{position:relative}
 .bell-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.90);background:rgba(255,255,255,0.70);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .17s}
 .bell-btn:hover{background:rgba(255,255,255,0.92);transform:scale(1.06)}
-.bell-badge{position:absolute;top:-2px;right:-2px;background:var(--red);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white}
+.bell-badge{position:absolute;top:-2px;right:-2px;background:var(--red);color:#fff;font-family:monospace;font-size:9px;font-weight:700;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white}
 .bell-badge.hidden{display:none}
 .content{flex:1;overflow-y:auto;padding:20px 22px 40px}
 .content::-webkit-scrollbar{width:5px}
 .content::-webkit-scrollbar-track{background:transparent}
 .content::-webkit-scrollbar-thumb{background:rgba(0,0,50,0.13);border-radius:3px}
+.section{display:none}
+.section.active{display:block}
 .banner{background:rgba(255,255,255,0.68);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,0.90);box-shadow:var(--glass-shadow);border-radius:14px;padding:13px 18px;margin-bottom:18px;position:relative;overflow:hidden;display:flex;align-items:center;gap:14px}
 .banner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan) 25%,var(--magenta) 50%,var(--cyan) 75%,transparent);background-size:200% 100%;animation:shimmer 3.5s linear infinite}
 @keyframes shimmer{0%{background-position:-100% 0}100%{background-position:100% 0}}
-.banner-text{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--text-secondary);letter-spacing:.04em;flex:1;line-height:1.5}
+.banner-text{font-family:monospace;font-size:11.5px;font-weight:600;color:var(--text-secondary);letter-spacing:.04em;flex:1;line-height:1.5}
 .banner-text strong{color:var(--text-primary)}
-.banner-tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 11px;border-radius:20px;background:rgba(255,176,32,0.10);color:#7A4D00;border:1px solid rgba(255,176,32,0.22);white-space:nowrap}
+.banner-tag{font-family:monospace;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 11px;border-radius:20px;background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22);white-space:nowrap}
 .sec-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;margin-top:6px}
 .sec-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary)}
-.sec-meta{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-dim)}
+.sec-meta{font-family:monospace;font-size:10.5px;color:var(--text-dim)}
 .status-row{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:22px}
 .stat-card{background:rgba(255,255,255,0.68);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,0.90);box-shadow:var(--glass-shadow);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:all .2s}
 .stat-card:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,60,0.11),inset 0 1px 0 rgba(255,255,255,0.95)}
-.stat-card.hi{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,207,255,0.15),var(--glass-shadow)}
 .stat-accent{width:3px;height:38px;border-radius:2px;flex-shrink:0}
 .stat-num{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;line-height:1;color:var(--text-primary)}
-.stat-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-dim);line-height:1.4}
+.stat-lbl{font-family:monospace;font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-dim);line-height:1.4}
 .queue-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:24px}
 .tx-card{background:rgba(255,255,255,0.68);-webkit-backdrop-filter:blur(28px) saturate(190%);backdrop-filter:blur(28px) saturate(190%);border:1px solid rgba(255,255,255,0.90);box-shadow:var(--glass-shadow);border-radius:18px;overflow:hidden;transition:all .22s}
 .tx-card:hover{box-shadow:0 12px 44px rgba(0,0,60,0.10),inset 0 1px 0 rgba(255,255,255,0.95)}
 .tx-card.killing{animation:cardKill .4s ease forwards;pointer-events:none}
 @keyframes cardKill{0%{opacity:1;transform:scale(1)}40%{opacity:.5;transform:scale(0.97)}100%{opacity:0;transform:scale(0.93) translateY(-8px)}}
-.tx-card.hi-card{border:2px solid var(--cyan);box-shadow:0 0 0 3px rgba(0,207,255,0.12),var(--glass-shadow)}
-.tx-top{padding:15px 17px 0}
-.tx-meta-row{display:flex;align-items:center;gap:7px;margin-bottom:9px;flex-wrap:wrap}
-.track-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+.track-tag{font-family:monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
 .track-tag.a{background:rgba(255,45,150,0.10);color:var(--magenta);border:1px solid rgba(255,45,150,0.22)}
 .track-tag.b{background:rgba(0,207,255,0.10);color:#0092BB;border:1px solid rgba(0,207,255,0.22)}
-.lens-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:var(--text-dim);background:rgba(0,0,50,0.04);border:1px solid rgba(0,0,50,0.08);padding:2px 8px;border-radius:10px}
-.exp-tag{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
-.exp-tag.warn{background:rgba(255,176,32,0.10);color:#7A4D00;border:1px solid rgba(255,176,32,0.22)}
-.exp-tag.crit{background:rgba(255,69,102,0.10);color:var(--red);border:1px solid rgba(255,69,102,0.22);animation:blink 1.6s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.45}}
+.lens-tag{font-family:monospace;font-size:9px;font-weight:500;color:var(--text-dim);background:rgba(0,0,50,0.04);border:1px solid rgba(0,0,50,0.08);padding:2px 8px;border-radius:10px}
+.status-tag{font-family:monospace;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:auto}
+.status-tag.draft{background:rgba(255,176,32,0.10);color:#7A4D00;border:1px solid rgba(255,176,32,0.22)}
+.status-tag.review{background:rgba(0,207,255,0.10);color:#005F80;border:1px solid rgba(0,207,255,0.22)}
+.status-tag.approved{background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)}
+.tx-top{padding:15px 17px 0}
+.tx-meta-row{display:flex;align-items:center;gap:7px;margin-bottom:9px;flex-wrap:wrap}
 .tx-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;line-height:1.25;color:var(--text-primary);margin-bottom:8px;letter-spacing:-.015em}
 .tx-hook{font-size:13px;line-height:1.55;color:var(--text-secondary)}
-.tx-expand-btn{background:none;border:none;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--cyan);cursor:pointer;padding:7px 17px 0;display:block;letter-spacing:.06em;transition:opacity .17s;width:100%;text-align:left}
+.tx-expand-btn{background:none;border:none;font-family:monospace;font-size:10.5px;font-weight:600;color:var(--cyan);cursor:pointer;padding:7px 17px 0;display:block;letter-spacing:.06em;transition:opacity .17s;width:100%;text-align:left}
 .tx-expand-btn:hover{opacity:.7}
 .tx-expand{display:none;padding:8px 17px 0}
 .tx-expand.open{display:block}
-.tx-body{font-size:12.5px;line-height:2;color:var(--text-secondary);white-space:pre-line;border-left:2px solid rgba(0,207,255,0.25);padding-left:12px;margin-top:8px;font-family:'Plus Jakarta Sans',sans-serif}
+.tx-body{font-size:12.5px;line-height:2;color:var(--text-secondary);white-space:pre-line;border-left:2px solid rgba(0,207,255,0.25);padding-left:12px;margin-top:8px}
 .checkpoints{padding:9px 17px;background:rgba(0,0,50,0.025);border-top:1px solid rgba(0,0,50,0.055);display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
-.cp{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;padding:3px 8px;border-radius:6px;display:flex;align-items:center;gap:4px;letter-spacing:.03em}
+.cp{font-family:monospace;font-size:9.5px;font-weight:600;padding:3px 8px;border-radius:6px;display:flex;align-items:center;gap:4px;letter-spacing:.03em}
 .cp.pass{background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)}
 .cp.fail{background:rgba(255,69,102,0.09);color:#BB0030;border:1px solid rgba(255,69,102,0.22)}
 .cp.warn{background:rgba(255,176,32,0.10);color:#7A4D00;border:1px solid rgba(255,176,32,0.22)}
@@ -122,47 +122,40 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .btn-kill{margin-left:auto;background:rgba(255,69,102,0.08);color:var(--red);border:1px solid rgba(255,69,102,0.20)}
 .btn-kill:hover{background:rgba(255,69,102,0.16)}
 .panel{display:none;padding:13px 17px;background:rgba(0,0,50,0.03);border-top:1px solid rgba(0,0,50,0.06)}
-.panel.open{display:block;animation:sIn .22s ease}
-@keyframes sIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
-.script-lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
-.script-txt{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;color:var(--text-primary);white-space:pre-line;background:rgba(255,255,255,0.70);border:1px solid rgba(0,0,50,0.08);border-radius:9px;padding:12px 14px;margin-bottom:9px}
+.panel.open{display:block}
+.script-lbl{font-family:monospace;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+.script-txt{font-family:monospace;font-size:13px;line-height:2;color:var(--text-primary);white-space:pre-line;background:rgba(255,255,255,0.70);border:1px solid rgba(0,0,50,0.08);border-radius:9px;padding:12px 14px;margin-bottom:9px}
 .btn-copy{background:var(--navy);color:#fff;font-size:12px;padding:7px 14px}
 .btn-copy:hover{background:#1A2040}
 .fb-row{display:flex;gap:8px;align-items:flex-end}
 .fb-ta{flex:1;resize:none;border:1.5px solid rgba(0,0,50,0.12);border-radius:9px;padding:10px 12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text-primary);background:rgba(255,255,255,0.85);min-height:75px;outline:none;transition:border-color .17s;line-height:1.5}
 .fb-ta:focus{border-color:var(--cyan);background:#fff}
 .fb-ta::placeholder{color:var(--text-dim)}
-.btn-mic{width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(0,0,50,0.12);background:rgba(255,255,255,0.80);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .17s;flex-shrink:0}
-.btn-mic:hover{border-color:var(--magenta);background:rgba(255,45,150,0.07)}
-.btn-mic.listening{border-color:var(--magenta);background:rgba(255,45,150,0.12);animation:micRing 1s infinite}
-@keyframes micRing{0%,100%{box-shadow:0 0 0 0 rgba(255,45,150,0.4)}50%{box-shadow:0 0 0 8px rgba(255,45,150,0)}}
 .fb-foot{display:flex;gap:7px;align-items:center;margin-top:9px}
-.fb-hint{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text-dim);flex:1}
+.fb-hint{font-family:monospace;font-size:9.5px;color:var(--text-dim);flex:1}
 .btn-sfb{background:var(--navy);color:#fff;font-size:13px}
 .btn-sfb:hover{background:#1A2040}
 .btn-cfb{background:transparent;color:var(--text-dim);border:1px solid rgba(0,0,50,0.10);font-size:13px}
 .lp-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:24px}
 .lp-card{background:rgba(255,255,255,0.68);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,0.90);box-shadow:var(--glass-shadow);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all .2s}
 .lp-card:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,60,0.12),inset 0 1px 0 rgba(255,255,255,0.98)}
-.lp-card:active{transform:translateY(0)}
 .lp-ico{font-size:22px;line-height:1}
-.lp-lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);line-height:1.35}
+.lp-lbl{font-family:monospace;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);line-height:1.35}
 .ar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .ag-card{background:rgba(255,255,255,0.68);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,0.90);box-shadow:var(--glass-shadow);border-radius:14px;padding:12px 14px 12px 18px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s}
 .ag-card:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(0,0,60,0.10),inset 0 1px 0 rgba(255,255,255,0.95)}
 .ag-bar{position:absolute;left:0;top:0;bottom:0;width:4px}
-.ag-bar.paused{background:rgba(130,140,165,0.35)}
 .ag-name{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
 .ag-role{font-size:11px;color:var(--text-dim);margin-bottom:6px;line-height:1.3}
-.ag-st{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;padding:2px 7px;border-radius:5px;display:inline-block;background:rgba(130,140,165,0.10);color:#888}
-.ag-sched{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text-dim);margin-top:4px}
+.ag-st{font-family:monospace;font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;padding:2px 7px;border-radius:5px;display:inline-block}
+.ag-sched{font-family:monospace;font-size:9.5px;color:var(--text-dim);margin-top:4px}
 .notif-bg{display:none;position:fixed;inset:0;z-index:90;background:rgba(0,0,0,0.28);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .notif-bg.open{display:block}
 .notif-drawer{position:fixed;top:0;right:-390px;width:380px;height:100vh;background:var(--navy);z-index:95;display:flex;flex-direction:column;transition:right .3s cubic-bezier(.4,0,.2,1);border-left:1px solid rgba(255,255,255,0.08)}
 .notif-drawer.open{right:0}
 .nd-head{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:10px}
 .nd-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#fff;flex:1}
-.nd-mar{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--cyan);cursor:pointer;background:none;border:none;letter-spacing:.06em;text-transform:uppercase}
+.nd-mar{font-family:monospace;font-size:10px;font-weight:600;color:var(--cyan);cursor:pointer;background:none;border:none;letter-spacing:.06em;text-transform:uppercase}
 .nd-mar:hover{opacity:.7}
 .nd-close{background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.50);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .17s}
 .nd-close:hover{background:rgba(255,255,255,0.14);color:#fff}
@@ -172,40 +165,37 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .nd-item.unread::before{content:'';position:absolute;top:14px;left:-5px;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red)}
 .nd-item.read{opacity:.45}
 .nd-hdr{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.nd-type{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.nd-type{font-family:monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 .nd-type.action{color:var(--amber)}.nd-type.info{color:var(--cyan)}.nd-type.alert{color:var(--red)}
-.nd-age{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.25)}
+.nd-age{margin-left:auto;font-family:monospace;font-size:9px;color:rgba(255,255,255,0.25)}
 .nd-text{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5}
-.nd-cta{margin-top:7px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--cyan)}
 .modal-bg{display:none;position:fixed;inset:0;z-index:80;background:rgba(0,0,0,0.30);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{background:rgba(255,255,255,0.90);-webkit-backdrop-filter:blur(30px) saturate(200%);backdrop-filter:blur(30px) saturate(200%);border:1px solid rgba(255,255,255,0.95);box-shadow:0 24px 64px rgba(0,0,60,0.16);border-radius:20px;padding:24px 26px;width:440px;max-width:90vw;position:relative}
 .modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
-.modal-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.modal-sub{font-family:monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
 .modal-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid rgba(0,0,50,0.06);gap:10px}
 .modal-row:last-child{border-bottom:none}
-.modal-key{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
-.modal-val{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-primary);text-align:right}
+.modal-key{font-family:monospace;font-size:10.5px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
+.modal-val{font-family:monospace;font-size:11px;color:var(--text-primary);text-align:right}
 .modal-close{position:absolute;top:16px;right:18px;background:rgba(0,0,50,0.07);border:none;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .17s}
 .modal-close:hover{background:rgba(0,0,50,0.12)}
 .toast-area{position:fixed;bottom:22px;left:calc(var(--sidebar-w) + 50%);transform:translateX(-50%);display:flex;flex-direction:column-reverse;gap:7px;align-items:center;z-index:200;pointer-events:none}
-.toast{background:var(--navy);color:rgba(255,255,255,0.90);font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;padding:10px 20px;border-radius:30px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.10);box-shadow:0 8px 28px rgba(0,0,0,0.22);animation:tIn .28s ease;pointer-events:all}
+.toast{background:var(--navy);color:rgba(255,255,255,0.90);font-family:monospace;font-size:12.5px;font-weight:500;padding:10px 20px;border-radius:30px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.10);box-shadow:0 8px 28px rgba(0,0,0,0.22);animation:tIn .28s ease;pointer-events:all}
 @keyframes tIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .toast.out{animation:tOut .28s ease forwards}
 @keyframes tOut{to{opacity:0;transform:translateY(8px)}}
 .td{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .td.green{background:var(--green)}.td.amber{background:var(--amber)}.td.red{background:var(--red)}.td.cyan{background:var(--cyan)}.td.magenta{background:var(--magenta)}
-/* CoS Direct Line -- sidebar top */
 .cos-dl{margin:10px 10px 6px;background:linear-gradient(135deg,rgba(255,45,150,0.15),rgba(255,69,102,0.09));border:1px solid rgba(255,45,150,0.30);border-radius:13px;padding:11px 13px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;text-align:left;width:calc(100% - 20px)}
 .cos-dl::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,45,150,0.65),transparent)}
-.cos-dl:hover{border-color:rgba(255,45,150,0.55);background:linear-gradient(135deg,rgba(255,45,150,0.22),rgba(255,69,102,0.14));transform:translateY(-1px)}
+.cos-dl:hover{border-color:rgba(255,45,150,0.55);transform:translateY(-1px)}
 .cos-dl-row{display:flex;align-items:center;gap:7px;margin-bottom:5px}
 .cos-dl-dot{width:7px;height:7px;border-radius:50%;background:var(--magenta);box-shadow:0 0 8px var(--magenta);animation:dotPulse 2s ease-in-out infinite;flex-shrink:0}
 .cos-dl-name{font-family:'Syne',sans-serif;font-size:11.5px;font-weight:700;color:#fff;letter-spacing:.06em;flex:1}
-.cos-dl-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;padding:2px 7px;border-radius:10px;background:rgba(255,45,150,0.18);color:#FF6DB8;border:1px solid rgba(255,45,150,0.28)}
-.cos-dl-line{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;color:rgba(255,255,255,0.40);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.cos-dl-tag{font-family:monospace;font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;padding:2px 7px;border-radius:10px;background:rgba(255,45,150,0.18);color:#FF6DB8;border:1px solid rgba(255,45,150,0.28)}
+.cos-dl-line{font-family:monospace;font-size:9.5px;font-weight:600;color:rgba(255,255,255,0.40);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:7px}
 .cos-dl-line::before,.cos-dl-line::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
-/* CoS drawer */
 .cos-overlay{display:none;position:fixed;top:0;right:0;bottom:0;left:var(--sidebar-w);z-index:85;background:rgba(0,0,20,0.18);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 .cos-overlay.open{display:block}
 .cos-drawer{position:fixed;top:var(--topbar-h);right:-460px;width:440px;bottom:0;background:rgba(11,14,24,0.98);-webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);border-left:1px solid rgba(255,45,150,0.22);z-index:86;display:flex;flex-direction:column;transition:right .32s cubic-bezier(.4,0,.2,1)}
@@ -214,25 +204,25 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .cos-dh-dot{width:9px;height:9px;border-radius:50%;background:var(--magenta);box-shadow:0 0 10px var(--magenta);animation:dotPulse 2s ease-in-out infinite;flex-shrink:0}
 .cos-dh-info{flex:1}
 .cos-dh-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#fff}
-.cos-dh-sub{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:rgba(255,255,255,0.36);margin-top:2px;letter-spacing:.04em}
+.cos-dh-sub{font-family:monospace;font-size:9.5px;color:rgba(255,255,255,0.36);margin-top:2px;letter-spacing:.04em}
 .cos-dh-close{background:rgba(255,255,255,0.07);border:none;color:rgba(255,255,255,0.45);width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .17s;flex-shrink:0}
 .cos-dh-close:hover{background:rgba(255,45,150,0.20);color:#FF6DB8}
 .cos-scope-row{padding:9px 16px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap}
-.cos-sl{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:.12em;margin-right:2px;white-space:nowrap}
-.sc-pill{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:14px;border:1px solid rgba(255,255,255,0.10);background:transparent;color:rgba(255,255,255,0.38);cursor:pointer;transition:all .15s;white-space:nowrap}
+.cos-sl{font-family:monospace;font-size:8.5px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:.12em;margin-right:2px;white-space:nowrap}
+.sc-pill{font-family:monospace;font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:14px;border:1px solid rgba(255,255,255,0.10);background:transparent;color:rgba(255,255,255,0.38);cursor:pointer;transition:all .15s;white-space:nowrap}
 .sc-pill:hover{border-color:rgba(255,45,150,0.38);color:rgba(255,255,255,0.72)}
 .sc-pill.sel{background:rgba(255,45,150,0.18);border-color:rgba(255,45,150,0.45);color:#FF6DB8}
 .cos-thread{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:11px}
 .cos-thread::-webkit-scrollbar{width:3px}
 .cos-thread::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.10);border-radius:2px}
-.cos-empty{text-align:center;padding:48px 24px 0;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.20);line-height:2.2}
+.cos-empty{text-align:center;padding:48px 24px 0;font-family:monospace;font-size:11px;color:rgba(255,255,255,0.20);line-height:2.2}
 .cos-cm{display:flex;flex-direction:column;gap:3px}
 .cos-cm.from-bodhi{align-items:flex-end}
 .cos-cm.from-cos{align-items:flex-start}
 .cos-bubble{padding:10px 14px;border-radius:14px;font-size:13.5px;line-height:1.6;font-family:'Plus Jakarta Sans',sans-serif;max-width:90%}
 .cos-cm.from-bodhi .cos-bubble{background:linear-gradient(135deg,rgba(255,45,150,0.26),rgba(255,69,102,0.18));border:1px solid rgba(255,45,150,0.38);color:#fff;border-radius:14px 14px 4px 14px}
 .cos-cm.from-cos .cos-bubble{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);color:rgba(255,255,255,0.85);border-radius:14px 14px 14px 4px}
-.cos-ts{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.22);padding:0 4px}
+.cos-ts{font-family:monospace;font-size:9px;color:rgba(255,255,255,0.22);padding:0 4px}
 .cos-typing-ind{display:flex;align-items:center;gap:5px;padding:11px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.09);border-radius:14px 14px 14px 4px;align-self:flex-start;width:64px}
 .cos-typing-ind span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.45);animation:typDot 1.2s ease-in-out infinite}
 .cos-typing-ind span:nth-child(2){animation-delay:.22s}
@@ -244,6 +234,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .cos-ta-input::placeholder{color:rgba(255,255,255,0.22)}
 .cos-send-btn{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FF2D96,#FF4566);border:none;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;transition:all .17s;box-shadow:0 3px 14px rgba(255,45,150,0.42)}
 .cos-send-btn:hover{transform:scale(1.09);box-shadow:0 5px 20px rgba(255,45,150,0.62)}
+.placeholder-section{padding:60px 20px;text-align:center;font-family:monospace;font-size:13px;color:var(--text-dim);line-height:2.2}
 </style>
 </head>
 <body>
@@ -265,25 +256,23 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
   <div class="nav">
     <div class="nav-sec">Operations</div>
     <button class="nav-btn active" data-sec="overview"><span class="nav-ico">&#9672;</span>Overview</button>
-    <button class="nav-btn" data-sec="queue"><span class="nav-ico">&#11041;</span>Morning Queue<span class="nav-badge" id="qb">2</span></button>
-    <button class="nav-btn" data-sec="launchpad"><span class="nav-ico">&#9714;</span>Launch Pad</button>
+    <button class="nav-btn" data-sec="queue"><span class="nav-ico">&#11041;</span>Morning Queue<span class="nav-badge" id="qb">--</span></button>
     <button class="nav-btn" data-sec="agents"><span class="nav-ico">&#9678;</span>Agent Fleet</button>
     <div class="nav-sec">Content</div>
     <button class="nav-btn" data-sec="transmissions"><span class="nav-ico">&#8801;</span>All Transmissions</button>
-    <button class="nav-btn" data-sec="wiki"><span class="nav-ico">&#9719;</span>Skills Wiki</button>
     <div class="nav-sec">System</div>
     <button class="nav-btn" data-sec="settings"><span class="nav-ico">&#9676;</span>Settings</button>
   </div>
   <div class="sidebar-footer">
     <div class="cos-card">
-      <div class="cos-row"><div class="cos-dot paused"></div><span class="cos-name">Chief of Staff</span></div>
-      <div class="cos-st">RUNNING -- Re-enabled 2026-04-14</div>
-      <div class="cos-st" style="margin-top:2px;font-size:9.5px;opacity:.65">Last run: 2026-04-10 05:01am</div>
+      <div class="cos-row"><div class="cos-dot"></div><span class="cos-name">Chief of Staff</span></div>
+      <div class="cos-st">RUNNING -- 5am daily</div>
+      <div class="cos-st" style="margin-top:2px;font-size:9.5px;opacity:.65">Last run: 2026-04-15 05:04am</div>
     </div>
     <div class="msg-toggle" onclick="toggleMsg()">
       <span style="font-size:15px">&#128172;</span>
       <span class="msg-lbl">iMessage Alerts</span>
-      <div class="sw on" id="msw"><div class="sw-knob"></div></div>
+      <div class="sw" id="msw"><div class="sw-knob"></div></div>
     </div>
   </div>
 </nav>
@@ -294,65 +283,165 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
     <span class="topbar-time" id="clk">--:--</span>
     <div class="topbar-sep"></div>
     <div class="agent-pills">
-      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>COS<div class="pill-tt">Chief of Staff<br>RUNNING -- 5am daily<br>Last: 2026-04-10 05:01</div></div>
-      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>TRK-A<div class="pill-tt">Track A Agent<br>RUNNING -- on-demand<br>Via trigger poller</div></div>
-      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>TRK-B<div class="pill-tt">Track B Agent<br>RUNNING -- 2:30am daily<br>Last: 2026-04-10 02:33</div></div>
-      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>IMG<div class="pill-tt">Image Engine<br>RUNNING -- 9am/1pm/5pm<br>Image gen active</div></div>
-      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>CORE<div class="pill-tt">Core Term Audit<br>RUNNING -- on-demand<br>Last: 2026-04-10 09:14</div></div>
-      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>PUB<div class="pill-tt">Website Publisher<br>RUNNING -- hourly<br>Publisher active</div></div>
-      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>POLL<div class="pill-tt">Trigger Poller<br>RUNNING -- every 10 min<br>Polling active</div></div>
-      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>NEWS<div class="pill-tt">News Pull<br>RUNNING -- 2am daily<br>Last: 2026-04-10 02:00</div></div>
+      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>COS<div class="pill-tt">Chief of Staff<br>RUNNING -- 5am daily<br>Last: 2026-04-15</div></div>
+      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>IMG<div class="pill-tt">Image Engine<br>RUNNING -- 9am daily<br>Last: 2026-04-16</div></div>
+      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>PUB<div class="pill-tt">Website Publisher<br>RUNNING -- hourly<br>Last: 2026-04-16</div></div>
+      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>POLL<div class="pill-tt">Trigger Poller<br>RUNNING -- every 10 min<br>Last: 2026-04-16</div></div>
+      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>NEWS<div class="pill-tt">News Pull<br>RUNNING -- Mon/Wed/Fri 2am<br>Re-armed 2026-04-15</div></div>
+      <div class="pill"><span class="pill-dot" style="background:var(--green)"></span>CE<div class="pill-tt">Content Engine<br>RUNNING -- Mon/Wed/Fri 2:30am<br>Re-armed 2026-04-15</div></div>
+      <div class="pill"><span class="pill-dot paused"></span>SOC<div class="pill-tt">Social Distribution<br>PAUSED -- needs rebuild<br>Twitter/Threads workflow pending</div></div>
     </div>
     <div class="spacer"></div>
     <div class="bell-wrap">
       <button class="bell-btn" onclick="openDrawer()">&#128276;</button>
-      <span class="bell-badge" id="bb">3</span>
+      <span class="bell-badge" id="bb">2</span>
     </div>
   </header>
 
   <div class="content">
-    <div class="banner">
-      <div class="banner-text"><strong>THE BLADE IS THE MISSION.</strong> Every transmission cuts to the mechanism the reader is running RIGHT NOW. Not inform. Not inspire. Fracture.</div>
-      <span class="banner-tag">Fleet Paused -- Skills Rebuild</span>
+
+    <!-- OVERVIEW SECTION -->
+    <div class="section active" id="sec-overview">
+      <div class="banner">
+        <div class="banner-text"><strong>TWO-TRACK NEWSROOM LIVE.</strong> Track A: TikTok Content Gap (morning scrape). Track B: World news (Mon/Wed/Fri 2:30am). Both feed the manual Opus workflow.</div>
+        <span class="banner-tag">7 Agents Running</span>
+      </div>
+      <div class="status-row">
+        <div class="stat-card" id="st-drafts" onclick="showSection('queue')">
+          <div class="stat-accent" style="background:var(--amber)"></div>
+          <div><div class="stat-num" id="cnt-drafts">--</div><div class="stat-lbl">Drafts<br>In Queue</div></div>
+        </div>
+        <div class="stat-card" id="st-approved" onclick="showSection('queue')">
+          <div class="stat-accent" style="background:var(--green)"></div>
+          <div><div class="stat-num" id="cnt-approved">--</div><div class="stat-lbl">Approved<br>Text</div></div>
+        </div>
+        <div class="stat-card" id="st-imaged" onclick="showSection('queue')">
+          <div class="stat-accent" style="background:var(--cyan)"></div>
+          <div><div class="stat-num" id="cnt-imaged">--</div><div class="stat-lbl">Image<br>Ready</div></div>
+        </div>
+        <div class="stat-card" id="st-published" onclick="showSection('transmissions')">
+          <div class="stat-accent" style="background:var(--magenta)"></div>
+          <div><div class="stat-num" id="cnt-published">--</div><div class="stat-lbl">Published<br>Signal</div></div>
+        </div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Morning Queue</span><span class="sec-meta" id="qmeta">Loading...</span></div>
+      <div class="queue-grid" id="qgrid">
+        <div style="grid-column:1/-1;padding:40px;text-align:center;font-family:monospace;font-size:12px;color:var(--text-dim)">Loading...</div>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Launch Pad</span><span class="sec-meta">Quick actions -- inserts into agent_triggers queue</span></div>
+      <div class="lp-grid">
+        <div class="lp-card" onclick="launchTrigger('content-gap')"><span class="lp-ico">&#128269;</span><span class="lp-lbl">Pull Content Gap</span></div>
+        <div class="lp-card" onclick="launchTrigger('kick-track-b')"><span class="lp-ico">&#9889;</span><span class="lp-lbl">Kick Track B</span></div>
+        <div class="lp-card" onclick="launchTrigger('regen-image')"><span class="lp-ico">&#127912;</span><span class="lp-lbl">Regen Image</span></div>
+        <div class="lp-card" onclick="launchTrigger('publish-queue')"><span class="lp-ico">&#128640;</span><span class="lp-lbl">Publish Queue</span></div>
+        <div class="lp-card" onclick="launchTrigger('core-term-audit')"><span class="lp-ico">&#9672;</span><span class="lp-lbl">Core Term Audit</span></div>
+        <div class="lp-card" onclick="launchTrigger('kick-pipeline')"><span class="lp-ico">&#9889;</span><span class="lp-lbl">Kick Pipeline</span></div>
+      </div>
     </div>
 
-    <div class="status-row">
-      <div class="stat-card" onclick="filterStat('ready')" id="st-ready"><div class="stat-accent" style="background:var(--green)"></div><div class="stat-num">4</div><div class="stat-lbl">Ready for<br>Opus Workflow</div></div>
-      <div class="stat-card" onclick="filterStat('image')" id="st-image"><div class="stat-accent" style="background:var(--amber)"></div><div class="stat-num">0</div><div class="stat-lbl">Awaiting<br>Image Approval</div></div>
-      <div class="stat-card" onclick="filterStat('core')" id="st-core"><div class="stat-accent" style="background:var(--magenta)"></div><div class="stat-num">0</div><div class="stat-lbl">Core Term<br>Audit Fails</div></div>
-      <div class="stat-card" onclick="filterStat('exp')" id="st-exp"><div class="stat-accent" style="background:var(--red)"></div><div class="stat-num">1</div><div class="stat-lbl">Expiring<br>Within 12h</div></div>
+    <!-- QUEUE SECTION -->
+    <div class="section" id="sec-queue">
+      <div class="sec-hdr"><span class="sec-title">Morning Queue</span><span class="sec-meta" id="qmeta2">Loading...</span><button class="btn btn-script" style="margin-left:auto;font-size:11px;padding:5px 12px" onclick="fetchMorningQueue()">&#8635; Refresh</button></div>
+      <div class="queue-grid" id="qgrid2">
+        <div style="grid-column:1/-1;padding:40px;text-align:center;font-family:monospace;font-size:12px;color:var(--text-dim)">Loading...</div>
+      </div>
     </div>
 
-    <div class="sec-hdr"><span class="sec-title">Morning Queue</span><span class="sec-meta" id="qmeta">2 transmissions ready</span></div>
-    <div class="queue-grid" id="qgrid">
-      <div style="grid-column:1/-1;padding:40px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)">Loading morning queue...</div>
+    <!-- AGENTS SECTION -->
+    <div class="section" id="sec-agents">
+      <div class="sec-hdr"><span class="sec-title">Agent Fleet</span><span class="sec-meta">7 running, 2 paused -- as of 2026-04-15</span></div>
+      <div class="ar-grid">
+        <div class="ag-card" onclick="agModal('Chief of Staff','Sonnet -- 5am daily','RUNNING','Morning digest, agent_learnings writes, notifications','2026-04-15 05:04am','5am daily')">
+          <div class="ag-bar" style="background:var(--green)"></div>
+          <div class="ag-name">Chief of Staff</div><div class="ag-role">Morning report, dispatch, agent_learnings</div>
+          <span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span>
+          <div class="ag-sched">5am daily</div>
+        </div>
+        <div class="ag-card" onclick="agModal('Content Engine','Sonnet -- Mon/Wed/Fri 2:30am','RUNNING','Track A on-demand + Track B from today.json','2026-04-15 02:39am','Mon/Wed/Fri 2:30am -- re-armed 2026-04-15')">
+          <div class="ag-bar" style="background:var(--green)"></div>
+          <div class="ag-name">Content Engine</div><div class="ag-role">Track A + Track B transmission drafts</div>
+          <span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span>
+          <div class="ag-sched">Mon/Wed/Fri 2:30am</div>
+        </div>
+        <div class="ag-card" onclick="agModal('Image Engine','Sonnet + Nano Banana Pro 2 -- 9am daily','RUNNING','70 gen/day quota. Picks up approved transmissions without images','2026-04-16 00:07am','9am daily (reduced from 3x -- 2026-04-15)')">
+          <div class="ag-bar" style="background:var(--green)"></div>
+          <div class="ag-name">Image Engine</div><div class="ag-role">Nano Banana Pro 2 image generation</div>
+          <span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span>
+          <div class="ag-sched">9am daily</div>
+        </div>
+        <div class="ag-card" onclick="agModal('Website Publisher','Haiku -- hourly 7am-9pm','RUNNING','Posts approved transmissions with images to /signal/','2026-04-16 04:03am','Hourly, 7am-9pm')">
+          <div class="ag-bar" style="background:var(--green)"></div>
+          <div class="ag-name">Website Publisher</div><div class="ag-role">Posts blogs to thebookofoneness.com</div>
+          <span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span>
+          <div class="ag-sched">Hourly, 7am-9pm</div>
+        </div>
+        <div class="ag-card" onclick="agModal('Trigger Poller','Haiku -- every 10 min 6am-10pm','RUNNING','Polls agent_triggers table, dispatches named agents','2026-04-16 04:35am','Every 10 min, 6am-10pm')">
+          <div class="ag-bar" style="background:var(--green)"></div>
+          <div class="ag-name">Trigger Poller</div><div class="ag-role">agent_triggers queue runner</div>
+          <span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span>
+          <div class="ag-sched">Every 10 min, 6am-10pm</div>
+        </div>
+        <div class="ag-card" onclick="agModal('News Pull','Haiku -- Mon/Wed/Fri 2am','RUNNING','RSS ingest: AP, Reuters, BBC, Guardian, Axios. Writes today.json','2026-04-15 02:29am','Mon/Wed/Fri 2am -- re-armed 2026-04-15')">
+          <div class="ag-bar" style="background:var(--green)"></div>
+          <div class="ag-name">News Pull</div><div class="ag-role">RSS ingest to _inbox/news/today.json</div>
+          <span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span>
+          <div class="ag-sched">Mon/Wed/Fri 2am</div>
+        </div>
+        <div class="ag-card" onclick="agModal('Core Term Audit','Haiku -- manual only','RUNNING','Reads Core Term Watchlist, audits transmission, returns JSON verdict','2026-04-10 09:14am','Manual only -- on-demand')">
+          <div class="ag-bar" style="background:var(--cyan)"></div>
+          <div class="ag-name">Core Term Audit</div><div class="ag-role">Post-draft Core Term gate (manual)</div>
+          <span class="ag-st" style="background:rgba(0,207,255,0.10);color:#005F80;border:1px solid rgba(0,207,255,0.22)">On-Demand</span>
+          <div class="ag-sched">Manual trigger only</div>
+        </div>
+        <div class="ag-card" onclick="agModal('Social Distribution','Haiku -- PAUSED','PAUSED','Needs rebuild for Twitter/Threads text+image+blog-link. Blotato candidate.','2026-04-06','PAUSED -- do not re-enable until workflow rebuilt')">
+          <div class="ag-bar" style="background:rgba(130,140,165,0.35)"></div>
+          <div class="ag-name">Social Distribution</div><div class="ag-role">Twitter/Threads publishing</div>
+          <span class="ag-st" style="background:rgba(130,140,165,0.10);color:#888;border:1px solid rgba(130,140,165,0.22)">Paused</span>
+          <div class="ag-sched">Paused -- awaiting rebuild</div>
+        </div>
+      </div>
     </div>
 
-    <div class="sec-hdr"><span class="sec-title">Launch Pad</span><span class="sec-meta">Quick actions -- inserts into agent_triggers queue</span></div>
-    <div class="lp-grid" id="lp-grid">
-      <div class="lp-card" onclick="launch('content-gap')"><span class="lp-ico">&#128269;</span><span class="lp-lbl">Pull Content Gap</span></div>
-      <div class="lp-card" onclick="launch('kick-track-b')"><span class="lp-ico">&#9889;</span><span class="lp-lbl">Kick Track B</span></div>
-      <div class="lp-card" onclick="launch('regen-image')"><span class="lp-ico">&#127912;</span><span class="lp-lbl">Regen Image</span></div>
-      <div class="lp-card" onclick="launch('publish-queue')"><span class="lp-ico">&#128640;</span><span class="lp-lbl">Publish Queue</span></div>
-      <div class="lp-card" onclick="launch('core-term-audit')"><span class="lp-ico">&#9672;</span><span class="lp-lbl">Core Term Audit</span></div>
-      <div class="lp-card" onclick="launch('flag-skill-gap')"><span class="lp-ico">&#9873;</span><span class="lp-lbl">Flag Skill Gap</span></div>
+    <!-- TRANSMISSIONS SECTION -->
+    <div class="section" id="sec-transmissions">
+      <div class="sec-hdr"><span class="sec-title">All Transmissions</span><span class="sec-meta" id="tx-meta">Loading...</span><button class="btn btn-script" style="margin-left:auto;font-size:11px;padding:5px 12px" onclick="fetchAllTransmissions()">&#8635; Refresh</button></div>
+      <div id="tx-grid" style="display:flex;flex-direction:column;gap:10px">
+        <div style="padding:40px;text-align:center;font-family:monospace;font-size:12px;color:var(--text-dim)">Loading...</div>
+      </div>
     </div>
 
-    <div class="sec-hdr"><span class="sec-title">Agent Fleet</span><span class="sec-meta">6 running, 2 paused -- click any agent for detail</span></div>
-    <div class="ar-grid" id="ar-grid">
-      <div class="ag-card" onclick="agModal('Chief of Staff','Sonnet 4.5 -- 5am daily','RUNNING','Skills rebuild active -- manual session only','Last: 2026-04-10 05:01am','0 triggers in queue')"><div class="ag-bar" style="background:var(--green)"></div><div class="ag-name">Chief of Staff</div><div class="ag-role">Morning report, dispatch, agent_learnings writes</div><span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span><div class="ag-sched">5am daily / Sonnet 4.5</div></div>
-      <div class="ag-card" onclick="agModal('Track A Agent','Sonnet 4.5 -- On-demand','RUNNING','Awaiting live Cowork session + TikTok scrape','Last: 2026-04-10 09:22am','4 transmissions drafted this cycle')"><div class="ag-bar" style="background:var(--green)"></div><div class="ag-name">Track A Agent</div><div class="ag-role">TikTok Content Gap transmissions</div><span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span><div class="ag-sched">On-demand / Sonnet 4.5</div></div>
-      <div class="ag-card" onclick="agModal('Track B Agent','Sonnet 4.5 -- 2:30am daily','RUNNING','Runs from RSS ingest today.json','Last: 2026-04-10 02:33am','id=93 awaiting title review')"><div class="ag-bar" style="background:var(--green)"></div><div class="ag-name">Track B Agent</div><div class="ag-role">World news cultural commentary</div><span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span><div class="ag-sched">2:30am daily / Sonnet 4.5</div></div>
-      <div class="ag-card" onclick="agModal('Image Engine','Sonnet 4.5 + Nano Banana Pro 2','RUNNING','70 gen/day quota -- 0 used today','Last: 2026-04-10 09:00am','Queue: 0 approved awaiting image')"><div class="ag-bar" style="background:var(--green)"></div><div class="ag-name">Image Engine</div><div class="ag-role">Nano Banana Pro 2 image generation</div><span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span><div class="ag-sched">9am/1pm/5pm / Sonnet 4.5</div></div>
-      <div class="ag-card" onclick="agModal('Core Term Audit','Haiku 4.5 -- On-demand','RUNNING','Flags violations before Supabase insert','Last: 2026-04-10 09:14am','0 active violations')"><div class="ag-bar" style="background:var(--green)"></div><div class="ag-name">Core Term Audit</div><div class="ag-role">Post-draft Core Term gate</div><span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span><div class="ag-sched">On-demand / Haiku 4.5</div></div>
-      <div class="ag-card" onclick="agModal('Website Publisher','Haiku 4.5 -- Hourly','RUNNING','Posts approved+image tx to /signal/','Last run: paused','4 posts queued, none publishing')"><div class="ag-bar" style="background:var(--green)"></div><div class="ag-name">Website Publisher</div><div class="ag-role">Posts blog to thebookofoneness.com</div><span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span><div class="ag-sched">Hourly / Haiku 4.5</div></div>
-      <div class="ag-card" onclick="agModal('Trigger Poller','Haiku 4.5 -- Every 10 min','RUNNING','Polls agent_triggers, dispatches agents','Last run: paused','0 pending rows in queue')"><div class="ag-bar" style="background:var(--green)"></div><div class="ag-name">Trigger Poller</div><div class="ag-role">agent_triggers queue runner</div><span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span><div class="ag-sched">Every 10 min, 6am-10pm / Haiku 4.5</div></div>
-      <div class="ag-card" onclick="agModal('News Pull','Haiku 4.5 -- 2am daily','RUNNING','RSS ingest: AP, Reuters, BBC, Guardian, Axios','Last: 2026-04-10 02:00am','today.json: 10 headlines ready')"><div class="ag-bar" style="background:var(--green)"></div><div class="ag-name">News Pull</div><div class="ag-role">RSS ingest to today.json</div><span class="ag-st" style="background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)">Running</span><div class="ag-sched">2am daily / Haiku 4.5</div></div>
+    <!-- SETTINGS SECTION -->
+    <div class="section" id="sec-settings">
+      <div class="sec-hdr"><span class="sec-title">Settings</span><span class="sec-meta">System configuration</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+        <div style="background:rgba(255,255,255,0.68);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.90);border-radius:14px;padding:20px">
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:4px">Supabase Project</div>
+          <div style="font-family:monospace;font-size:10px;color:var(--text-dim);margin-bottom:12px">pobddtmnzimcdiaujyyf (free tier)</div>
+          <button class="btn btn-script" onclick="testSupabase()" style="font-size:11px;padding:6px 14px">Test Connection</button>
+        </div>
+        <div style="background:rgba(255,255,255,0.68);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.90);border-radius:14px;padding:20px">
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:4px">iMessage Alerts</div>
+          <div style="font-family:monospace;font-size:10px;color:var(--text-dim);margin-bottom:12px">Browser notifications only -- iMessage not wired yet</div>
+          <button class="btn btn-script" onclick="requestNotifPerm()" style="font-size:11px;padding:6px 14px">Enable Browser Notifs</button>
+        </div>
+        <div style="background:rgba(255,255,255,0.68);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.90);border-radius:14px;padding:20px">
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:4px">Dashboard</div>
+          <div style="font-family:monospace;font-size:10px;color:var(--text-dim);margin-bottom:12px">ops.thebookofoneness.com via GitHub Pages</div>
+          <div style="font-family:monospace;font-size:10px;color:var(--text-dim)">Repo: StillpointVentures/mirrorops</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.68);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.90);border-radius:14px;padding:20px">
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:4px">Content Status Filter</div>
+          <div style="font-family:monospace;font-size:10px;color:var(--text-dim);margin-bottom:12px">Morning Queue shows: draft, review, approved</div>
+          <div style="font-family:monospace;font-size:10px;color:var(--text-dim)">Max 20 per fetch, newest first</div>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>
 </div>
 
+<!-- Notification drawer -->
 <div class="notif-bg" id="ndbg" onclick="closeDrawer()"></div>
 <div class="notif-drawer" id="nd">
   <div class="nd-head">
@@ -360,24 +449,19 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
     <button class="nd-mar" onclick="markAll()">Mark all read</button>
     <button class="nd-close" onclick="closeDrawer()">&#10005;</button>
   </div>
-  <div class="nd-list">
+  <div class="nd-list" id="nd-list">
     <div class="nd-item unread" id="ni0" onclick="handleNotif(0)">
-      <div class="nd-hdr"><span class="nd-type action">Action Needed</span><span class="nd-age">2h ago</span></div>
-      <div class="nd-text">Track B id=93 title "FOUR" is a concept label, not ego-bait. Awaiting direction -- approve or request redraft.</div>
-      <div class="nd-cta">Jump to Track B card &rarr;</div>
+      <div class="nd-hdr"><span class="nd-type action">Action Needed</span><span class="nd-age">Today</span></div>
+      <div class="nd-text">10 transmissions in Supabase are status=draft. They need approval to enter the queue. Go to Morning Queue to review.</div>
     </div>
     <div class="nd-item unread" id="ni1" onclick="handleNotif(1)">
-      <div class="nd-hdr"><span class="nd-type alert">Skill Gap</span><span class="nd-age">4h ago</span></div>
-      <div class="nd-text">No skill loaded for GitHub Pages deploy. Netlify CLI used currently. Flag for skills rebuild phase 1.</div>
-      <div class="nd-cta">Flag for rebuild &rarr;</div>
-    </div>
-    <div class="nd-item unread" id="ni2" onclick="handleNotif(2)">
-      <div class="nd-hdr"><span class="nd-type info">Info</span><span class="nd-age">6h ago</span></div>
-      <div class="nd-text">Fleet re-enabled 2026-04-14. 6 agents running. agent_learnings.md CORE_MANDATE confirmed. Morning Queue wired to live Supabase.</div>
+      <div class="nd-hdr"><span class="nd-type info">Info</span><span class="nd-age">2026-04-15</span></div>
+      <div class="nd-text">Agent fleet re-armed: news-pull + content-engine now run Mon/Wed/Fri. Image-engine reduced to 1x/day. 7 agents active.</div>
     </div>
   </div>
 </div>
 
+<!-- Agent modal -->
 <div class="modal-bg" id="agbg" onclick="closeAgModal(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeAgModal()">&#10005;</button>
@@ -387,351 +471,443 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
   </div>
 </div>
 
+<!-- Chief of Staff drawer -->
 <div class="cos-overlay" id="cos-ov" onclick="closeCos()"></div>
 <div class="cos-drawer" id="cos-dr">
   <div class="cos-dh">
     <div class="cos-dh-dot"></div>
     <div class="cos-dh-info">
       <div class="cos-dh-name">Chief of Staff</div>
-      <div class="cos-dh-sub">Direct line -- message fans out to full fleet</div>
+      <div class="cos-dh-sub">Direct line -- queues into agent_triggers</div>
     </div>
     <button class="cos-dh-close" onclick="closeCos()">&#10005;</button>
   </div>
   <div class="cos-scope-row">
     <span class="cos-sl">Scope:</span>
-    <button class="sc-pill sel" id="scp-all" onclick="setScope('all',this)">All Transmissions</button>
+    <button class="sc-pill sel" id="scp-all" onclick="setScope('all',this)">All</button>
     <button class="sc-pill" id="scp-a" onclick="setScope('a',this)">Track A</button>
     <button class="sc-pill" id="scp-b" onclick="setScope('b',this)">Track B</button>
-    <button class="sc-pill" id="scp-queue" onclick="setScope('queue',this)">Queue Only</button>
+    <button class="sc-pill" id="scp-queue" onclick="setScope('queue',this)">Queue</button>
   </div>
   <div class="cos-thread" id="cos-thread">
-    <div class="cos-empty" id="cos-empty">
-      Direct line to Chief of Staff.<br>
-      One message. Fleet handles the rest.<br>
-      Desktop ping when done.
-    </div>
+    <div class="cos-empty" id="cos-empty">Direct line to Chief of Staff.<br>One message. Fleet handles the rest.</div>
   </div>
   <div class="cos-input-row">
-    <textarea class="cos-ta-input" id="cos-ta" placeholder="What needs to change? e.g. &quot;Both titles are too concept-forward&quot;" rows="2" onkeydown="cosTaKey(event)"></textarea>
-    <button class="cos-send-btn" onclick="sendCos()" title="Send to Chief of Staff">&#9650;</button>
+    <textarea class="cos-ta-input" id="cos-ta" placeholder="What needs to change?" rows="2" onkeydown="cosTaKey(event)"></textarea>
+    <button class="cos-send-btn" onclick="sendCos()">&#9650;</button>
   </div>
 </div>
 
 <div class="toast-area" id="toasts"></div>
 
 <script>
-var cards={a:true,b:true},reads=[false,false,false],msgOn=true;
-function tick(){var d=new Date();document.getElementById('clk').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-tick();setInterval(tick,30000);
-document.querySelectorAll('.nav-btn').forEach(function(b){b.addEventListener('click',function(){
-  document.querySelectorAll('.nav-btn').forEach(function(x){x.classList.remove('active');});
-  b.classList.add('active');
-  var s=b.dataset.sec;
-  document.getElementById('sec-lbl').textContent=s.charAt(0).toUpperCase()+s.slice(1);
-  var t={queue:'qgrid',launchpad:'lp-grid',agents:'ar-grid'};
-  if(t[s]){document.getElementById(t[s]).scrollIntoView({behavior:'smooth',block:'start'});}
-  else{toast('cyan',s+' -- full view coming in next build');}
-});});
-function filterStat(t){
-  document.querySelectorAll('.stat-card').forEach(function(c){c.classList.remove('hi');});
-  document.getElementById('st-'+t).classList.add('hi');
-  var m={ready:'4 transmissions ready for Opus -- ids 89, 90, 91, 92',image:'0 transmissions awaiting image approval',core:'0 Core Term audit failures in queue',exp:'Track A "Who Taught You to Scroll?" expires in 21h 14m'};
-  toast(t==='exp'?'red':'cyan',m[t]);
-  if(t==='exp'){var c=document.getElementById('tx-a');c.classList.add('hi-card');c.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){c.classList.remove('hi-card');},3000);}
+var SB_URL = 'https://pobddtmnzimcdiaujyyf.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvYmRkdG1uemltY2RpYXVqeXlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNzU3OTUsImV4cCI6MjA4OTg1MTc5NX0.WuIrn9nOMLqJXL5kou8MyOb4yO6pCEa3QvfqoO3hnls';
+var SB_HEADERS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+var notifReads = [false, false];
+var cosScope = 'all';
+var msgOn = false;
+var currentSection = 'overview';
+
+function tick() {
+  var d = new Date();
+  document.getElementById('clk').textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 }
-function expandTx(id,btn){
-  var p=document.getElementById('exp-'+id);
-  if(p.classList.contains('open')){p.classList.remove('open');btn.textContent='+ Show full transmission';}
-  else{p.classList.add('open');btn.textContent='- Hide full transmission';}
+tick();
+setInterval(tick, 30000);
+
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  var el = document.getElementById('sec-' + name);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  var btn = document.querySelector('[data-sec="' + name + '"]');
+  if (btn) btn.classList.add('active');
+  document.getElementById('sec-lbl').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+  currentSection = name;
+  if (name === 'transmissions') fetchAllTransmissions();
+  if (name === 'queue') { syncQueueToSection(); }
 }
-function approveTx(id){toast('green','&#10003; Text approved -- image generation queued');}
-function killTx(id){
-  var c=document.getElementById('tx-'+id);
-  c.classList.add('killing');
-  toast('red','&#10005; Killed -- moved to rejected');
-  setTimeout(function(){c.style.display='none';cards[id]=false;updateQ();},420);
+
+document.querySelectorAll('.nav-btn').forEach(function(b) {
+  b.addEventListener('click', function() { showSection(b.dataset.sec); });
+});
+
+function sbFetch(path, opts) {
+  var ctrl = new AbortController();
+  var timer = setTimeout(function() { ctrl.abort(); }, 8000);
+  var h = Object.assign({}, SB_HEADERS, opts && opts.headers ? opts.headers : {});
+  return fetch(SB_URL + path, Object.assign({}, opts || {}, { headers: h, signal: ctrl.signal }))
+    .then(function(r) { clearTimeout(timer); return r; })
+    .catch(function(e) { clearTimeout(timer); throw e; });
 }
-function updateQ(){
-  var n=Object.values(cards).filter(Boolean).length;
-  document.getElementById('qmeta').textContent=n+' transmission'+(n!==1?'s':'')+' ready';
-  document.getElementById('qb').textContent=n;
-  if(n===0){document.getElementById('qgrid').innerHTML='<div style="grid-column:1/-1;padding:32px;text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--text-dim)">Queue empty -- use Launch Pad to kick Track A or Track B</div>';}
+
+function fetchMorningQueue() {
+  var url = '/rest/v1/transmissions?select=id,title,cultural_hook,body,track,thematic_lens,content_ttl,expires_at,tiktok_caption,hashtags,narration_script,core_term_audit_passed,blog_image_url,blog_url,status&status=in.(draft,review,approved)&order=created_at.desc&limit=20';
+  ['qgrid','qgrid2'].forEach(function(gid) {
+    var g = document.getElementById(gid);
+    if (g) g.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;font-family:monospace;font-size:12px;color:var(--text-dim)">Fetching from Supabase...</div>';
+  });
+  sbFetch(url)
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(rows) {
+      var now = new Date();
+      rows = rows.filter(function(tx) { return !tx.expires_at || new Date(tx.expires_at) > now; });
+      var drafts = rows.filter(function(t) { return t.status === 'draft'; }).length;
+      var approved = rows.filter(function(t) { return t.status === 'approved'; }).length;
+      var imaged = rows.filter(function(t) { return t.blog_image_url; }).length;
+      document.getElementById('cnt-drafts').textContent = drafts;
+      document.getElementById('cnt-approved').textContent = approved;
+      document.getElementById('cnt-imaged').textContent = imaged;
+      var meta = rows.length + ' item' + (rows.length !== 1 ? 's' : '') + ' in queue';
+      document.getElementById('qmeta').textContent = meta;
+      document.getElementById('qmeta2').textContent = meta;
+      document.getElementById('qb').textContent = rows.length || '0';
+      var html = rows.length === 0
+        ? '<div style="grid-column:1/-1;padding:40px;text-align:center;font-family:monospace;font-size:12px;color:var(--text-dim)">Queue empty -- content engine runs Mon/Wed/Fri at 2:30am</div>'
+        : rows.map(buildTxCard).join('');
+      ['qgrid','qgrid2'].forEach(function(gid) {
+        var g = document.getElementById(gid); if (g) g.innerHTML = html;
+      });
+      fetchPublishedCount();
+    })
+    .catch(function(err) {
+      var msg = '<div style="grid-column:1/-1;padding:30px;text-align:center;font-family:monospace;font-size:12px;color:var(--red)">Supabase error: ' + escH(err.message) + '<br><br><button onclick="fetchMorningQueue()" style="margin-top:8px;font-family:monospace;font-size:11px;padding:6px 14px;border-radius:8px;border:1px solid rgba(255,69,102,0.3);background:transparent;color:var(--red);cursor:pointer">Retry</button></div>';
+      ['qgrid','qgrid2'].forEach(function(gid) {
+        var g = document.getElementById(gid); if (g) g.innerHTML = msg;
+      });
+      toast('red', 'Supabase error: ' + err.message.substring(0,40));
+    });
 }
-function showScript(id){
-  var sp=document.getElementById('sp-'+id),fb=document.getElementById('fb-'+id);
-  if(fb)fb.classList.remove('open');
-  sp.classList.toggle('open');
-  if(sp.classList.contains('open'))sp.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function copyScript(id){
-  var txt=document.getElementById('st-'+id).textContent.trim();
-  navigator.clipboard.writeText(txt).then(function(){toast('cyan','&#128203; Script copied -- paste into ElevenLabs');}).catch(function(){toast('amber','Select and copy text manually');});
-}
-function toggleFb(id){
-  var p=document.getElementById('fb-'+id),sp=document.getElementById('sp-'+id);
-  if(sp)sp.classList.remove('open');
-  if(p.classList.contains('open')){closeFb(id);}
-  else{p.classList.add('open');document.getElementById('fbt-'+id).focus();p.scrollIntoView({behavior:'smooth',block:'nearest'});}
-}
-function closeFb(id){var p=document.getElementById('fb-'+id);p.classList.remove('open');var ta=document.getElementById('fbt-'+id);if(ta)ta.value='';stopMic(id);}
-function submitFb(id){var t=document.getElementById('fbt-'+id).value.trim();if(!t){toast('amber','Add feedback before submitting');return;}closeFb(id);toast('green','&#10003; Feedback sent -- Chief of Staff queues redraft within 10 min');}
-var rec=null,micId=null;
-function toggleMic(id){
-  var btn=document.getElementById('mic-'+id);
-  if(micId===id){stopMic(id);return;}
-  if(rec)stopMic(micId);
-  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){toast('amber','Use Wispr Flow or type feedback');return;}
-  rec=new SR();rec.continuous=true;rec.interimResults=true;
-  rec.onresult=function(e){var t='';for(var i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;document.getElementById('fbt-'+id).value=t;};
-  rec.onend=function(){stopMic(id);};rec.onerror=function(){stopMic(id);toast('amber','Voice error -- type instead');};
-  rec.start();micId=id;btn.classList.add('listening');btn.innerHTML='&#128308;';toast('magenta','&#127897; Listening...');
-}
-function stopMic(id){if(rec){try{rec.stop();}catch(e){}rec=null;}micId=null;if(id){var b=document.getElementById('mic-'+id);if(b){b.classList.remove('listening');b.innerHTML='&#127897;';}}}
-function launch(a){var m={'content-gap':['cyan','Chrome scrape initiated -- check TikTok Creator Insights'],'kick-track-b':['magenta','Track B queued -- picks up within 10 min'],'regen-image':['amber','Image regen queued'],'publish-queue':['green','Publisher triggered -- blogs live in ~60s'],'core-term-audit':['cyan','Core Term audit queued for all pending drafts'],'flag-skill-gap':['red','&#9873; Skill gap flagged -- Chief of Staff will log it']};var r=m[a]||['cyan',a];toast(r[0],r[1]);}
-function agModal(name,sub,status,desc,last,queue){
-  document.getElementById('mag-name').textContent=name;
-  document.getElementById('mag-sub').textContent=sub;
-  document.getElementById('mag-body').innerHTML='<div class="modal-row"><span class="modal-key">Status</span><span class="modal-val">'+status+'</span></div><div class="modal-row"><span class="modal-key">Function</span><span class="modal-val" style="text-align:right;max-width:250px">'+desc+'</span></div><div class="modal-row"><span class="modal-key">Last Run</span><span class="modal-val">'+last+'</span></div><div class="modal-row"><span class="modal-key">Queue</span><span class="modal-val">'+queue+'</span></div>';
-  document.getElementById('agbg').classList.add('open');
-}
-function closeAgModal(e){if(!e||e.target===document.getElementById('agbg')||!e.target){document.getElementById('agbg').classList.remove('open');}}
-function openDrawer(){document.getElementById('nd').classList.add('open');document.getElementById('ndbg').classList.add('open');}
-function closeDrawer(){document.getElementById('nd').classList.remove('open');document.getElementById('ndbg').classList.remove('open');}
-function handleNotif(i){
-  markRead(i);
-  if(i===0){closeDrawer();var c=document.getElementById('tx-b');if(c){c.classList.add('hi-card');c.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){c.classList.remove('hi-card');},3000);toast('amber','Track B title flagged -- submit feedback to redraft');}}
-  else if(i===1){closeDrawer();launch('flag-skill-gap');}
-}
-function markRead(i){if(reads[i])return;reads[i]=true;var el=document.getElementById('ni'+i);el.classList.remove('unread');el.classList.add('read');updateBell();}
-function markAll(){[0,1,2].forEach(markRead);toast('cyan','&#10003; All notifications marked as read');}
-function updateBell(){var u=reads.filter(function(r){return !r;}).length;var b=document.getElementById('bb');if(u===0){b.classList.add('hidden');}else{b.classList.remove('hidden');b.textContent=u;}}
-function toggleMsg(){msgOn=!msgOn;document.getElementById('msw').classList.toggle('on',msgOn);toast(msgOn?'cyan':'amber','&#128172; iMessage alerts '+(msgOn?'ON':'OFF'));}
-function toast(color,msg){var a=document.getElementById('toasts'),t=document.createElement('div');t.className='toast';t.innerHTML='<span class="td '+color+'"></span>'+msg;a.appendChild(t);setTimeout(function(){t.classList.add('out');setTimeout(function(){t.remove();},300);},3400);}
-/* CoS Direct Line -- REAL Supabase wiring */
-var cosScope='all';
-var SB_URL='https://pobddtmnzimcdiaujyyf.supabase.co';
-var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvYmRkdG1uemltY2RpYXVqeXlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNzU3OTUsImV4cCI6MjA4OTg1MTc5NX0.WuIrn9nOMLqJXL5kou8MyOb4yO6pCEa3QvfqoO3hnls';
-function openCos(){
-  document.getElementById('cos-dr').classList.add('open');
-  document.getElementById('cos-ov').classList.add('open');
-  setTimeout(function(){document.getElementById('cos-ta').focus();},250);
-  if('Notification' in window && Notification.permission==='default'){
-    Notification.requestPermission();
+
+function syncQueueToSection() {
+  var src = document.getElementById('qgrid');
+  var dst = document.getElementById('qgrid2');
+  if (src && dst && src.innerHTML && !src.innerHTML.includes('Fetching')) {
+    dst.innerHTML = src.innerHTML;
+    var m1 = document.getElementById('qmeta');
+    var m2 = document.getElementById('qmeta2');
+    if (m1 && m2) m2.textContent = m1.textContent;
   }
 }
-function closeCos(){
+
+function fetchPublishedCount() {
+  sbFetch('/rest/v1/transmissions?select=id&status=eq.published&limit=1&head=true', {
+    headers: { 'Prefer': 'count=exact' }
+  }).then(function(r) {
+    var cnt = r.headers.get('content-range');
+    if (cnt) {
+      var parts = cnt.split('/');
+      document.getElementById('cnt-published').textContent = parts[parts.length-1] === '*' ? '--' : parts[parts.length-1];
+    }
+  }).catch(function() {});
+}
+
+function fetchAllTransmissions() {
+  var grid = document.getElementById('tx-grid');
+  if (grid) grid.innerHTML = '<div style="padding:40px;text-align:center;font-family:monospace;font-size:12px;color:var(--text-dim)">Loading...</div>';
+  sbFetch('/rest/v1/transmissions?select=id,title,status,track,thematic_lens,created_at&order=created_at.desc&limit=50')
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(rows) {
+      document.getElementById('tx-meta').textContent = rows.length + ' transmissions';
+      if (!rows.length) { grid.innerHTML = '<div style="padding:40px;text-align:center;font-family:monospace;font-size:12px;color:var(--text-dim)">No transmissions found</div>'; return; }
+      grid.innerHTML = rows.map(function(tx) {
+        var sc = {draft:'rgba(255,176,32,0.12)',review:'rgba(0,207,255,0.12)',approved:'rgba(0,212,144,0.12)',published:'rgba(255,45,150,0.12)',rejected:'rgba(255,69,102,0.08)',expired:'rgba(130,140,165,0.08)'};
+        var bg = sc[tx.status] || 'rgba(255,255,255,0.68)';
+        var d = new Date(tx.created_at);
+        var ds = (d.getMonth()+1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+        return '<div style="background:' + bg + ';backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.80);border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:12px">' +
+          '<span class="track-tag ' + ((tx.track||'B').toLowerCase()) + '">Track ' + (tx.track||'B') + '</span>' +
+          '<span style="font-family:\'Syne\',sans-serif;font-size:14px;font-weight:700;color:var(--text-primary);flex:1">' + escH(tx.title||'Untitled') + '</span>' +
+          '<span style="font-family:monospace;font-size:10px;color:var(--text-dim)">' + escH(tx.thematic_lens||'') + '</span>' +
+          '<span class="status-tag ' + (tx.status||'draft') + '">' + (tx.status||'draft') + '</span>' +
+          '<span style="font-family:monospace;font-size:10px;color:var(--text-dim)">' + ds + '</span>' +
+          '</div>';
+      }).join('');
+    })
+    .catch(function(err) {
+      if (grid) grid.innerHTML = '<div style="padding:30px;text-align:center;font-family:monospace;font-size:12px;color:var(--red)">Error: ' + escH(err.message) + '</div>';
+    });
+}
+
+function buildTxCard(tx) {
+  var id = tx.id;
+  var track = (tx.track || 'B').toUpperCase();
+  var lens = tx.thematic_lens || '';
+  var cpCore = tx.core_term_audit_passed ? '<span class="cp pass">&#10004; Core Term</span>' : '<span class="cp skip">&#9900; Core Term</span>';
+  var cpImg = tx.blog_image_url ? '<span class="cp pass">&#10004; Image</span>' : '<span class="cp warn">&#9650; No Image</span>';
+  var cpBlog = tx.blog_url ? '<span class="cp pass">&#10004; Blog</span>' : '<span class="cp skip">&#9900; Blog</span>';
+  var statusLabel = tx.status || 'draft';
+  var approveBtn;
+  if (tx.status === 'approved' || tx.status === 'published') {
+    approveBtn = '<span class="cp pass" style="padding:8px 12px;border-radius:9px;font-size:12px;">&#10003; ' + statusLabel + '</span>';
+  } else {
+    approveBtn = '<button class="btn btn-approve" onclick="approveTxLive(' + id + ')">&#10003; Approve</button>';
+  }
+  var scriptContent = tx.narration_script ? escH(tx.narration_script) : '(no narration script yet)';
+  var bodyContent = tx.body ? escH(tx.body) : '(no body)';
+  return '<div class="tx-card" id="tx-' + id + '">' +
+    '<div class="tx-top">' +
+    '<div class="tx-meta-row"><span class="track-tag ' + track.toLowerCase() + '">Track ' + track + '</span><span class="lens-tag">' + escH(lens) + '</span><span class="status-tag ' + statusLabel + '" style="margin-left:auto">' + statusLabel + '</span></div>' +
+    '<div class="tx-title">' + escH(tx.title || 'Untitled') + '</div>' +
+    '<div class="tx-hook">' + escH(tx.cultural_hook || '') + '</div>' +
+    '</div>' +
+    '<button class="tx-expand-btn" onclick="expandTx(' + id + ',this)">+ Show full transmission</button>' +
+    '<div class="tx-expand" id="exp-' + id + '"><div class="tx-body">' + bodyContent + '</div></div>' +
+    '<div class="checkpoints">' + cpCore + cpImg + cpBlog + '</div>' +
+    '<div class="tx-actions">' +
+    approveBtn +
+    '<button class="btn btn-script" onclick="showScript(' + id + ')">&#128203; Copy Script</button>' +
+    '<button class="btn btn-fb" onclick="toggleFb(' + id + ')">Feedback</button>' +
+    '<button class="btn btn-kill" onclick="killTxLive(' + id + ')">&#10005; Kill</button>' +
+    '</div>' +
+    '<div class="panel" id="sp-' + id + '">' +
+    '<div class="script-lbl">Narration Script -- ElevenLabs / Lily</div>' +
+    '<div class="script-txt" id="st-' + id + '">' + scriptContent + '</div>' +
+    '<button class="btn btn-copy" onclick="copyScript(' + id + ')">Copy to clipboard</button>' +
+    '</div>' +
+    '<div class="panel" id="fb-' + id + '">' +
+    '<div class="fb-row"><textarea class="fb-ta" id="fbt-' + id + '" placeholder="What needs to change? Chief of Staff picks this up within 10 min." rows="3"></textarea></div>' +
+    '<div class="fb-foot"><span class="fb-hint">Queued within 10 min</span><button class="btn btn-cfb" onclick="closeFb(' + id + ')">Cancel</button><button class="btn btn-sfb" onclick="submitFbLive(' + id + ')">Submit</button></div>' +
+    '</div>' +
+    '</div>';
+}
+
+function expandTx(id, btn) {
+  var p = document.getElementById('exp-' + id);
+  if (!p) return;
+  if (p.classList.contains('open')) { p.classList.remove('open'); btn.textContent = '+ Show full transmission'; }
+  else { p.classList.add('open'); btn.textContent = '- Hide full transmission'; }
+}
+function showScript(id) {
+  var sp = document.getElementById('sp-' + id), fb = document.getElementById('fb-' + id);
+  if (fb) fb.classList.remove('open');
+  if (sp) sp.classList.toggle('open');
+}
+function copyScript(id) {
+  var el = document.getElementById('st-' + id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent.trim())
+    .then(function() { toast('cyan', '&#128203; Script copied -- paste into ElevenLabs'); })
+    .catch(function() { toast('amber', 'Select and copy text manually'); });
+}
+function closeFb(id) {
+  var p = document.getElementById('fb-' + id), ta = document.getElementById('fbt-' + id);
+  if (p) p.classList.remove('open');
+  if (ta) ta.value = '';
+}
+function toggleFb(id) {
+  var p = document.getElementById('fb-' + id), sp = document.getElementById('sp-' + id);
+  if (sp) sp.classList.remove('open');
+  if (!p) return;
+  if (p.classList.contains('open')) { closeFb(id); }
+  else { p.classList.add('open'); var ta = document.getElementById('fbt-' + id); if (ta) ta.focus(); }
+}
+function approveTxLive(id) {
+  sbFetch('/rest/v1/transmissions?id=eq.' + id, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ status: 'approved', approved_at: new Date().toISOString() })
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    toast('green', '&#10003; Approved -- image engine picks up at 9am');
+    setTimeout(fetchMorningQueue, 800);
+  }).catch(function(err) { toast('red', 'Approve failed: ' + err.message); });
+}
+function killTxLive(id) {
+  var card = document.getElementById('tx-' + id);
+  if (card) card.classList.add('killing');
+  sbFetch('/rest/v1/transmissions?id=eq.' + id, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ status: 'rejected' })
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    toast('red', '&#10005; Killed');
+    setTimeout(fetchMorningQueue, 800);
+  }).catch(function(err) {
+    if (card) card.classList.remove('killing');
+    toast('red', 'Kill failed: ' + err.message);
+  });
+}
+function submitFbLive(id) {
+  var ta = document.getElementById('fbt-' + id);
+  var msg = ta ? ta.value.trim() : '';
+  if (!msg) { toast('amber', 'Add feedback before submitting'); return; }
+  var payload = { agent_name: 'content-engine', reason: 'feedback_ready', payload: { transmission_id: id, feedback_text: msg, source: 'morning_queue_card' }, status: 'pending', source: 'morning_queue' };
+  sbFetch('/rest/v1/agent_triggers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify(payload)
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(data) {
+    var row = Array.isArray(data) ? data[0] : data;
+    closeFb(id);
+    toast('green', '&#10003; Feedback queued -- row #' + (row && row.id ? row.id : 'written'));
+  }).catch(function(err) { toast('red', 'Feedback failed: ' + err.message); });
+}
+function launchTrigger(action) {
+  var messages = {
+    'content-gap': ['cyan', 'Use the tiktok-gap-scrape skill in a Cowork session for Track A'],
+    'kick-track-b': ['magenta', 'Kicking Track B -- queuing trigger'],
+    'regen-image': ['amber', 'Image regen -- go to Morning Queue and use Feedback button'],
+    'publish-queue': ['green', 'Publisher runs hourly 7am-9pm -- triggering now'],
+    'core-term-audit': ['cyan', 'Core Term audit -- use the mirror-core-term-agent task'],
+    'kick-pipeline': ['cyan', 'Kicking pipeline -- inserting trigger row']
+  };
+  var m = messages[action] || ['cyan', action];
+  if (action === 'kick-track-b' || action === 'kick-pipeline') {
+    var agentName = action === 'kick-track-b' ? 'track-b-engine' : 'content-engine';
+    var payload = { agent_name: agentName, reason: 'manual_kick', payload: {}, status: 'pending', source: 'dashboard_launchpad' };
+    sbFetch('/rest/v1/agent_triggers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify(payload)
+    }).then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function(data) {
+      var row = Array.isArray(data) ? data[0] : data;
+      toast('green', '&#10003; Trigger queued -- row #' + (row && row.id ? row.id : 'written') + ' in agent_triggers');
+    }).catch(function(err) { toast('red', 'Trigger failed: ' + err.message); });
+  } else {
+    toast(m[0], m[1]);
+  }
+}
+function openDrawer() {
+  document.getElementById('nd').classList.add('open');
+  document.getElementById('ndbg').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('nd').classList.remove('open');
+  document.getElementById('ndbg').classList.remove('open');
+}
+function handleNotif(i) {
+  markRead(i);
+  closeDrawer();
+  if (i === 0) { showSection('queue'); toast('amber', 'Review drafts and approve text to move them forward'); }
+  else if (i === 1) { showSection('agents'); }
+}
+function markRead(i) {
+  if (notifReads[i]) return;
+  notifReads[i] = true;
+  var el = document.getElementById('ni' + i);
+  if (el) { el.classList.remove('unread'); el.classList.add('read'); }
+  updateBell();
+}
+function markAll() {
+  for (var i = 0; i < notifReads.length; i++) markRead(i);
+  toast('cyan', '&#10003; All read');
+}
+function updateBell() {
+  var u = notifReads.filter(function(r) { return !r; }).length;
+  var b = document.getElementById('bb');
+  if (u === 0) { b.classList.add('hidden'); } else { b.classList.remove('hidden'); b.textContent = u; }
+}
+function toggleMsg() {
+  msgOn = !msgOn;
+  document.getElementById('msw').classList.toggle('on', msgOn);
+  toast(msgOn ? 'cyan' : 'amber', '&#128172; iMessage alerts ' + (msgOn ? 'ON (browser only)' : 'OFF'));
+}
+function agModal(name, sub, status, desc, last, queue) {
+  document.getElementById('mag-name').textContent = name;
+  document.getElementById('mag-sub').textContent = sub;
+  document.getElementById('mag-body').innerHTML =
+    '<div class="modal-row"><span class="modal-key">Status</span><span class="modal-val">' + escH(status) + '</span></div>' +
+    '<div class="modal-row"><span class="modal-key">Function</span><span class="modal-val" style="text-align:right;max-width:250px">' + escH(desc) + '</span></div>' +
+    '<div class="modal-row"><span class="modal-key">Last Run</span><span class="modal-val">' + escH(last) + '</span></div>' +
+    '<div class="modal-row"><span class="modal-key">Schedule</span><span class="modal-val">' + escH(queue) + '</span></div>';
+  document.getElementById('agbg').classList.add('open');
+}
+function closeAgModal(e) {
+  if (!e || e.target === document.getElementById('agbg') || !e.target) {
+    document.getElementById('agbg').classList.remove('open');
+  }
+}
+function openCos() {
+  document.getElementById('cos-dr').classList.add('open');
+  document.getElementById('cos-ov').classList.add('open');
+  setTimeout(function() { document.getElementById('cos-ta').focus(); }, 250);
+}
+function closeCos() {
   document.getElementById('cos-dr').classList.remove('open');
   document.getElementById('cos-ov').classList.remove('open');
 }
-function setScope(s,btn){
-  cosScope=s;
-  document.querySelectorAll('.sc-pill').forEach(function(p){p.classList.remove('sel');});
+function setScope(s, btn) {
+  cosScope = s;
+  document.querySelectorAll('.sc-pill').forEach(function(p) { p.classList.remove('sel'); });
   btn.classList.add('sel');
-  var labels={'all':'all transmissions','a':'Track A only','b':'Track B only','queue':'Morning Queue only'};
-  document.getElementById('cos-ta').placeholder='What needs to change across '+labels[s]+'?';
 }
-function cosTaKey(e){
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendCos();}
+function cosTaKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendCos(); }
 }
-function sendCos(){
-  var ta=document.getElementById('cos-ta');
-  var msg=ta.value.trim();
-  if(!msg)return;
-  ta.value='';
-  document.getElementById('cos-empty').style.display='none';
-  var thread=document.getElementById('cos-thread');
-  var ts=nowTs();
-  var scopeLabels={'all':'All Transmissions','a':'Track A','b':'Track B','queue':'Morning Queue'};
-  // Bodhi's message bubble
-  var bm=document.createElement('div');bm.className='cos-cm from-bodhi';
-  bm.innerHTML='<div class="cos-bubble">'+escH(msg)+'<div style="margin-top:6px;font-family:\'JetBrains Mono\',monospace;font-size:9px;color:rgba(255,255,255,0.35);">Scope: '+scopeLabels[cosScope]+'</div></div><span class="cos-ts">'+ts+'</span>';
+function sendCos() {
+  var ta = document.getElementById('cos-ta');
+  var msg = ta.value.trim();
+  if (!msg) return;
+  ta.value = '';
+  document.getElementById('cos-empty').style.display = 'none';
+  var thread = document.getElementById('cos-thread');
+  var ts = nowTs();
+  var bm = document.createElement('div'); bm.className = 'cos-cm from-bodhi';
+  bm.innerHTML = '<div class="cos-bubble">' + escH(msg) + '</div><span class="cos-ts">' + ts + '</span>';
   thread.appendChild(bm);
-  thread.scrollTop=thread.scrollHeight;
-  // Writing indicator
-  var typ=document.createElement('div');typ.className='cos-typing-ind';typ.id='cos-typing-ind';
-  typ.innerHTML='<span></span><span></span><span></span>';
+  var typ = document.createElement('div'); typ.className = 'cos-typing-ind'; typ.id = 'cos-typing-ind';
+  typ.innerHTML = '<span></span><span></span><span></span>';
   thread.appendChild(typ);
-  thread.scrollTop=thread.scrollHeight;
-  // REAL Supabase INSERT into agent_triggers
-  var payload={
-    agent_name:'content-engine',
-    reason:'feedback_ready',
-    payload:{feedback:msg, scope:cosScope, applies_to:'all_queued', source:'cos_direct_line'},
-    source:'cos_direct_line',
-    status:'pending'
-  };
-  fetch(SB_URL+'/rest/v1/agent_triggers',{
-    method:'POST',
-    headers:{
-      'apikey':SB_KEY,
-      'Authorization':'Bearer '+SB_KEY,
-      'Content-Type':'application/json',
-      'Prefer':'return=representation'
-    },
-    body:JSON.stringify(payload)
-  })
-  .then(function(r){
-    if(!r.ok)return r.text().then(function(t){throw new Error('HTTP '+r.status+': '+t);});
+  thread.scrollTop = thread.scrollHeight;
+  var payload = { agent_name: 'content-engine', reason: 'feedback_ready', payload: { feedback: msg, scope: cosScope, source: 'cos_direct_line' }, source: 'cos_direct_line', status: 'pending' };
+  sbFetch('/rest/v1/agent_triggers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify(payload)
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
-  })
-  .then(function(data){
-    var row=Array.isArray(data)?data[0]:data;
-    var rowId=row&&row.id?row.id:'written';
-    cosConfirm(rowId,thread);
-  })
-  .catch(function(err){
-    cosError(err.message,thread);
+  }).then(function(data) {
+    var row = Array.isArray(data) ? data[0] : data;
+    var typ2 = document.getElementById('cos-typing-ind'); if (typ2) typ2.remove();
+    var rm = document.createElement('div'); rm.className = 'cos-cm from-cos';
+    rm.innerHTML = '<div class="cos-bubble"><strong>Queued.</strong> Row #' + escH(String(row && row.id ? row.id : 'written')) + ' in agent_triggers. Poller picks up within 10 min.</div><span class="cos-ts">' + nowTs() + '</span>';
+    thread.appendChild(rm); thread.scrollTop = thread.scrollHeight;
+    toast('green', '&#10003; Queued to agent_triggers');
+  }).catch(function(err) {
+    var typ2 = document.getElementById('cos-typing-ind'); if (typ2) typ2.remove();
+    var rm = document.createElement('div'); rm.className = 'cos-cm from-cos';
+    rm.innerHTML = '<div class="cos-bubble" style="border-color:rgba(255,69,102,0.40);"><strong style="color:#FF6080;">Write failed.</strong><br><span style="font-family:monospace;font-size:11px;color:rgba(255,255,255,0.55)">' + escH(err.message) + '</span></div><span class="cos-ts">' + nowTs() + '</span>';
+    thread.appendChild(rm); thread.scrollTop = thread.scrollHeight;
+    toast('red', 'Write failed: ' + err.message.substring(0,40));
   });
 }
-function cosConfirm(rowId,thread){
-  var typ=document.getElementById('cos-typing-ind');if(typ)typ.remove();
-  var ts=nowTs();
-  var rm=document.createElement('div');rm.className='cos-cm from-cos';
-  rm.innerHTML='<div class="cos-bubble"><strong>Queued.</strong> Row #'+escH(String(rowId))+' written to <code style="font-family:\'JetBrains Mono\',monospace;font-size:11px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">agent_triggers</code>.<br><br><span style="color:rgba(255,255,255,0.55);font-size:12px;">Trigger is queued. Poller picks it up within 10 min.<br><br>iMessage notification not yet wired -- that is the next build item.</span></div><span class="cos-ts">'+ts+'</span>';
-  thread.appendChild(rm);
-  thread.scrollTop=thread.scrollHeight;
-  toast('green','&#10003; Real write -- row #'+rowId+' in agent_triggers');
+function testSupabase() {
+  sbFetch('/rest/v1/transmissions?select=id&limit=1')
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function() { toast('green', '&#10003; Supabase connected'); })
+    .catch(function(err) { toast('red', 'Supabase error: ' + err.message); });
 }
-function cosError(errMsg,thread){
-  var typ=document.getElementById('cos-typing-ind');if(typ)typ.remove();
-  var ts=nowTs();
-  var rm=document.createElement('div');rm.className='cos-cm from-cos';
-  rm.innerHTML='<div class="cos-bubble" style="border-color:rgba(255,69,102,0.40);"><strong style="color:#FF6080;">Write failed.</strong><br><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:rgba(255,255,255,0.55);">'+escH(errMsg)+'</span><br><br><span style="color:rgba(255,255,255,0.45);font-size:12px;">Check: RLS policy on agent_triggers, Supabase project status, or network.</span></div><span class="cos-ts">'+ts+'</span>';
-  thread.appendChild(rm);
-  thread.scrollTop=thread.scrollHeight;
-  toast('red','Supabase write failed -- see Direct Line for error');
-}
-function nowTs(){var d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-function fireDesktopNotif(title,body){
-  if(!('Notification' in window))return;
-  if(Notification.permission==='granted'){
-    new Notification(title,{body:body,icon:'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%23FF2D96"/><text x="16" y="22" font-size="18" text-anchor="middle" fill="white">&#9670;</text></svg>'});
-  } else if(Notification.permission!=='denied'){
-    Notification.requestPermission().then(function(p){if(p==='granted')new Notification(title,{body:body});});
-  }
-}
-function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-/* Morning Queue -- live Supabase data */
-function fetchMorningQueue(){
-  var grid=document.getElementById('qgrid');
-  grid.innerHTML='<div style="grid-column:1/-1;padding:40px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)">Loading morning queue...</div>';
-  var url=SB_URL+'/rest/v1/transmissions?select=id,title,cultural_hook,body,track,thematic_lens,content_ttl,expires_at,tiktok_caption,hashtags,narration_script,core_term_audit_passed,blog_image_url,blog_url,status&status=in.(review,approved)&order=created_at.desc&limit=10';
-  fetch(url,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}})
-  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-  .then(function(rows){
-    var now=new Date();
-    rows=rows.filter(function(tx){return !tx.expires_at||new Date(tx.expires_at)>now;});
-    if(rows.length===0){
-      grid.innerHTML='<div style="grid-column:1/-1;padding:40px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)">Queue empty -- content engine drafts nightly at 2:30am</div>';
-      document.getElementById('qmeta').textContent='0 transmissions';
-      document.getElementById('qb').textContent='0';
-      return;
-    }
-    document.getElementById('qmeta').textContent=rows.length+' transmission'+(rows.length===1?'':'s')+' ready';
-    document.getElementById('qb').textContent=rows.length;
-    grid.innerHTML=rows.map(buildTxCard).join('');
-  })
-  .catch(function(err){
-    grid.innerHTML='<div style="grid-column:1/-1;padding:30px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--red)">Supabase fetch failed: '+escH(err.message)+'<br><br><button onclick="fetchMorningQueue()" style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 14px;border-radius:8px;border:1px solid rgba(255,69,102,0.3);background:transparent;color:var(--red);cursor:pointer">Retry</button></div>';
+function requestNotifPerm() {
+  if (!('Notification' in window)) { toast('amber', 'Notifications not supported in this browser'); return; }
+  Notification.requestPermission().then(function(p) {
+    toast(p === 'granted' ? 'green' : 'amber', 'Notifications ' + p);
   });
 }
-function buildTxCard(tx){
-  var id=tx.id,track=(tx.track||'B').toUpperCase(),lens=tx.thematic_lens||'';
-  var expHtml='';
-  if(tx.expires_at){
-    var diff=new Date(tx.expires_at)-new Date();
-    if(diff>0){
-      var hrs=Math.floor(diff/3600000);
-      if(hrs<24){expHtml='<span class="exp-tag crit">'+hrs+'h</span>';}
-      else if(hrs<96){var d=Math.floor(hrs/24),h=hrs%24;expHtml='<span class="exp-tag warn">'+d+'d '+h+'h</span>';}
-    }
-  }
-  var cpCore=tx.core_term_audit_passed?'<span class="cp pass">&#10004; Core Term</span>':'<span class="cp skip">&#9900; Core Term</span>';
-  var cpImg=tx.blog_image_url?'<span class="cp pass">&#10004; Image</span>':'<span class="cp warn">&#9650; Image</span>';
-  var cpBlog=tx.blog_url?'<span class="cp pass">&#10004; Blog</span>':'<span class="cp skip">&#9900; Blog</span>';
-  var approveBtn=tx.status==='review'?'<button class="btn btn-approve" onclick="approveTxLive('+id+')">&#10003; Approve Text</button>':'<span class="cp pass" style="padding:8px 12px;border-radius:9px;font-size:13px;">&#10003; Approved</span>';
-  var scriptContent=tx.narration_script?escH(tx.narration_script):'<span style="color:var(--text-dim);font-style:italic">No narration script yet -- content engine populates on next run</span>';
-  var bodyContent=tx.body?escH(tx.body):'(no body)';
-  return '<div class="tx-card" id="tx-'+id+'">'+
-    '<div class="tx-top">'+
-    '<div class="tx-meta-row"><span class="track-tag '+track.toLowerCase()+'">Track '+track+'</span><span class="lens-tag">'+escH(lens)+'</span>'+expHtml+'</div>'+
-    '<div class="tx-title">'+escH(tx.title||'Untitled')+'</div>'+
-    '<div class="tx-hook">'+escH(tx.cultural_hook||'')+'</div>'+
-    '</div>'+
-    '<button class="tx-expand-btn" onclick="expandTxDyn('+id+',this)">+ Show full transmission</button>'+
-    '<div class="tx-expand" id="exp-'+id+'"><div class="tx-body">'+bodyContent+'</div></div>'+
-    '<div class="checkpoints">'+cpCore+'<span class="cp skip">&#9900; Blade</span><span class="cp skip">&#9900; Title</span><span class="cp skip">&#9900; Lens</span>'+cpImg+cpBlog+'</div>'+
-    '<div class="tx-actions">'+
-    approveBtn+
-    '<button class="btn btn-script" onclick="showScriptDyn('+id+')">&#128203; Copy Script</button>'+
-    '<button class="btn btn-fb" onclick="toggleFbDyn('+id+')">Submit Feedback</button>'+
-    '<button class="btn btn-kill" onclick="killTxLive('+id+')">&#10005; Kill</button>'+
-    '</div>'+
-    '<div class="panel" id="sp-'+id+'">'+
-    '<div class="script-lbl">Narration Script -- ElevenLabs / Lily</div>'+
-    '<div class="script-txt" id="st-'+id+'">'+scriptContent+'</div>'+
-    '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-copy" onclick="copyScriptDyn('+id+')">Copy to clipboard</button><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim)">Paste into ElevenLabs / Lily voice</span></div>'+
-    '</div>'+
-    '<div class="panel" id="fb-'+id+'">'+
-    '<div class="fb-row"><textarea class="fb-ta" id="fbt-'+id+'" placeholder="What needs to change? Chief of Staff picks this up within 10 min." rows="3"></textarea><button class="btn-mic" id="mic-'+id+'" onclick="toggleMic(''+id+'')">&#127897;</button></div>'+
-    '<div class="fb-foot"><span class="fb-hint">Queued redraft within 10 min</span><button class="btn btn-cfb" onclick="closeFbDyn('+id+')">Cancel</button><button class="btn btn-sfb" onclick="submitFbLive('+id+')">Submit Feedback</button></div>'+
-    '</div>'+
-    '</div>';
+function nowTs() {
+  var d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 }
-function expandTxDyn(id,btn){var p=document.getElementById('exp-'+id);if(p.classList.contains('open')){p.classList.remove('open');btn.textContent='+ Show full transmission';}else{p.classList.add('open');btn.textContent='- Hide full transmission';}}
-function showScriptDyn(id){var sp=document.getElementById('sp-'+id),fb=document.getElementById('fb-'+id);if(fb)fb.classList.remove('open');sp.classList.toggle('open');if(sp.classList.contains('open'))sp.scrollIntoView({behavior:'smooth',block:'nearest'});}
-function copyScriptDyn(id){var el=document.getElementById('st-'+id);if(!el)return;navigator.clipboard.writeText(el.textContent.trim()).then(function(){toast('cyan','&#128203; Script copied -- paste into ElevenLabs');}).catch(function(){toast('amber','Select and copy text manually');});}
-function closeFbDyn(id){var p=document.getElementById('fb-'+id);if(p)p.classList.remove('open');var ta=document.getElementById('fbt-'+id);if(ta)ta.value='';stopMic(id);}
-function toggleFbDyn(id){var p=document.getElementById('fb-'+id),sp=document.getElementById('sp-'+id);if(sp)sp.classList.remove('open');if(p.classList.contains('open')){closeFbDyn(id);}else{p.classList.add('open');document.getElementById('fbt-'+id).focus();p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
-function approveTxLive(id){
-  fetch(SB_URL+'/rest/v1/transmissions?id=eq.'+id,{
-    method:'PATCH',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-    body:JSON.stringify({status:'approved',approved_at:new Date().toISOString()})
-  }).then(function(r){
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    toast('green','&#10003; Approved -- image engine picks up within the hour');
-    setTimeout(fetchMorningQueue,800);
-  }).catch(function(err){toast('red','Approve failed: '+err.message);});
+function escH(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function killTxLive(id){
-  var card=document.getElementById('tx-'+id);
-  if(card)card.classList.add('killing');
-  fetch(SB_URL+'/rest/v1/transmissions?id=eq.'+id,{
-    method:'PATCH',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-    body:JSON.stringify({status:'rejected'})
-  }).then(function(r){
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    toast('red','&#10005; Killed -- status set to rejected');
-    setTimeout(fetchMorningQueue,800);
-  }).catch(function(err){
-    if(card)card.classList.remove('killing');
-    toast('red','Kill failed: '+err.message);
-  });
+function toast(color, msg) {
+  var a = document.getElementById('toasts'), t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '<span class="td ' + color + '"></span>' + msg;
+  a.appendChild(t);
+  setTimeout(function() { t.classList.add('out'); setTimeout(function() { t.remove(); }, 300); }, 3400);
 }
-function submitFbLive(id){
-  var t=document.getElementById('fbt-'+id);
-  var msg=t?t.value.trim():'';
-  if(!msg){toast('amber','Add feedback before submitting');return;}
-  var payload={agent_name:'content-engine',reason:'feedback_ready',payload:{transmission_id:id,feedback_text:msg,source:'morning_queue_card'},status:'pending',source:'morning_queue'};
-  fetch(SB_URL+'/rest/v1/agent_triggers',{
-    method:'POST',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-    body:JSON.stringify(payload)
-  }).then(function(r){
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    return r.json();
-  }).then(function(data){
-    var row=Array.isArray(data)?data[0]:data;
-    closeFbDyn(id);
-    toast('green','&#10003; Feedback queued -- row #'+(row&&row.id?row.id:'written')+' in agent_triggers');
-  }).catch(function(err){toast('red','Feedback failed: '+err.message);});
-}
-/* Boot: fetch Morning Queue on load */
-document.addEventListener('DOMContentLoaded',function(){fetchMorningQueue();});
+document.addEventListener('DOMContentLoaded', function() { fetchMorningQueue(); });
 </script>
 </body>
 </html>
