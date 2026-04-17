@@ -618,7 +618,7 @@ function fetchAllTransmissions() {
         var ds = (d.getMonth()+1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
         return '<div style="background:' + bg + ';backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.80);border-radius:13px;padding:15px 18px;display:flex;align-items:center;gap:14px">' +
           '<span class="track-tag ' + ((tx.track||'B').toLowerCase()) + '">Track ' + (tx.track||'B') + '</span>' +
-          '<span style="font-family:\'Syne\',sans-serif;font-size:16px;font-weight:700;color:var(--text-primary);flex:1">' + escH(tx.title||'Untitled') + '</span>' +
+          '<span style="font-family:\'Syne\',sans-serif;font-size:16px;font-weight:700;color:var(--text-primary);flex:1">' + escH((tx.title||'Untitled').toUpperCase()) + '</span>' +
           '<span style="font-family:monospace;font-size:13px;color:var(--text-dim)">' + escH(tx.thematic_lens||'') + '</span>' +
           '<span class="status-tag ' + (tx.status||'draft') + '">' + (tx.status||'draft') + '</span>' +
           '<span style="font-family:monospace;font-size:13px;color:var(--text-dim)">' + ds + '</span>' +
@@ -648,7 +648,7 @@ function buildTxCard(tx) {
   return '<div class="tx-card" id="tx-' + id + '">' +
     '<div class="tx-top">' +
     '<div class="tx-meta-row"><span class="track-tag ' + track.toLowerCase() + '">Track ' + track + '</span><span class="lens-tag">' + escH(lens) + '</span><span class="status-tag ' + statusLabel + '" style="margin-left:auto">' + statusLabel + '</span></div>' +
-    '<div class="tx-title">' + escH(tx.title || 'Untitled') + '</div>' +
+    '<div class="tx-title">' + escH((tx.title || 'Untitled').toUpperCase()) + '</div>' +
     '<div class="tx-hook">' + escH(tx.cultural_hook || '') + '</div>' +
     '</div>' +
     '<button class="tx-expand-btn" onclick="expandTx(' + id + ',this)">+ Show full transmission</button>' +
