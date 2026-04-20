@@ -768,6 +768,16 @@ function toggleFb(id) {
   if (p.classList.contains('open')) { closeFb(id); }
   else { p.classList.add('open'); var ta = document.getElementById('fbt-' + id); if (ta) ta.focus(); }
 }
+function scrollQueueTop() {
+  var c = document.querySelector('.content');
+  if (c) c.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function evictCard(id, animClass, delay, cb) {
+  var card = document.getElementById('tx-' + id);
+  if (!card) { if (cb) cb(); scrollQueueTop(); return; }
+  card.classList.add(animClass);
+  setTimeout(function() { card.remove(); scrollQueueTop(); if (cb) cb(); }, delay);
+}
 function approveTxLive(id) {
   var btn = document.querySelector('#tx-' + id + ' .btn-approve');
   if (btn) { btn.disabled = true; btn.textContent = 'Approving...'; }
@@ -778,10 +788,7 @@ function approveTxLive(id) {
   }).then(function(r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     if (btn) { btn.className = 'btn btn-approve-done'; btn.innerHTML = '&#10003; Approved'; }
-    var card = document.getElementById('tx-' + id);
-    setTimeout(function() {
-      if (card) { card.classList.add('approving'); setTimeout(function() { card.remove(); }, 460); }
-    }, 750);
+    setTimeout(function() { evictCard(id, 'approving', 460); }, 750);
   }).catch(function(err) {
     if (btn) { btn.disabled = false; btn.innerHTML = '&#10003; Approve'; }
     toast('red', 'Approve failed: ' + err.message);
@@ -797,7 +804,7 @@ function killTxLive(id) {
   }).then(function(r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     toast('red', 'Killed');
-    setTimeout(fetchMorningQueue, 900);
+    setTimeout(function() { if (card) { card.remove(); scrollQueueTop(); } }, 420);
   }).catch(function(err) {
     if (card) card.classList.remove('killing');
     toast('red', 'Kill failed: ' + err.message);
@@ -827,9 +834,8 @@ function submitFbLive(id) {
     }).then(function(r2) {
       if (!r2.ok) throw new Error('Status update failed: HTTP ' + r2.status);
       closeFb(id);
-      var card = document.getElementById('tx-' + id);
-      if (card) { card.classList.add('approving'); setTimeout(function() { card.remove(); fetchRevisionQueue(); }, 460); }
       toast('green', 'Feedback sent -- moved to Awaiting Revision');
+      evictCard(id, 'approving', 460, fetchRevisionQueue);
     });
   }).catch(function(err) {
     if (btn) { btn.disabled = false; btn.textContent = 'Submit'; }
