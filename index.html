@@ -96,6 +96,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .status-tag.draft{background:rgba(255,176,32,0.10);color:#7A4D00;border:1px solid rgba(255,176,32,0.22)}
 .status-tag.review{background:rgba(0,207,255,0.10);color:#005F80;border:1px solid rgba(0,207,255,0.22)}
 .status-tag.approved{background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.22)}
+.status-tag.revision{background:rgba(138,99,255,0.10);color:#4B2EA0;border:1px solid rgba(138,99,255,0.28)}
+.rev-section{margin-bottom:28px}
+.rev-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:4px}
+.rev-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary)}
+.rev-count{font-family:monospace;font-size:12px;font-weight:700;background:rgba(138,99,255,0.12);color:#4B2EA0;border:1px solid rgba(138,99,255,0.25);padding:2px 9px;border-radius:20px}
+.rev-meta{font-family:monospace;font-size:13px;color:var(--text-dim);margin-left:auto}
+.rev-grid{display:flex;flex-direction:column;gap:9px}
+.rev-card{background:rgba(255,255,255,0.60);border:1px solid rgba(138,99,255,0.18);border-left:3px solid rgba(138,99,255,0.50);border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:12px;transition:all .18s}
+.rev-card:hover{background:rgba(255,255,255,0.80)}
+.rev-info{flex:1;min-width:0}
+.rev-card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rev-card-hook{font-family:monospace;font-size:12px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rev-badge{font-family:monospace;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(138,99,255,0.10);color:#4B2EA0;border:1px solid rgba(138,99,255,0.25);white-space:nowrap;flex-shrink:0}
+.btn-rev-kill{background:rgba(255,69,102,0.07);color:var(--red);border:1px solid rgba(255,69,102,0.18);font-size:13px;padding:6px 12px;flex-shrink:0}
 .tx-top{padding:17px 19px 0}
 .tx-meta-row{display:flex;align-items:center;gap:8px;margin-bottom:11px;flex-wrap:wrap}
 .tx-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;line-height:1.25;color:var(--text-primary);margin-bottom:9px;letter-spacing:-.015em}
@@ -330,6 +344,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
       <div class="queue-grid" id="qgrid">
         <div style="grid-column:1/-1;padding:40px;text-align:center;font-family:monospace;font-size:15px;color:var(--text-dim)">Loading...</div>
       </div>
+      <div class="rev-section" id="rev-section-overview" style="display:none">
+        <div class="rev-hdr"><span class="rev-title">Awaiting Revision</span><span class="rev-count" id="rev-count-overview">0</span><span class="rev-meta">Feedback sent -- content engine rewriting</span></div>
+        <div class="rev-grid" id="rev-grid-overview"></div>
+      </div>
       <div class="sec-hdr"><span class="sec-title">Launch Pad</span><span class="sec-meta">Quick actions -- inserts into agent_triggers queue</span></div>
       <div class="lp-grid">
         <div class="lp-card" onclick="launchTrigger('content-gap')"><span class="lp-ico">&#128269;</span><span class="lp-lbl">Pull Content Gap</span></div>
@@ -346,6 +364,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
       <div class="sec-hdr"><span class="sec-title">Morning Queue</span><span class="sec-meta" id="qmeta2">Loading...</span><button class="btn btn-script" style="margin-left:auto;font-size:13px;padding:7px 14px" onclick="fetchMorningQueue()">&#8635; Refresh</button></div>
       <div class="queue-grid" id="qgrid2">
         <div style="grid-column:1/-1;padding:40px;text-align:center;font-family:monospace;font-size:15px;color:var(--text-dim)">Loading...</div>
+      </div>
+      <div class="rev-section" id="rev-section-queue" style="display:none">
+        <div class="rev-hdr"><span class="rev-title">Awaiting Revision</span><span class="rev-count" id="rev-count-queue">0</span><span class="rev-meta">Feedback sent -- content engine rewriting</span></div>
+        <div class="rev-grid" id="rev-grid-queue"></div>
       </div>
     </div>
 
@@ -573,6 +595,7 @@ function fetchMorningQueue() {
         var g = document.getElementById(gid); if (g) g.innerHTML = html;
       });
       fetchPublishedCount();
+      fetchRevisionQueue();
     })
     .catch(function(err) {
       var msg = '<div style="grid-column:1/-1;padding:30px;text-align:center;font-family:monospace;font-size:15px;color:var(--red)">Error: ' + escH(err.message) + '<br><br><button onclick="fetchMorningQueue()" style="margin-top:10px;font-family:monospace;font-size:14px;padding:8px 18px;border-radius:9px;border:1px solid rgba(255,69,102,0.3);background:transparent;color:var(--red);cursor:pointer">Retry</button></div>';
@@ -581,6 +604,46 @@ function fetchMorningQueue() {
       });
       toast('red', 'Supabase error: ' + err.message.substring(0,50));
     });
+}
+
+function fetchRevisionQueue() {
+  sbFetch('/rest/v1/transmissions?select=id,title,cultural_hook,track&status=eq.revision&order=created_at.desc&limit=20')
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(rows) {
+      var sections = [['rev-section-overview','rev-count-overview','rev-grid-overview'],['rev-section-queue','rev-count-queue','rev-grid-queue']];
+      sections.forEach(function(s) {
+        var sec = document.getElementById(s[0]);
+        var cnt = document.getElementById(s[1]);
+        var grid = document.getElementById(s[2]);
+        if (!sec || !cnt || !grid) return;
+        if (!rows.length) { sec.style.display = 'none'; return; }
+        sec.style.display = 'block';
+        cnt.textContent = rows.length;
+        grid.innerHTML = rows.map(function(tx) {
+          var hook = tx.cultural_hook ? tx.cultural_hook.substring(0, 90) + (tx.cultural_hook.length > 90 ? '...' : '') : '';
+          var trackTag = tx.track ? '<span class="track-tag ' + tx.track.toLowerCase() + '" style="font-size:10px;padding:2px 8px;flex-shrink:0">Track ' + escH(tx.track) + '</span>' : '';
+          return '<div class="rev-card" id="rev-' + tx.id + '">' +
+            trackTag +
+            '<div class="rev-info"><div class="rev-card-title">' + escH(tx.title) + '</div>' +
+            (hook ? '<div class="rev-card-hook">' + escH(hook) + '</div>' : '') + '</div>' +
+            '<span class="rev-badge">&#9676; Awaiting Revision</span>' +
+            '<button class="btn btn-rev-kill" onclick="killRevCard(' + tx.id + ')">&#10005; Kill</button>' +
+            '</div>';
+        }).join('');
+      });
+    })
+    .catch(function() {}); // silent -- revision bucket is non-critical
+}
+function killRevCard(id) {
+  sbFetch('/rest/v1/transmissions?id=eq.' + id, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ status: 'rejected' })
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    ['rev-' + id].forEach(function(eid) { var el = document.getElementById(eid); if (el) { el.style.opacity='0'; el.style.transform='translateX(12px)'; el.style.transition='all .3s'; setTimeout(function() { el.remove(); fetchRevisionQueue(); }, 320); } });
+    toast('red', 'Killed');
+  }).catch(function(err) { toast('red', 'Kill failed: ' + err.message); });
 }
 
 function syncQueueToSection() {
@@ -760,12 +823,13 @@ function submitFbLive(id) {
     return sbFetch('/rest/v1/transmissions?id=eq.' + id, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ status: 'draft' })
+      body: JSON.stringify({ status: 'revision' })
     }).then(function(r2) {
       if (!r2.ok) throw new Error('Status update failed: HTTP ' + r2.status);
       closeFb(id);
-      toast('green', 'Feedback sent -- trigger #' + triggerId + ' queued, card reset to draft');
-      setTimeout(fetchMorningQueue, 800);
+      var card = document.getElementById('tx-' + id);
+      if (card) { card.classList.add('approving'); setTimeout(function() { card.remove(); fetchRevisionQueue(); }, 460); }
+      toast('green', 'Feedback sent -- moved to Awaiting Revision');
     });
   }).catch(function(err) {
     if (btn) { btn.disabled = false; btn.textContent = 'Submit'; }
