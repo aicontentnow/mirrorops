@@ -577,7 +577,26 @@ function fetchMorningQueue() {
     .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function(rows) {
       var now = new Date();
-      rows = rows.filter(function(tx) { return !tx.expires_at || new Date(tx.expires_at) > now; });
+      var threeDaysAgo = new Date(now - 3 * 24 * 60 * 60 * 1000);
+      var staleCount = 0;
+      rows = rows.filter(function(tx) {
+        if (tx.content_ttl === 'evergreen') return true;
+        if (tx.expires_at) { if (new Date(tx.expires_at) > now) return true; staleCount++; return false; }
+        if (new Date(tx.created_at) < threeDaysAgo) { staleCount++; return false; }
+        return true;
+      });
+      if (staleCount > 0) {
+        var sm = document.getElementById('stale-msg');
+        if (!sm) {
+          sm = document.createElement('div');
+          sm.id = 'stale-msg';
+          sm.style.cssText = 'font-family:monospace;font-size:13px;color:#7A4D00;background:rgba(255,176,32,0.09);border:1px solid rgba(255,176,32,0.25);border-radius:9px;padding:8px 14px;margin-bottom:12px';
+          var qg = document.getElementById('qgrid'); if (qg && qg.parentNode) qg.parentNode.insertBefore(sm, qg);
+        }
+        sm.textContent = staleCount + ' item' + (staleCount > 1 ? 's' : '') + ' hidden -- older than 3 days and not evergreen. Mark content_ttl = evergreen to keep.';
+      } else {
+        var sm2 = document.getElementById('stale-msg'); if (sm2) sm2.remove();
+      }
       var drafts = rows.filter(function(t) { return t.status === 'draft'; }).length;
       var approved = rows.filter(function(t) { return t.status === 'approved' || t.status === 'review'; }).length;
       var imaged = rows.filter(function(t) { return t.blog_image_url; }).length;
@@ -703,6 +722,22 @@ function buildTxCard(tx) {
   var cpCore = tx.core_term_audit_passed ? '<span class="cp pass">&#10004; Core Term</span>' : '<span class="cp skip">&#9900; Core Term</span>';
   var cpImg = tx.blog_image_url ? '<span class="cp pass">&#10004; Image Ready</span>' : '<span class="cp warn">&#9650; No Image</span>';
   var statusLabel = tx.status || 'draft';
+  var ageStr = (function() {
+    if (!tx.created_at) return '';
+    var diff = Date.now() - new Date(tx.created_at).getTime();
+    var h = Math.floor(diff / 3600000);
+    if (h < 1) return 'just now';
+    if (h < 24) return h + 'h ago';
+    var d = Math.floor(h / 24);
+    return d + 'd ago';
+  })();
+  var ageColor = (function() {
+    if (!tx.created_at) return 'var(--text-dim)';
+    var h = (Date.now() - new Date(tx.created_at).getTime()) / 3600000;
+    if (h > 48) return 'var(--red)';
+    if (h > 24) return 'var(--amber)';
+    return 'var(--text-dim)';
+  })();
   var approveBtn;
   if (tx.status === 'approved' || tx.status === 'published') {
     approveBtn = '<span class="cp pass" style="padding:10px 14px;border-radius:10px;font-size:14px;">&#10003; ' + statusLabel + '</span>';
@@ -713,7 +748,7 @@ function buildTxCard(tx) {
   var bodyContent = tx.body ? escH(tx.body) : '(no body)';
   return '<div class="tx-card" id="tx-' + id + '">' +
     '<div class="tx-top">' +
-    '<div class="tx-meta-row"><span class="track-tag ' + track.toLowerCase() + '">Track ' + track + '</span><span class="lens-tag">' + escH(lens) + '</span><span class="status-tag ' + statusLabel + '" style="margin-left:auto">' + statusLabel + '</span></div>' +
+    '<div class="tx-meta-row"><span class="track-tag ' + track.toLowerCase() + '">Track ' + track + '</span><span class="lens-tag">' + escH(lens) + '</span><span class="status-tag ' + statusLabel + '">' + statusLabel + '</span><span style="margin-left:auto;font-family:monospace;font-size:12px;font-weight:600;color:' + ageColor + '">' + ageStr + '</span></div>' +
     '<div class="tx-title">' + escH((tx.title || 'Untitled').toUpperCase()) + '</div>' +
     '<div class="tx-hook">' + escH(tx.cultural_hook || '') + '</div>' +
     '</div>' +
