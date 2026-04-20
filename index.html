@@ -113,8 +113,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .cp.skip{background:rgba(0,0,50,0.04);color:var(--text-dim);border:1px solid rgba(0,0,50,0.08)}
 .tx-actions{padding:13px 19px;display:flex;gap:8px;align-items:center;border-top:1px solid rgba(0,0,50,0.055);flex-wrap:wrap}
 .btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;padding:10px 16px;border-radius:10px;border:none;cursor:pointer;transition:all .17s;display:flex;align-items:center;gap:6px;letter-spacing:.01em;white-space:nowrap}
-.btn-approve{background:var(--green);color:#003020}
-.btn-approve:hover{background:#00F0A4;transform:translateY(-1px)}
+.btn-approve{background:rgba(0,212,144,0.10);color:#005C3C;border:1px solid rgba(0,212,144,0.35)}
+.btn-approve:hover{background:rgba(0,212,144,0.22);transform:translateY(-1px)}
+.btn-approve-done{background:var(--green);color:#003020;border:none;pointer-events:none}
+.tx-card.approving{animation:cardApprove .45s ease forwards;pointer-events:none}
+@keyframes cardApprove{0%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.01)}100%{opacity:0;transform:scale(0.96) translateY(-12px)}}
 .btn-script{background:rgba(0,207,255,0.10);color:#005F80;border:1px solid rgba(0,207,255,0.20)}
 .btn-script:hover{background:rgba(0,207,255,0.18)}
 .btn-fb{background:rgba(0,0,50,0.06);color:var(--text-secondary);border:1px solid rgba(0,0,50,0.10)}
@@ -543,7 +546,7 @@ function sbFetch(path, opts) {
 }
 
 function fetchMorningQueue() {
-  var url = '/rest/v1/transmissions?select=id,title,cultural_hook,body,track,thematic_lens,content_ttl,expires_at,tiktok_caption,hashtags,narration_script,core_term_audit_passed,blog_image_url,status&status=in.(draft,review,approved)&order=created_at.desc&limit=20';
+  var url = '/rest/v1/transmissions?select=id,title,cultural_hook,body,track,thematic_lens,content_ttl,expires_at,tiktok_caption,hashtags,narration_script,core_term_audit_passed,blog_image_url,status&status=in.(draft,review)&order=created_at.desc&limit=20';
   var loading = '<div style="grid-column:1/-1;padding:40px;text-align:center;font-family:monospace;font-size:15px;color:var(--text-dim)">Fetching from Supabase...</div>';
   ['qgrid','qgrid2'].forEach(function(gid) {
     var g = document.getElementById(gid); if (g) g.innerHTML = loading;
@@ -703,15 +706,23 @@ function toggleFb(id) {
   else { p.classList.add('open'); var ta = document.getElementById('fbt-' + id); if (ta) ta.focus(); }
 }
 function approveTxLive(id) {
+  var btn = document.querySelector('#tx-' + id + ' .btn-approve');
+  if (btn) { btn.disabled = true; btn.textContent = 'Approving...'; }
   sbFetch('/rest/v1/transmissions?id=eq.' + id, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
     body: JSON.stringify({ status: 'approved', approved_at: new Date().toISOString() })
   }).then(function(r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    toast('green', 'Approved -- image engine picks up at 9am');
-    setTimeout(fetchMorningQueue, 900);
-  }).catch(function(err) { toast('red', 'Approve failed: ' + err.message); });
+    if (btn) { btn.className = 'btn btn-approve-done'; btn.innerHTML = '&#10003; Approved'; }
+    var card = document.getElementById('tx-' + id);
+    setTimeout(function() {
+      if (card) { card.classList.add('approving'); setTimeout(function() { card.remove(); }, 460); }
+    }, 750);
+  }).catch(function(err) {
+    if (btn) { btn.disabled = false; btn.innerHTML = '&#10003; Approve'; }
+    toast('red', 'Approve failed: ' + err.message);
+  });
 }
 function killTxLive(id) {
   var card = document.getElementById('tx-' + id);
