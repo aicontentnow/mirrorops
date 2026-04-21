@@ -57,6 +57,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
 .pill-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .pill-dot.paused{background:rgba(130,140,165,0.55)}
 .spacer{flex:1}
+.gmail-btn{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:10px;background:rgba(255,255,255,0.70);border:1.5px solid rgba(255,255,255,0.90);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;color:var(--text-secondary);text-decoration:none;transition:all .17s;white-space:nowrap;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.gmail-btn:hover{background:rgba(255,255,255,0.92);color:var(--text-primary);transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,60,0.09)}
 .bell-wrap{position:relative}
 .bell-btn{width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.90);background:rgba(255,255,255,0.70);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .17s}
 .bell-btn:hover{background:rgba(255,255,255,0.92);transform:scale(1.06)}
@@ -308,6 +310,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text-primary);overfl
       <div class="pill"><span class="pill-dot paused"></span>SOC<div class="pill-tt">Social Distribution<br>PAUSED -- needs rebuild<br>Twitter/Threads workflow pending</div></div>
     </div>
     <div class="spacer"></div>
+    <a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="gmail-btn">&#9993; Gmail Drafts (charles@)</a>
     <div class="bell-wrap">
       <button class="bell-btn" onclick="openDrawer()">&#128276;</button>
       <span class="bell-badge" id="bb">2</span>
